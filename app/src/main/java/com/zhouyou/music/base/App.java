@@ -1,7 +1,6 @@
 package com.zhouyou.music.base;
 
 import android.app.Application;
-import android.content.Context;
 
 /**
  * 作者：ZhouYou

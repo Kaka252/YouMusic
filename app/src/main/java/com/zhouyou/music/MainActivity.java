@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.list_view);
 
-        List<Audio> data = MediaUtils.get().getAudioList(this);
+        List<Audio> data = MediaUtils.get().getAudioList();
 
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
