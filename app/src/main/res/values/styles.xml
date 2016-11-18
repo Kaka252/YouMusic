@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- RelativeLayout布局，点击效果设置 -->
+    <style name="clickable_layout_settings">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dip</item>
+        <item name="android:background">@drawable/bg_selector_clickable_item</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
 </resources>

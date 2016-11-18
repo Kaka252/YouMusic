@@ -52,7 +52,7 @@ public class AudioAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.item_audio, null);
             holder.tvAudioTitle = (TextView) convertView.findViewById(R.id.tv_audio_title);
-            holder.tvAudioDuration = (TextView) convertView.findViewById(R.id.tv_audio_duration);
+            holder.tvAudioArtist = (TextView) convertView.findViewById(R.id.tv_audio_artist);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -61,13 +61,13 @@ public class AudioAdapter extends BaseAdapter {
         Audio audio = getItem(position);
         if (audio != null) {
             holder.tvAudioTitle.setText(audio.title);
-            holder.tvAudioDuration.setText(audio.duration + "");
+            holder.tvAudioArtist.setText(audio.artist);
         }
         return convertView;
     }
 
     private static class ViewHolder {
         TextView tvAudioTitle;
-        TextView tvAudioDuration;
+        TextView tvAudioArtist;
     }
 }

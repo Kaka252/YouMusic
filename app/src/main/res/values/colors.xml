@@ -3,4 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- 1. 应用内文字颜色，由深到浅 -->
+    <color name="text_c1">#333333</color>
+    <color name="text_c2">#797979</color>
+    <color name="text_c3">#aaaaaa</color>
+    <color name="text_c4">#c3c3c3</color>
+    <!-- 4. 分割线-->
+    <color name="app_divider">#dcdcdc</color>
+    <color name="item_pressed_color">#f8f8f8</color>
 </resources>

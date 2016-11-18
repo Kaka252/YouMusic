@@ -43,24 +43,18 @@ public class MediaUtils {
             Media.DATA
     };
 
-    private volatile static MediaUtils MEDIA;
+    private static class MediaUtilsHolder {
+        private static final MediaUtils MEDIA = new MediaUtils();
+    }
 
-    public static MediaUtils get() {
-        if (MEDIA == null) {
-            synchronized (MediaUtils.class) {
-                if (MEDIA == null) {
-                    MEDIA = new MediaUtils();
-                }
-            }
-        }
-        return MEDIA;
+    public static final MediaUtils get() {
+        return MediaUtilsHolder.MEDIA;
     }
 
     private ContentResolver resolver;
-    private Context context;
 
     private MediaUtils() {
-        context = App.get().getApplicationContext();
+        Context context = App.get().getApplicationContext();
         resolver = context.getContentResolver();
     }
 
