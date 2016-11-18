@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore.Audio.Media;
 
+import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
 
 import java.util.ArrayList;
@@ -42,20 +43,36 @@ public class MediaUtils {
             Media.DATA
     };
 
+    private volatile static MediaUtils MEDIA;
+
+    public static MediaUtils get() {
+        if (MEDIA == null) {
+            synchronized (MediaUtils.class) {
+                if (MEDIA == null) {
+                    MEDIA = new MediaUtils();
+                }
+            }
+        }
+        return MEDIA;
+    }
+
+    private ContentResolver resolver;
+    private Context context;
+
+    private MediaUtils() {
+        context = App.get().getApplicationContext();
+        resolver = context.getContentResolver();
+    }
+
     /**
      * 获取音频列表
      *
-     * @param context
      * @return
      */
-    public static List<Audio> getAudioList(Context context) {
-        List<Audio> audioList = new ArrayList<>();
-        ContentResolver resolver = context.getContentResolver();
-        Cursor cursor = resolver.query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS,
-                null,
-                null,
-                null);
+    public synchronized List<Audio> getAudioList() {
+        Cursor cursor = resolver.query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
         if (cursor == null) return null;
+        List<Audio> audioList = new ArrayList<>();
         cursor.moveToFirst();
         while (cursor.moveToNext()) {
             Bundle bundle = new Bundle();
