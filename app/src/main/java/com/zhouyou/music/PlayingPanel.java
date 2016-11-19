@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.utils.T;
 
 /**
  * 作者：ZhouYou
@@ -33,12 +34,16 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
         init();
     }
 
+    /*音乐名*/
     private TextView tvAudioTitle;
+    /*艺术家*/
     private TextView tvAudioArtist;
-
+    /*播放/暂停*/
     private ImageView ivPlayNow;
-    private ImageView ivPlayNext;
 
+    /**
+     * 音乐播放的状态
+     */
     private boolean isPlaying = false;
 
     private void init() {
@@ -46,10 +51,9 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
         tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
-        ivPlayNext = (ImageView) view.findViewById(R.id.iv_play_next);
         view.findViewById(R.id.rl_playing_panel).setOnClickListener(this);
         ivPlayNow.setOnClickListener(this);
-        ivPlayNext.setOnClickListener(this);
+        view.findViewById(R.id.iv_play_next).setOnClickListener(this);
     }
 
     /**
@@ -76,14 +80,14 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_playing_panel:
-
+                T.ss("查看音乐");
                 break;
             case R.id.iv_play_now:
                 isPlaying = !isPlaying;
                 updateAudioPlayingStatus();
                 break;
             case R.id.iv_play_next:
-
+                T.ss("下一首");
                 break;
             default:
                 break;
