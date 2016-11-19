@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.zhouyou.music.media.IAudioTask;
+
 /**
  * 作者：ZhouYou
  * 日期：2016/11/18.
@@ -15,6 +17,8 @@ import android.support.annotation.Nullable;
 public class AudioMediaService extends Service {
 
     private boolean isServiceRunning;
+
+    private static IAudioTask binder;
 
     @Nullable
     @Override
@@ -64,7 +68,9 @@ public class AudioMediaService extends Service {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-
+            if (service != null && service instanceof IAudioTask) {
+                binder = (IAudioTask) service;
+            }
         }
 
         @Override

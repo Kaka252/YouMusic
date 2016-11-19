@@ -19,7 +19,7 @@ public class AudioTask extends Binder implements MediaPlayer.OnErrorListener, Me
         init();
     }
 
-    public void init() {
+    private void init() {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
             changeState(AudioPlayState.IDLE);
@@ -34,12 +34,18 @@ public class AudioTask extends Binder implements MediaPlayer.OnErrorListener, Me
         mediaPlayer.setOnCompletionListener(this);
     }
 
+    /**
+     * 改变音乐的播放状态
+     *
+     * @param state
+     */
     public void changeState(int state) {
         currState = state;
     }
 
     /**
      * 重置状态
+     *
      * @return
      */
     private boolean isReset() {
