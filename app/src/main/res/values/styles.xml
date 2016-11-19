@@ -16,4 +16,9 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="divide_dark">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/app_divider</item>
+        <item name="android:background">@color/app_divider</item>
+    </style>
 </resources>

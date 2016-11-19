@@ -10,9 +10,15 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
         android:listSelector="@android:color/transparent" />
+
+    <com.zhouyou.music.PlayingPanel
+        android:id="@+id/playing_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
