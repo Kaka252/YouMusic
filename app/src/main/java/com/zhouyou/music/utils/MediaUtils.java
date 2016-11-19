@@ -47,7 +47,7 @@ public class MediaUtils {
         private static final MediaUtils MEDIA = new MediaUtils();
     }
 
-    public static final MediaUtils get() {
+    public static MediaUtils get() {
         return MediaUtilsHolder.MEDIA;
     }
 
