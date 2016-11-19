@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.utils.ListUtils;
 import com.zhouyou.music.utils.MediaUtils;
 
 import java.util.List;

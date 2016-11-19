@@ -1,4 +1,4 @@
-package com.zhouyou.music.utils;
+package com.zhouyou.library.utils;
 
 import android.content.Context;
 

@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.utils.T;
 
 /**
  * 作者：ZhouYou
@@ -80,14 +79,14 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_playing_panel:
-                T.ss("查看音乐");
+//                T.ss("查看音乐");
                 break;
             case R.id.iv_play_now:
                 isPlaying = !isPlaying;
                 updateAudioPlayingStatus();
                 break;
             case R.id.iv_play_next:
-                T.ss("下一首");
+//                T.ss("下一首");
                 break;
             default:
                 break;
