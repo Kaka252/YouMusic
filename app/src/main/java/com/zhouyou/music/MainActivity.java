@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Audio audio = (Audio) parent.getItemAtPosition(position);
-        if (audio != null) {
-            playingPanel.updateAudio(audio, true);
-        }
+        playingPanel.updateAudio(audio, true);
     }
 }
