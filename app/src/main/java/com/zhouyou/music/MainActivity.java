@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         List<Audio> data = sdk.getAudioList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
-
-        Audio audio = ListUtils.getElement(data, 0);
-        playingPanel.updateAudio(audio, false);
     }
 
     private void initReceiver() {
@@ -71,14 +68,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!TextUtils.equals(intent.getAction(), Constants.RECEIVER_AUDIO_STATE_CHANGE)) return;
+            if (!TextUtils.equals(intent.getAction(), Constants.RECEIVER_AUDIO_STATE_CHANGE))
+                return;
             int state = intent.getIntExtra(Constants.DATA_INT, 0);
             Audio audio = intent.getParcelableExtra(Constants.DATA_ENTITY);
-            if (state == AudioPlayState.STARTED) {
-                playingPanel.updateAudio(audio, true);
-            } else if (state == AudioPlayState.PAUSED) {
-                playingPanel.updateAudio(audio, false);
-            }
+            playingPanel.updateAudio(audio, state);
         }
     };
 }

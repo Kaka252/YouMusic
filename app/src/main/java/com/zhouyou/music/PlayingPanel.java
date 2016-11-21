@@ -43,11 +43,6 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     /*播放/暂停*/
     private ImageView ivPlayNow;
 
-    /**
-     * 音乐播放的状态
-     */
-    private boolean isPlaying = false;
-
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_playing_audio, this);
         tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
@@ -61,8 +56,25 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     /**
      * 更新音乐播放的状态
      */
-    public void updateAudioPlayingStatus() {
-        ivPlayNow.setImageResource(isPlaying ? R.mipmap.ic_pause : R.mipmap.ic_play);
+    public void updateAudioPlayingStatus(int state) {
+        switch (state) {
+            case AudioPlayState.IDLE:
+            case AudioPlayState.INITIALIZED:
+            case AudioPlayState.PREPARED:
+            case AudioPlayState.PREPARING:
+            case AudioPlayState.PAUSED:
+            case AudioPlayState.STOPPED:
+            case AudioPlayState.COMPLETED:
+            case AudioPlayState.END:
+            case AudioPlayState.ERROR:
+                ivPlayNow.setImageResource(R.mipmap.ic_play);
+                break;
+            case AudioPlayState.STARTED:
+                ivPlayNow.setImageResource(R.mipmap.ic_pause);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -70,12 +82,11 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
      *
      * @param audio
      */
-    public void updateAudio(Audio audio, boolean play) {
+    public void updateAudio(Audio audio, int state) {
         if (audio == null) return;
         tvAudioTitle.setText(audio.title);
         tvAudioArtist.setText(audio.artist);
-        isPlaying = play;
-        updateAudioPlayingStatus();
+        updateAudioPlayingStatus(state);
     }
 
     @Override
@@ -85,9 +96,7 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
 //                T.ss("查看音乐");
                 break;
             case R.id.iv_play_now:
-                isPlaying = !isPlaying;
-                updateAudioPlayingStatus();
-                if (MusicPlaySDK.get().getCurrState() == AudioPlayState.PAUSED)
+                doPlayAction();
                 break;
             case R.id.iv_play_next:
 //                T.ss("下一首");

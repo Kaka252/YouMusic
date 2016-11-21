@@ -27,6 +27,7 @@ public class AudioMediaService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         SDK = MusicPlaySDK.get();
+        SDK.init();
         return null;
     }
 
