@@ -2,6 +2,7 @@ package com.zhouyou.music.media;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.zhouyou.music.base.App;
+import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 
 import java.util.ArrayList;
@@ -53,11 +55,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     private int currState;
     private Audio currAudio;
     private MediaPlayer mediaPlayer;
-    private OnAudioPlayCallback callback;
-
-    public void setOnAudioPlayCallback(OnAudioPlayCallback callback) {
-        this.callback = callback;
-    }
 
     private static class SDKHolder {
         private static final MusicPlaySDK SDK = new MusicPlaySDK();
@@ -65,6 +62,24 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     public static MusicPlaySDK get() {
         return SDKHolder.SDK;
+    }
+
+    /**
+     * 获取当前音乐的播放状态
+     *
+     * @return
+     */
+    public int getCurrState() {
+        return currState;
+    }
+
+    /**
+     * 获取当前音乐的实体
+     *
+     * @return
+     */
+    public Audio getCurrAudio() {
+        return currAudio;
     }
 
     private MusicPlaySDK() {
@@ -75,7 +90,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     /**
      * 初始化
      */
-    private void init() {
+    public void init() {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
             changeState(AudioPlayState.IDLE);
@@ -97,7 +112,19 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      */
     private void changeState(int state) {
         currState = state;
-        if (callback != null) callback.onStateChanged(currAudio, currState);
+        sendPlayStateBroadcast();
+    }
+
+    /**
+     * 发送一个更改状态的广播
+     */
+    private void sendPlayStateBroadcast() {
+        Intent intent = new Intent();
+        intent.putExtra(Constants.DATA_INT, currState);
+        intent.putExtra(Constants.DATA_ENTITY, currAudio);
+        intent.setAction(Constants.RECEIVER_AUDIO_STATE_CHANGE);
+        intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
     }
 
     /**
@@ -140,9 +167,17 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     /**
      * 开始播放
      */
-    private void startPlay() {
+    public void play() {
         mediaPlayer.start();
         changeState(AudioPlayState.STARTED);
+    }
+
+    /**
+     * 暂停
+     */
+    public void pause() {
+        mediaPlayer.pause();
+        changeState(AudioPlayState.PAUSED);
     }
 
     /**
@@ -198,6 +233,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        startPlay();
+        play();
     }
 }

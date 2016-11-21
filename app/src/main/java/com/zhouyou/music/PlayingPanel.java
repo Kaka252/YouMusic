@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.AudioPlayState;
+import com.zhouyou.music.media.MusicPlaySDK;
 import com.zhouyou.music.service.AudioMediaService;
 
 /**
@@ -85,12 +87,24 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
             case R.id.iv_play_now:
                 isPlaying = !isPlaying;
                 updateAudioPlayingStatus();
+                if (MusicPlaySDK.get().getCurrState() == AudioPlayState.PAUSED)
                 break;
             case R.id.iv_play_next:
 //                T.ss("下一首");
                 break;
             default:
                 break;
+        }
+    }
+
+    private void doPlayAction() {
+        int state = MusicPlaySDK.get().getCurrState();
+        if (state == AudioPlayState.PAUSED) {
+            MusicPlaySDK.get().play();
+        } else if (state == AudioPlayState.STARTED) {
+            MusicPlaySDK.get().pause();
+        } else {
+//            MusicPlaySDK.get().prepare();
         }
     }
 }
