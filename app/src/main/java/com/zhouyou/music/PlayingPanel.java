@@ -96,13 +96,13 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_playing_panel:
-//                T.ss("查看音乐");
+                // TODO 查看音乐
                 break;
             case R.id.iv_play_now:
                 doPlayAction();
                 break;
             case R.id.iv_play_next:
-//                T.ss("下一首");
+                // TODO 下一首
                 break;
             default:
                 break;
