@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.MusicPlaySDK;
 import com.zhouyou.music.media.OnAudioPlayCallback;
 
 /**
@@ -19,11 +21,13 @@ public class AudioMediaService extends Service {
     private boolean isServiceRunning;
 
     public static OnAudioPlayCallback BINDER;
+    private static MusicPlaySDK SDK;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new AudioTask();
+        SDK = MusicPlaySDK.get();
+        return null;
     }
 
     @Override
