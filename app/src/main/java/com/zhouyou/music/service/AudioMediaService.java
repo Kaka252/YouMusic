@@ -18,7 +18,7 @@ public class AudioMediaService extends Service {
 
     private boolean isServiceRunning;
 
-    private static IAudioTask binder;
+    public static IAudioTask BINDER;
 
     @Nullable
     @Override
@@ -69,7 +69,7 @@ public class AudioMediaService extends Service {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             if (service != null && service instanceof IAudioTask) {
-                binder = (IAudioTask) service;
+                BINDER = (IAudioTask) service;
             }
         }
 

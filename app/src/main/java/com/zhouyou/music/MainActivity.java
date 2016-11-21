@@ -9,7 +9,8 @@ import android.widget.ListView;
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.utils.MediaUtils;
+import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.service.AudioMediaService;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView = (ListView) findViewById(R.id.list_view);
         playingPanel = (PlayingPanel) findViewById(R.id.playing_panel);
         listView.setOnItemClickListener(this);
-        List<Audio> data = MediaUtils.get().getAudioList();
+        List<Audio> data = MusicPlaySDK.get().getAudioList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Audio audio = (Audio) parent.getItemAtPosition(position);
-        playingPanel.updateAudio(audio, true);
+        boolean b = MusicPlaySDK.get().prepare(audio);
+        if (b) playingPanel.updateAudio(audio, true);
     }
 }

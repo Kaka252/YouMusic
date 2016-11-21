@@ -1,71 +1,72 @@
 package com.zhouyou.music.service;
 
-import android.media.MediaPlayer;
 import android.os.Binder;
 
-import com.zhouyou.music.media.AudioPlayState;
+import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.IAudioTask;
+import com.zhouyou.music.media.MusicPlaySDK;
+
+import java.util.List;
 
 /**
  * 作者：ZhouYou
  * 日期：2016/11/19.
  */
-public class AudioTask extends Binder implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class AudioTask extends Binder implements IAudioTask {
 
-    private int currState;
-
-    private MediaPlayer mediaPlayer;
+    private MusicPlaySDK sdk;
 
     public AudioTask() {
-        init();
-    }
-
-    private void init() {
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-            changeState(AudioPlayState.IDLE);
-        } else {
-            if (isReset()) {
-                mediaPlayer.reset();
-                changeState(AudioPlayState.IDLE);
-            }
-        }
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnCompletionListener(this);
+        sdk = MusicPlaySDK.get();
     }
 
     /**
-     * 改变音乐的播放状态
+     * 播放音乐
      *
-     * @param state
+     * @param audio 音频文件
      */
-    public void changeState(int state) {
-        currState = state;
+    @Override
+    public boolean resume(Audio audio) {
+        return sdk.prepare(audio);
     }
 
     /**
-     * 重置状态
+     * 暂停音乐
+     *
+     * @param audio
+     */
+    @Override
+    public void pause(Audio audio) {
+
+    }
+
+    /**
+     * 播放下一首
+     *
+     * @param audio
+     */
+    @Override
+    public void playNext(Audio audio) {
+
+    }
+
+    /**
+     * 播放上一首
+     *
+     * @param audio
+     */
+    @Override
+    public void playBack(Audio audio) {
+
+    }
+
+    /**
+     * 获取音频列表
      *
      * @return
      */
-    private boolean isReset() {
-        return currState == AudioPlayState.IDLE || currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.PREPARED ||
-                currState == AudioPlayState.STARTED || currState == AudioPlayState.PAUSED || currState == AudioPlayState.STOPPED ||
-                currState == AudioPlayState.COMPLETED || currState == AudioPlayState.ERROR;
-    }
-
     @Override
-    public void onCompletion(MediaPlayer mp) {
-
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        return false;
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-
+    public List<Audio> getAudioList() {
+        return sdk.getAudioList();
     }
 }
