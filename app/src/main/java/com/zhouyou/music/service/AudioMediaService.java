@@ -8,7 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.zhouyou.music.media.IAudioTask;
+import com.zhouyou.music.media.OnAudioPlayCallback;
 
 /**
  * 作者：ZhouYou
@@ -18,7 +18,7 @@ public class AudioMediaService extends Service {
 
     private boolean isServiceRunning;
 
-    public static IAudioTask BINDER;
+    public static OnAudioPlayCallback BINDER;
 
     @Nullable
     @Override
@@ -68,8 +68,8 @@ public class AudioMediaService extends Service {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (service != null && service instanceof IAudioTask) {
-                BINDER = (IAudioTask) service;
+            if (service != null && service instanceof OnAudioPlayCallback) {
+                BINDER = (OnAudioPlayCallback) service;
             }
         }
 

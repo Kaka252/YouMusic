@@ -9,16 +9,20 @@ import android.widget.ListView;
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.AudioPlayState;
 import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.media.OnAudioPlayCallback;
 import com.zhouyou.music.service.AudioMediaService;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, OnAudioPlayCallback {
 
     private ListView listView;
 
     private PlayingPanel playingPanel;
+
+    private MusicPlaySDK sdk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +31,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView = (ListView) findViewById(R.id.list_view);
         playingPanel = (PlayingPanel) findViewById(R.id.playing_panel);
         listView.setOnItemClickListener(this);
-        List<Audio> data = MusicPlaySDK.get().getAudioList();
+        sdk = MusicPlaySDK.get();
+        sdk.setOnAudioPlayCallback(this);
+        List<Audio> data = sdk.getAudioList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
 
@@ -38,7 +44,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Audio audio = (Audio) parent.getItemAtPosition(position);
-        boolean b = MusicPlaySDK.get().prepare(audio);
-        if (b) playingPanel.updateAudio(audio, true);
+        sdk.prepare(audio);
+    }
+
+    @Override
+    public void onStateChanged(Audio audio, int state) {
+        if (state == AudioPlayState.STARTED) {
+            playingPanel.updateAudio(audio, true);
+        }
     }
 }

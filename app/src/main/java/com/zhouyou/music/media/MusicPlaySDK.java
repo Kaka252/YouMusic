@@ -19,7 +19,9 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/11/21.
  */
-public class MusicPlaySDK implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
+        MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnCompletionListener {
 
     private static final String[] AUDIO_KEYS = new String[]{
             MediaStore.Audio.Media._ID,
@@ -49,7 +51,13 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener, MediaPlayer.On
     private Context context;
     private ContentResolver resolver;
     private int currState;
+    private Audio currAudio;
     private MediaPlayer mediaPlayer;
+    private OnAudioPlayCallback callback;
+
+    public void setOnAudioPlayCallback(OnAudioPlayCallback callback) {
+        this.callback = callback;
+    }
 
     private static class SDKHolder {
         private static final MusicPlaySDK SDK = new MusicPlaySDK();
@@ -62,9 +70,11 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener, MediaPlayer.On
     private MusicPlaySDK() {
         context = App.get().getApplicationContext();
         resolver = context.getContentResolver();
-        init();
     }
 
+    /**
+     * 初始化
+     */
     private void init() {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
@@ -85,8 +95,9 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener, MediaPlayer.On
      *
      * @param state
      */
-    public void changeState(int state) {
+    private void changeState(int state) {
         currState = state;
+        if (callback != null) callback.onStateChanged(currAudio, currState);
     }
 
     /**
@@ -105,7 +116,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener, MediaPlayer.On
      *
      * @param audio
      */
-    public boolean prepare(Audio audio) {
+    public void prepare(Audio audio) {
         init();
         try {
             if (currState == AudioPlayState.IDLE) {
@@ -118,20 +129,18 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener, MediaPlayer.On
             }
             if (currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.STOPPED) {
                 mediaPlayer.prepareAsync();
+                this.currAudio = audio;
                 changeState(AudioPlayState.PREPARING);
-                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
-        return false;
     }
 
     /**
      * 开始播放
      */
-    public void startPlay() {
+    private void startPlay() {
         mediaPlayer.start();
         changeState(AudioPlayState.STARTED);
     }
