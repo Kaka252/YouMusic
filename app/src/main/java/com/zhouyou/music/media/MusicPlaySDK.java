@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
+import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
@@ -185,7 +186,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      *
      * @return
      */
-    public List<Audio> getAudioList() {
+    public synchronized List<Audio> getAudioList() {
         Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
         if (cursor == null) return null;
         List<Audio> audioList = new ArrayList<>();
@@ -219,6 +220,16 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         }
         cursor.close();
         return audioList;
+    }
+
+    /**
+     * 获取上一次选中的音频文件
+     *
+     * @return
+     */
+    public void initLastSelectedAudio() {
+        List<Audio> audioList = getAudioList();
+        currAudio = ListUtils.getElement(audioList, 0);
     }
 
     @Override

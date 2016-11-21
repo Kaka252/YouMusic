@@ -21,13 +21,12 @@ public class AudioMediaService extends Service {
     private boolean isServiceRunning;
 
     public static OnAudioPlayCallback BINDER;
-    private static MusicPlaySDK SDK;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        SDK = MusicPlaySDK.get();
-        SDK.init();
+        MusicPlaySDK.get().initLastSelectedAudio();
+        MusicPlaySDK.get().init();
         return null;
     }
 

@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
@@ -65,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    /**
+     * 接收状态改变的广播
+     */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
