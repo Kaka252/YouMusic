@@ -26,12 +26,11 @@ public class AudioLocalDataManager {
         return DataManagerHolder.MANAGER;
     }
 
-    private Context context;
     private ContentResolver resolver;
     private List<Audio> audioList;
 
-    public AudioLocalDataManager() {
-        context = App.get().getApplicationContext();
+    private AudioLocalDataManager() {
+        Context context = App.get().getApplicationContext();
         resolver = context.getContentResolver();
         audioList = getAudioList();
     }
