@@ -9,10 +9,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
+import com.zhouyou.music.data.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
 
 import java.util.ArrayList;
@@ -26,36 +28,12 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
 
-    private static final String[] AUDIO_KEYS = new String[]{
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.TITLE_KEY,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.ARTIST_ID,
-            MediaStore.Audio.Media.ARTIST_KEY,
-            MediaStore.Audio.Media.COMPOSER,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.ALBUM_ID,
-            MediaStore.Audio.Media.ALBUM_KEY,
-            MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.SIZE,
-            MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.TRACK,
-            MediaStore.Audio.Media.IS_RINGTONE,
-            MediaStore.Audio.Media.IS_PODCAST,
-            MediaStore.Audio.Media.IS_ALARM,
-            MediaStore.Audio.Media.IS_MUSIC,
-            MediaStore.Audio.Media.IS_NOTIFICATION,
-            MediaStore.Audio.Media.MIME_TYPE,
-            MediaStore.Audio.Media.DATA
-    };
 
     private Context context;
-    private ContentResolver resolver;
     private int currState;
     private Audio currAudio;
     private MediaPlayer mediaPlayer;
+
 
     private static class SDKHolder {
         private static final MusicPlaySDK SDK = new MusicPlaySDK();
@@ -85,7 +63,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     private MusicPlaySDK() {
         context = App.get().getApplicationContext();
-        resolver = context.getContentResolver();
     }
 
     /**
@@ -182,45 +159,20 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
-     * 获取音频列表
-     *
-     * @return
+     * 停止
      */
-    public synchronized List<Audio> getAudioList() {
-        Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
-        if (cursor == null) return null;
-        List<Audio> audioList = new ArrayList<>();
-        cursor.moveToFirst();
-        while (cursor.moveToNext()) {
-            Bundle bundle = new Bundle();
-            for (final String key : AUDIO_KEYS) {
-                final int columnIndex = cursor.getColumnIndex(key);
-                final int type = cursor.getType(columnIndex);
-                switch (type) {
-                    case Cursor.FIELD_TYPE_BLOB:
-                        break;
-                    case Cursor.FIELD_TYPE_FLOAT:
-                        float floatValue = cursor.getFloat(columnIndex);
-                        bundle.putFloat(key, floatValue);
-                        break;
-                    case Cursor.FIELD_TYPE_INTEGER:
-                        int intValue = cursor.getInt(columnIndex);
-                        bundle.putInt(key, intValue);
-                        break;
-                    case Cursor.FIELD_TYPE_NULL:
-                        break;
-                    case Cursor.FIELD_TYPE_STRING:
-                        String strValue = cursor.getString(columnIndex);
-                        bundle.putString(key, strValue);
-                        break;
-                }
-            }
-            Audio audio = new Audio(bundle);
-            audioList.add(audio);
-        }
-        cursor.close();
-        return audioList;
+    public void stop() {
+        mediaPlayer.stop();
+        changeState(AudioPlayState.STOPPED);
     }
+
+    /**
+     * 下一首
+     */
+    public void next() {
+
+    }
+
 
     /**
      * 获取上一次选中的音频文件
@@ -228,13 +180,20 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @return
      */
     public void initLastSelectedAudio() {
-        List<Audio> audioList = getAudioList();
-        currAudio = ListUtils.getElement(audioList, 0);
+        currAudio = ListUtils.getElement(getAudioList(), 0);
+    }
+
+    public List<Audio> getAudioList() {
+        List<Audio> audioList = AudioLocalDataManager.get().getAudioCacheList();
+        if (ListUtils.isEmpty(audioList)) {
+            audioList = AudioLocalDataManager.get().getAudioList();
+        }
+        return audioList;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        stop();
     }
 
     @Override
