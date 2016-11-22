@@ -167,9 +167,9 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
-     * 下一首
+     * 播放下一首
      */
-    public void next() {
+    public void playNext() {
         List<Audio> list = getAudioList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
@@ -180,6 +180,9 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 if (audio == null) continue;
                 if (audio.id == currAudio.id) {
                     index = list.indexOf(audio) + 1;
+                    if (index >= list.size()) {
+                        index = 0;
+                    }
                 }
             }
             currAudio = ListUtils.getElement(list, index);
@@ -187,6 +190,29 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         prepare(currAudio);
     }
 
+    /**
+     * 播放上一首
+     */
+    public void playBack() {
+        List<Audio> list = getAudioList();
+        if (ListUtils.isEmpty(list)) return;
+        if (currAudio == null) {
+            currAudio = ListUtils.getElement(list, 0);
+        } else {
+            int index = 0;
+            for (Audio audio : list) {
+                if (audio == null) continue;
+                if (audio.id == currAudio.id) {
+                    index = list.indexOf(audio) - 1;
+                    if (index < 0) {
+                        index = list.size() - 1;
+                    }
+                }
+            }
+            currAudio = ListUtils.getElement(list, index);
+        }
+        prepare(currAudio);
+    }
 
     /**
      * 获取上一次选中的音频文件
