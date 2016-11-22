@@ -122,6 +122,10 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @param audio
      */
     public void prepare(Audio audio) {
+        if (audio == null) {
+            stop();
+            return;
+        }
         init();
         try {
             if (currState == AudioPlayState.IDLE) {
@@ -234,6 +238,12 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     @Override
     public void onCompletion(MediaPlayer mp) {
         stop();
+        // TODO 单曲播放
+
+        // TODO 随机播放
+
+        // TODO 循环播放
+        playNext();
     }
 
     @Override
