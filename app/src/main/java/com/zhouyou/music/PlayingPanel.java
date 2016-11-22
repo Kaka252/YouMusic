@@ -102,7 +102,7 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
                 doPlayAction();
                 break;
             case R.id.iv_play_next:
-                // TODO 下一首
+                MusicPlaySDK.get().next();
                 break;
             default:
                 break;

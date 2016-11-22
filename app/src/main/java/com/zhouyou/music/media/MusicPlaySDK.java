@@ -170,7 +170,21 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 下一首
      */
     public void next() {
-
+        List<Audio> list = getAudioList();
+        if (ListUtils.isEmpty(list)) return;
+        if (currAudio == null) {
+            currAudio = ListUtils.getElement(list, 0);
+        } else {
+            int index = 0;
+            for (Audio audio : list) {
+                if (audio == null) continue;
+                if (audio.id == currAudio.id) {
+                    index = list.indexOf(audio) + 1;
+                }
+            }
+            currAudio = ListUtils.getElement(list, index);
+        }
+        prepare(currAudio);
     }
 
 
