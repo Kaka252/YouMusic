@@ -49,6 +49,12 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onAudioStateChanged(sdk.getCurrAudio(), sdk.getCurrState());
+    }
+
     /**
      * 监听音频播放的状态改变
      *
