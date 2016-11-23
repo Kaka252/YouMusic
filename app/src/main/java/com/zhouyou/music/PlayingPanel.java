@@ -1,6 +1,7 @@
 package com.zhouyou.music;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zhouyou.music.activity.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioPlayState;
 import com.zhouyou.music.media.MusicPlaySDK;
@@ -118,7 +120,8 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_playing_panel:
-                // TODO 查看音乐
+                Intent intent = new Intent(context, AudioDetailActivity.class);
+                context.startActivity(intent);
                 break;
             case R.id.iv_play_now:
                 doPlayAction();
