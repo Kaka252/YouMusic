@@ -1,6 +1,7 @@
 package com.zhouyou.music;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -55,5 +56,21 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 sdk.prepare(audio);
             }
         }
+    }
+
+    /**
+     * 按下返回键回到后台
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

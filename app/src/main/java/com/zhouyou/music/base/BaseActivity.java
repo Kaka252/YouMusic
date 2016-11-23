@@ -25,6 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sdk = MusicPlaySDK.get();
+        registerHomeKeyEventReceiver(this);
         initReceiver();
     }
 
@@ -56,9 +57,43 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected abstract void onAudioStateChanged(Audio audio, int state);
 
+    private void registerHomeKeyEventReceiver(Context context) {
+        // 注册用户按HOME键的广播接收器
+        context.registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    }
+
+    private void unregisterHomeKeyEventReceiver(Context context) {
+        // 解除注册用户按HOME键的广播接收器
+        context.unregisterReceiver(mHomeKeyEventReceiver);
+    }
+
+    /**
+     * 检测app是否处于后台运行的标识
+     */
+    private static boolean isRunningInBackground = false;
+
+    /**
+     * 该广播用于接收用户按下HOME键的监听
+     */
+    private BroadcastReceiver mHomeKeyEventReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isRunningInBackground) return;
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra("reason");
+                if (TextUtils.equals(reason, "homekey")) {
+                    isRunningInBackground = true;
+                }
+            }
+        }
+    };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterHomeKeyEventReceiver(this);
         if (receiver != null) unregisterReceiver(receiver);
     }
 }
