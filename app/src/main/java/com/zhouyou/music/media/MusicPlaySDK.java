@@ -165,6 +165,11 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 播放下一首
      */
     public void playNext() {
+        // TODO 单曲播放
+
+        // TODO 随机播放
+
+        // TODO 循环播放
         List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
@@ -189,6 +194,11 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 播放上一首
      */
     public void playBack() {
+        // TODO 单曲播放
+
+        // TODO 随机播放
+
+        // TODO 循环播放
         List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
@@ -233,11 +243,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     @Override
     public void onCompletion(MediaPlayer mp) {
         stop();
-        // TODO 单曲播放
-
-        // TODO 随机播放
-
-        // TODO 循环播放
         playNext();
     }
 
