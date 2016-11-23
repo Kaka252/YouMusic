@@ -174,6 +174,8 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
         // TODO 随机播放
 
+        // TODO 顺序播放
+
         // TODO 循环播放
         List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
@@ -235,6 +237,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     /**
      * 获取播放列表
+     *
      * @return
      */
     public List<Audio> getPlayList() {
