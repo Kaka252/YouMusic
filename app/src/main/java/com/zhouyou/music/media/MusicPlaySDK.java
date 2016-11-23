@@ -1,15 +1,10 @@
 package com.zhouyou.music.media;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
@@ -17,7 +12,6 @@ import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.data.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
