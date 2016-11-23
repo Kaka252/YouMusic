@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.zhouyou.library.utils.ListUtils;
+import com.zhouyou.library.utils.SP;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.data.AudioLocalDataManager;
@@ -116,6 +117,10 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @param audio
      */
     public void prepare(Audio audio) {
+        if (audio == null) {
+            changeState(AudioPlayState.ERROR);
+            return;
+        }
         init();
         try {
             if (currState == AudioPlayState.IDLE) {

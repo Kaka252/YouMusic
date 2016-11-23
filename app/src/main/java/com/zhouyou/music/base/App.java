@@ -2,6 +2,7 @@ package com.zhouyou.music.base;
 
 import android.app.Application;
 
+import com.zhouyou.library.utils.Lib;
 import com.zhouyou.music.service.AudioMediaService;
 
 /**
@@ -20,6 +21,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        Lib.init(this);
         AudioMediaService.startService(getApplicationContext());
     }
 }
