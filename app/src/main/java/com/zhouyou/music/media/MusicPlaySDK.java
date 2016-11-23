@@ -116,10 +116,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @param audio
      */
     public void prepare(Audio audio) {
-        if (audio == null) {
-            stop();
-            return;
-        }
         init();
         try {
             if (currState == AudioPlayState.IDLE) {
@@ -137,6 +133,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             }
         } catch (Exception e) {
             e.printStackTrace();
+            changeState(AudioPlayState.ERROR);
         }
     }
 
@@ -168,7 +165,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 播放下一首
      */
     public void playNext() {
-        List<Audio> list = getAudioList();
+        List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
             currAudio = ListUtils.getElement(list, 0);
@@ -192,7 +189,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 播放上一首
      */
     public void playBack() {
-        List<Audio> list = getAudioList();
+        List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
             currAudio = ListUtils.getElement(list, 0);
@@ -218,10 +215,14 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @return
      */
     public void initLastSelectedAudio() {
-        currAudio = ListUtils.getElement(getAudioList(), 0);
+        currAudio = ListUtils.getElement(getPlayList(), 0);
     }
 
-    public List<Audio> getAudioList() {
+    /**
+     * 获取播放列表
+     * @return
+     */
+    public List<Audio> getPlayList() {
         List<Audio> audioList = AudioLocalDataManager.get().getAudioCacheList();
         if (ListUtils.isEmpty(audioList)) {
             audioList = AudioLocalDataManager.get().getAudioList();
@@ -242,6 +243,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        changeState(AudioPlayState.ERROR);
         return false;
     }
 

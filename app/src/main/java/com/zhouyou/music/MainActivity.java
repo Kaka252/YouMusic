@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         listView = (ListView) findViewById(R.id.list_view);
         playingPanel = (PlayingPanel) findViewById(R.id.playing_panel);
         listView.setOnItemClickListener(this);
-        List<Audio> data = sdk.getAudioList();
+        List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
     }

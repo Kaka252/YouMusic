@@ -1,12 +1,15 @@
 package com.zhouyou.music;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioPlayState;
@@ -85,12 +88,31 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
      * @param audio
      */
     public void updateAudio(Audio audio, int state) {
-        if (audio == null) return;
-        this.audio = audio;
-        tvAudioTitle.setText(audio.title);
-        tvAudioArtist.setText(audio.artist);
         updateAudioPlayingStatus(state);
+        if (state == AudioPlayState.ERROR) {
+            Toast.makeText(context, "音频文件出错", Toast.LENGTH_SHORT).show();
+            handler.sendEmptyMessageDelayed(1, 2000);
+        }
+        if (audio != null) {
+            this.audio = audio;
+            tvAudioTitle.setText(audio.title);
+            tvAudioArtist.setText(audio.artist);
+        }
     }
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    MusicPlaySDK.get().playNext();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    });
 
     @Override
     public void onClick(View v) {
