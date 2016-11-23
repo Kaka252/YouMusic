@@ -50,8 +50,8 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
         tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
-        view.findViewById(R.id.rl_playing_panel).setOnClickListener(this);
         ivPlayNow.setOnClickListener(this);
+        view.findViewById(R.id.rl_playing_panel).setOnClickListener(this);
         view.findViewById(R.id.iv_play_next).setOnClickListener(this);
     }
 
