@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import com.zhouyou.music.config.Constants;
@@ -17,7 +17,7 @@ import com.zhouyou.music.media.MusicPlaySDK;
  * 作者：ZhouYou
  * 日期：2016/11/23.
  */
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected MusicPlaySDK sdk;
 
