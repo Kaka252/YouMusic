@@ -1,4 +1,4 @@
-package com.zhouyou.music;
+package com.zhouyou.music.module;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -7,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.zhouyou.music.module.views.PlayingPanel;
+import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;

@@ -9,7 +9,7 @@ import android.net.Uri;
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
-import com.zhouyou.music.data.AudioLocalDataManager;
+import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
 
 import java.util.List;

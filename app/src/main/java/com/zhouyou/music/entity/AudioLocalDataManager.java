@@ -1,4 +1,4 @@
-package com.zhouyou.music.data;
+package com.zhouyou.music.entity;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.zhouyou.music.base.App;
-import com.zhouyou.music.entity.Audio;
 
 import java.util.ArrayList;
 import java.util.List;

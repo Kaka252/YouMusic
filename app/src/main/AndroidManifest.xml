@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".module.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
         </activity>
 
         <activity
-            android:name=".activity.AudioDetailActivity"
+            android:name=".module.AudioDetailActivity"
             android:screenOrientation="portrait" />
 
         <service
