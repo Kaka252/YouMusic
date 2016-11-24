@@ -32,8 +32,6 @@ public class AudioStateChangeBroadcastReceiver extends BroadcastReceiver {
         if (TextUtils.equals(intent.getAction(), Constants.RECEIVER_AUDIO_STATE_CHANGE)) {
             int state = intent.getIntExtra(Constants.DATA_INT, 0);
             Audio audio = intent.getParcelableExtra(Constants.DATA_ENTITY);
-            sdk.setCurrAudio(audio);
-            sdk.setCurrState(state);
             if (listener != null) listener.onAudioStateChange(audio, state);
         }
     }

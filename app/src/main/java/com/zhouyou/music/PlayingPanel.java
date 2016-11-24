@@ -46,9 +46,6 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     private TextView tvAudioArtist;
     /*播放/暂停*/
     private ImageView ivPlayNow;
-
-    private Audio audio;
-
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_playing_audio, this);
         tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
@@ -95,7 +92,6 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
             handler.sendEmptyMessageDelayed(1, 2000);
         }
         if (audio != null) {
-            this.audio = audio;
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
         }
@@ -140,6 +136,7 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
         } else if (state == AudioPlayState.STARTED) {
             MusicPlaySDK.get().pause();
         } else {
+            Audio audio = MusicPlaySDK.get().getCurrAudio();
             MusicPlaySDK.get().prepare(audio);
         }
     }
