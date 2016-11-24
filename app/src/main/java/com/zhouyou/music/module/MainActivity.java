@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.zhouyou.music.module.views.PlayingPanel;
+import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
@@ -20,14 +20,14 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private ListView listView;
 
-    private PlayingPanel playingPanel;
+    private AudioPlayPanel playingPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = (ListView) findViewById(R.id.list_view);
-        playingPanel = (PlayingPanel) findViewById(R.id.playing_panel);
+        playingPanel = (AudioPlayPanel) findViewById(R.id.playing_panel);
         listView.setOnItemClickListener(this);
         List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);

@@ -23,19 +23,19 @@ import com.zhouyou.music.media.MusicPlaySDK;
  * 日期：2016/11/19.
  * 底部正在播放的音乐
  */
-public class PlayingPanel extends LinearLayout implements View.OnClickListener {
+public class AudioPlayPanel extends LinearLayout implements View.OnClickListener {
 
     private Context context;
 
-    public PlayingPanel(Context context) {
+    public AudioPlayPanel(Context context) {
         this(context, null);
     }
 
-    public PlayingPanel(Context context, AttributeSet attrs) {
+    public AudioPlayPanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PlayingPanel(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AudioPlayPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init();
@@ -48,7 +48,7 @@ public class PlayingPanel extends LinearLayout implements View.OnClickListener {
     /*播放/暂停*/
     private ImageView ivPlayNow;
     private void init() {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_playing_audio, this);
+        View view = LayoutInflater.from(context).inflate(R.layout.view_audio_play_panel, this);
         tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);

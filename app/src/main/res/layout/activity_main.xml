@@ -25,7 +25,7 @@
         android:divider="@null"
         android:listSelector="@android:color/transparent" />
 
-    <com.zhouyou.music.module.views.PlayingPanel
+    <com.zhouyou.music.module.views.AudioPlayPanel
         android:id="@+id/playing_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

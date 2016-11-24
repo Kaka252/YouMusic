@@ -39,4 +39,10 @@
 
     </LinearLayout>
 
+    <com.zhouyou.music.module.views.AudioOperationPanel
+        android:id="@+id/operation_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
 </LinearLayout>

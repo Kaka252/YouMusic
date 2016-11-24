@@ -12,6 +12,7 @@ import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioPlayState;
 import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.module.views.AudioOperationPanel;
 
 /**
  * 作者：ZhouYou
@@ -21,6 +22,8 @@ public class AudioDetailActivity extends BaseActivity {
 
     private TextView tvAudioTitle;
     private TextView tvAudioArtist;
+
+    private AudioOperationPanel operationPanel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class AudioDetailActivity extends BaseActivity {
     private void initViews() {
         tvAudioTitle = (TextView) findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) findViewById(R.id.tv_audio_artist);
+        operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
     }
 
     @Override
