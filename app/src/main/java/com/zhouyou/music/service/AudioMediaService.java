@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MusicPlaySDK;
 import com.zhouyou.music.media.OnAudioPlayCallback;
 

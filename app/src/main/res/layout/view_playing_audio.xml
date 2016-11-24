@@ -3,6 +3,7 @@
     android:id="@+id/rl_playing_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:id="@+id/tv_audio_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_c2"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_d4" />
 
         <TextView
@@ -28,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
-            android:textColor="@color/text_c2"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_d5" />
     </LinearLayout>
 
@@ -56,10 +57,4 @@
             android:src="@mipmap/ic_play_next" />
 
     </LinearLayout>
-
-    <View
-        style="@style/divide_dark"
-        android:layout_alignParentTop="true" />
-
-
 </RelativeLayout>

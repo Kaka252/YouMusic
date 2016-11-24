@@ -1,4 +1,4 @@
-package com.zhouyou.music.receiver;
+package com.zhouyou.music.media.receiver;
 
 import com.zhouyou.music.entity.Audio;
 

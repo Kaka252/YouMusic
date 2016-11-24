@@ -1,4 +1,4 @@
-package com.zhouyou.music.receiver;
+package com.zhouyou.music.media.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

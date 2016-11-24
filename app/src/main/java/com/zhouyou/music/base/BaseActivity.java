@@ -12,8 +12,8 @@ import android.text.TextUtils;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MusicPlaySDK;
-import com.zhouyou.music.receiver.AudioStateChangeBroadcastReceiver;
-import com.zhouyou.music.receiver.OnAudioStateChangeListener;
+import com.zhouyou.music.media.receiver.AudioStateChangeBroadcastReceiver;
+import com.zhouyou.music.media.receiver.OnAudioStateChangeListener;
 
 /**
  * 作者：ZhouYou
