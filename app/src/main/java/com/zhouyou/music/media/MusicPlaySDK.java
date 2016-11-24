@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.zhouyou.library.utils.ListUtils;
-import com.zhouyou.library.utils.SP;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.data.AudioLocalDataManager;
@@ -47,6 +46,10 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         return currState;
     }
 
+    public void setCurrState(int currState) {
+        this.currState = currState;
+    }
+
     /**
      * 获取当前音乐的实体
      *
@@ -54,6 +57,10 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      */
     public Audio getCurrAudio() {
         return currAudio;
+    }
+
+    public void setCurrAudio(Audio currAudio) {
+        this.currAudio = currAudio;
     }
 
     private MusicPlaySDK() {
@@ -84,7 +91,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @param state
      */
     private void changeState(int state) {
-        currState = state;
+        setCurrState(state);
         sendPlayStateBroadcast();
     }
 
@@ -133,7 +140,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             }
             if (currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.STOPPED) {
                 mediaPlayer.prepareAsync();
-                this.currAudio = audio;
+                setCurrAudio(audio);
                 changeState(AudioPlayState.PREPARING);
             }
         } catch (Exception e) {

@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.receiver.AudioStateChangeBroadcastReceiver;
+import com.zhouyou.music.receiver.OnAudioStateChangeListener;
 
 /**
  * 作者：ZhouYou
@@ -23,36 +25,41 @@ public abstract class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         sdk = MusicPlaySDK.get();
+        super.onCreate(savedInstanceState);
         registerHomeKeyEventReceiver(this);
-        initReceiver();
+        registerAudioStateChangeReceiver();
     }
 
-    private void initReceiver() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onAudioStateChanged(MusicPlaySDK.get().getCurrAudio(), MusicPlaySDK.get().getCurrState());
+    }
+
+    private AudioStateChangeBroadcastReceiver receiver;
+
+    /**
+     * 注册音频播放状态变化广播
+     */
+    private void registerAudioStateChangeReceiver() {
+        receiver = new AudioStateChangeBroadcastReceiver();
+        receiver.setOnAudioStateChangeListener(new OnAudioStateChangeListener() {
+            @Override
+            public void onAudioStateChange(Audio audio, int state) {
+                onAudioStateChanged(audio, state);
+            }
+        });
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.RECEIVER_AUDIO_STATE_CHANGE);
         registerReceiver(receiver, filter);
     }
 
     /**
-     * 接收状态改变的广播
+     * 解除注册音频播放状态变化广播
      */
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (!TextUtils.equals(intent.getAction(), Constants.RECEIVER_AUDIO_STATE_CHANGE))
-                return;
-            int state = intent.getIntExtra(Constants.DATA_INT, 0);
-            Audio audio = intent.getParcelableExtra(Constants.DATA_ENTITY);
-            onAudioStateChanged(audio, state);
-        }
-    };
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        onAudioStateChanged(sdk.getCurrAudio(), sdk.getCurrState());
+    private void unregisterAudioStateChangeReceiver() {
+        if (receiver != null) unregisterReceiver(receiver);
     }
 
     /**
@@ -63,13 +70,21 @@ public abstract class BaseActivity extends FragmentActivity {
      */
     protected abstract void onAudioStateChanged(Audio audio, int state);
 
+    /**
+     * 注册用户按HOME键的广播接收器
+     *
+     * @param context
+     */
     private void registerHomeKeyEventReceiver(Context context) {
-        // 注册用户按HOME键的广播接收器
         context.registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
+    /**
+     * 解除注册用户按HOME键的广播接收器
+     *
+     * @param context
+     */
     private void unregisterHomeKeyEventReceiver(Context context) {
-        // 解除注册用户按HOME键的广播接收器
         context.unregisterReceiver(mHomeKeyEventReceiver);
     }
 
@@ -100,6 +115,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterHomeKeyEventReceiver(this);
-        if (receiver != null) unregisterReceiver(receiver);
+        unregisterAudioStateChangeReceiver();
     }
 }

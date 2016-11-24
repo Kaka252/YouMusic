@@ -16,7 +16,6 @@ import com.zhouyou.music.activity.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioPlayState;
 import com.zhouyou.music.media.MusicPlaySDK;
-import com.zhouyou.music.service.AudioMediaService;
 
 /**
  * 作者：ZhouYou
