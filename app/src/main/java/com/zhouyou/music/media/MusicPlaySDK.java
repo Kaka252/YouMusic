@@ -65,6 +65,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     private MusicPlaySDK() {
         context = App.get().getApplicationContext();
+        currAudio = ListUtils.getElement(getPlayList(), 0);
     }
 
     /**
@@ -99,10 +100,9 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 发送一个更改状态的广播
      */
     private void sendPlayStateBroadcast() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Constants.RECEIVER_AUDIO_STATE_CHANGE);
         intent.putExtra(Constants.DATA_INT, currState);
         intent.putExtra(Constants.DATA_ENTITY, currAudio);
-        intent.setAction(Constants.RECEIVER_AUDIO_STATE_CHANGE);
         intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
     }

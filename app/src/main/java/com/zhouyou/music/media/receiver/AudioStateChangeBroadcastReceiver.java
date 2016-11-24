@@ -17,12 +17,6 @@ public class AudioStateChangeBroadcastReceiver extends BroadcastReceiver {
 
     private OnAudioStateChangeListener listener;
 
-    private MusicPlaySDK sdk;
-
-    public AudioStateChangeBroadcastReceiver() {
-        sdk = MusicPlaySDK.get();
-    }
-
     public void setOnAudioStateChangeListener(OnAudioStateChangeListener listener) {
         this.listener = listener;
     }

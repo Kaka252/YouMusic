@@ -24,7 +24,7 @@ public class AudioMediaService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        MusicPlaySDK.get().initLastSelectedAudio();
+//        MusicPlaySDK.get().initLastSelectedAudio();
         MusicPlaySDK.get().init();
         return null;
     }
