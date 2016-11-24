@@ -46,10 +46,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         return currState;
     }
 
-    public void setCurrState(int currState) {
-        this.currState = currState;
-    }
-
     /**
      * 获取当前音乐的实体
      *
@@ -57,10 +53,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      */
     public Audio getCurrAudio() {
         return currAudio;
-    }
-
-    public void setCurrAudio(Audio currAudio) {
-        this.currAudio = currAudio;
     }
 
     private MusicPlaySDK() {
@@ -92,7 +84,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * @param state
      */
     private void changeState(int state) {
-        setCurrState(state);
+        currState = state;
         sendPlayStateBroadcast();
     }
 
@@ -140,7 +132,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             }
             if (currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.STOPPED) {
                 mediaPlayer.prepareAsync();
-                setCurrAudio(audio);
+                currAudio = audio;
                 changeState(AudioPlayState.PREPARING);
             }
         } catch (Exception e) {
