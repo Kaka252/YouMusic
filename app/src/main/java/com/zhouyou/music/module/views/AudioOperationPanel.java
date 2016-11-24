@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -45,6 +46,7 @@ public class AudioOperationPanel extends LinearLayout {
     private TextView tvStartTime;
     private TextView tvEndTime;
     private SeekBar seekBar;
+    private int duration = 0;
 
     private void init() {
         View view = inflater.inflate(R.layout.view_audio_operation_panel, this);
@@ -57,7 +59,7 @@ public class AudioOperationPanel extends LinearLayout {
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+            updateStartAndEndTime(duration, progress);
         }
 
         @Override
@@ -83,9 +85,37 @@ public class AudioOperationPanel extends LinearLayout {
             handler.sendEmptyMessageDelayed(1, 2000);
         }
         if (audio != null) {
-            tvStartTime.setText(StringUtils.formatTime(0));
-            tvEndTime.setText(StringUtils.formatTime(audio.duration));
+            duration = audio.duration;
         }
+        updateStartAndEndTime(0, duration);
+    }
+
+    /**
+     * 更新音频播放的起始时间
+     *
+     * @param progress 进度
+     * @param duration 时长
+     */
+    private void updateStartAndEndTime(int progress, int duration) {
+        if (progress <= 0) {
+            tvStartTime.setText(StringUtils.formatTime(0));
+            tvEndTime.setText(StringUtils.formatTime(duration));
+            MusicPlaySDK.get().seekTo(0);
+            seekBar.setProgress(0);
+        } else if (progress >= 100) {
+            tvStartTime.setText(StringUtils.formatTime(duration));
+            tvEndTime.setText(StringUtils.formatTime(0));
+            MusicPlaySDK.get().seekTo(duration);
+            seekBar.setProgress(duration);
+        } else {
+            int hasPlayed = duration * progress / 100;
+            int hasNotPlayed = duration - hasPlayed;
+            tvStartTime.setText(StringUtils.formatTime(hasPlayed));
+            tvEndTime.setText(StringUtils.formatTime(hasNotPlayed));
+            MusicPlaySDK.get().seekTo(hasPlayed);
+            seekBar.setProgress(hasPlayed);
+        }
+
     }
 
     private Handler handler = new Handler(new Handler.Callback() {

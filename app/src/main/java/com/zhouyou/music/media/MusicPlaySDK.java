@@ -166,6 +166,15 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
+     * 定位播放位置
+     *
+     * @param mesc
+     */
+    public void seekTo(int mesc) {
+        mediaPlayer.seekTo(mesc);
+    }
+
+    /**
      * 播放下一首
      */
     public void playNext() {
