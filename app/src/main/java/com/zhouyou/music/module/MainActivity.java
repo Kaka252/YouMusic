@@ -1,12 +1,15 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.zhouyou.music.media.MusicPlaySDK;
 import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;

@@ -1,17 +1,12 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.AudioPlayState;
-import com.zhouyou.music.media.MusicPlaySDK;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 
 /**
@@ -40,21 +35,10 @@ public class AudioDetailActivity extends BaseActivity {
 
     @Override
     protected void onAudioStateChanged(Audio audio, int state) {
-        if (state == AudioPlayState.ERROR) {
-            Toast.makeText(this, "音频文件出错", Toast.LENGTH_SHORT).show();
-            handler.sendEmptyMessageDelayed(1, 2000);
-        }
         if (audio != null) {
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
         }
+        operationPanel.updatePanel(audio, state);
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            MusicPlaySDK.get().playNext();
-            return true;
-        }
-    });
 }
