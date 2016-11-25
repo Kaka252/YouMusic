@@ -28,7 +28,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AudioManagerFactory.get().createAudioStateManager().register(this);
+        AudioManagerFactory.get().createAudioStatePublisher().register(this);
         initViews();
     }
 
@@ -41,15 +41,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         listView.setAdapter(adapter);
     }
 
-    /**
-     * 监听音频播放的状态改变
-     *
-     * @param audio 音频
-     * @param state 状态
-     */
     @Override
-    protected void onAudioStateChanged(Audio audio, int state) {
-        onUpdateChange(audio, state);
+    protected void onResume() {
+        super.onResume();
+        onUpdateChange(sdk.getCurrAudio(), sdk.getCurrState());
     }
 
     /**
@@ -97,6 +92,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AudioManagerFactory.get().createAudioStateManager().unregister(this);
+        AudioManagerFactory.get().createAudioStatePublisher().unregister(this);
     }
 }

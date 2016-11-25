@@ -27,20 +27,6 @@ public abstract class BaseActivity extends FragmentActivity {
         registerHomeKeyEventReceiver(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        onAudioStateChanged(sdk.getCurrAudio(), sdk.getCurrState());
-    }
-
-    /**
-     * 监听音频播放的状态改变
-     *
-     * @param audio 音频
-     * @param state 状态
-     */
-    protected abstract void onAudioStateChanged(Audio audio, int state);
-
     /**
      * 注册用户按HOME键的广播接收器
      *

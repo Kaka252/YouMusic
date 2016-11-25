@@ -31,7 +31,7 @@ public class AudioManagerFactory {
 
     private IAudioStatePublisher statePublisher = new AudioStatePublisher();
 
-    public IAudioStatePublisher createAudioStateManager() {
+    public IAudioStatePublisher createAudioStatePublisher() {
         return statePublisher;
     }
 }

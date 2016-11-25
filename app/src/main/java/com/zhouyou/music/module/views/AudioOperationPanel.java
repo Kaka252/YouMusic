@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -62,17 +63,19 @@ public class AudioOperationPanel extends LinearLayout {
      * @param state
      */
     public void updatePanel(Audio audio, int state) {
-        if (audio != null) duration = audio.duration;
-        updateStartAndEndTime(0, duration);
+
     }
 
     /**
      * 更新音频播放的起始时间
      *
-     * @param progress 进度
-     * @param duration 时长
+     * @param currentPosition 进度
+     * @param duration        时长
      */
-    private void updateStartAndEndTime(int progress, int duration) {
+    public void updateProgress(int currentPosition, int duration) {
+        float f = currentPosition * 1.0f / duration;
+        int progress = (int) (f * 100);
+        Log.d("AudioOperationPanel", "updateProgress: " + progress);
         if (progress <= 0) {
             tvStartTime.setText(StringUtils.formatTime(0));
             tvEndTime.setText(StringUtils.formatTime(duration));
@@ -82,11 +85,10 @@ public class AudioOperationPanel extends LinearLayout {
             tvEndTime.setText(StringUtils.formatTime(0));
             seekBar.setProgress(duration);
         } else {
-            int hasPlayed = duration * progress / 100;
-            int hasNotPlayed = duration - hasPlayed;
-            tvStartTime.setText(StringUtils.formatTime(hasPlayed));
+            int hasNotPlayed = duration - currentPosition;
+            tvStartTime.setText(StringUtils.formatTime(currentPosition));
             tvEndTime.setText(StringUtils.formatTime(hasNotPlayed));
-            seekBar.setProgress(hasPlayed);
+            seekBar.setProgress(progress);
         }
     }
 }

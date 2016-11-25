@@ -8,6 +8,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
+import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 
@@ -15,7 +16,8 @@ import com.zhouyou.music.module.views.AudioOperationPanel;
  * 作者：ZhouYou
  * 日期：2016/11/23.
  */
-public class AudioDetailActivity extends BaseActivity implements IAudioStateSubscriber {
+public class AudioDetailActivity extends BaseActivity implements IAudioStateSubscriber,
+        IAudioProgressSubscriber {
 
     private TextView tvAudioTitle;
     private TextView tvAudioArtist;
@@ -25,7 +27,8 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AudioManagerFactory.get().createAudioStateManager().register(this);
+        AudioManagerFactory.get().createAudioStatePublisher().register(this);
+        AudioManagerFactory.get().createProgressPublisher().register(this);
         setContentView(R.layout.activity_audio_detail);
         initViews();
     }
@@ -37,8 +40,10 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     }
 
     @Override
-    protected void onAudioStateChanged(Audio audio, int state) {
-        onUpdateChange(audio, state);
+    protected void onResume() {
+        super.onResume();
+        onUpdateChange(sdk.getCurrAudio(), sdk.getCurrState());
+        onProgressChange(sdk.getCurrentAudioProgress(), sdk.getCurrentAudioDuration());
     }
 
     /**
@@ -56,9 +61,21 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         operationPanel.updatePanel(audio, state);
     }
 
+    /**
+     * 播放进度改变
+     *
+     * @param currentPosition 播放进度
+     * @param duration        音频时长
+     */
+    @Override
+    public void onProgressChange(int currentPosition, int duration) {
+        operationPanel.updateProgress(currentPosition, duration);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AudioManagerFactory.get().createAudioStateManager().unregister(this);
+        AudioManagerFactory.get().createAudioStatePublisher().unregister(this);
+        AudioManagerFactory.get().createProgressPublisher().unregister(this);
     }
 }

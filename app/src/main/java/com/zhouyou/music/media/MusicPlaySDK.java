@@ -124,9 +124,17 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     /**
      * 获取播放进度
      */
-    public int getCurrentPlayProgress() {
-        float f = mediaPlayer.getCurrentPosition() * 1.0f / mediaPlayer.getDuration();
-        return (int) (f * 100);
+    public int getCurrentAudioProgress() {
+        if (mediaPlayer == null || currAudio == null) return 0;
+        return mediaPlayer.getCurrentPosition();
+    }
+
+    /**
+     * 获取当前播放音频的时长
+     */
+    public int getCurrentAudioDuration() {
+        if (mediaPlayer == null || currAudio == null) return 0;
+        return mediaPlayer.getDuration();
     }
 
     /**
@@ -231,7 +239,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 break;
             case AudioPlayState.IN_PROGRESS:
                 Log.d("MusicState", "changeState: " + AudioPlayState.IN_PROGRESS + " - 正在播放");
-                AudioManagerFactory.get().createProgressPublisher().notifySubscribers(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
+                handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                 break;
             case AudioPlayState.PAUSED: // 暂停
                 Log.d("MusicState", "changeState: " + AudioPlayState.PAUSED + " - 暂停");
@@ -259,10 +267,11 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 break;
         }
         // 发送通知
-        AudioManagerFactory.get().createAudioStateManager().notifySubscribers(currAudio, currState);
+        AudioManagerFactory.get().createAudioStatePublisher().notifySubscribers(currAudio, currState);
     }
 
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
+    private static final int ACTION_PROGRESS_UPDATE = 2; // 播放下一首
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -270,6 +279,10 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             switch (msg.what) {
                 case ACTION_PLAY_NEXT:
                     playNext();
+                    break;
+                case ACTION_PROGRESS_UPDATE:
+                    AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
+                    handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
                     break;
                 default:
                     break;
