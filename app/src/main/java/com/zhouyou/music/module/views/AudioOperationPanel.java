@@ -53,25 +53,8 @@ public class AudioOperationPanel extends LinearLayout {
         tvStartTime = (TextView) view.findViewById(R.id.tv_start_time);
         tvEndTime = (TextView) view.findViewById(R.id.tv_end_time);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-        seekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
+//        seekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
     }
-
-    private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            updateStartAndEndTime(duration, progress);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    };
 
     /**
      * 更新操作板信息
@@ -112,7 +95,6 @@ public class AudioOperationPanel extends LinearLayout {
             tvEndTime.setText(StringUtils.formatTime(hasNotPlayed));
             seekBar.setProgress(hasPlayed);
         }
-
     }
 
     private Handler handler = new Handler(new Handler.Callback() {
