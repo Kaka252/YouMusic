@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (sdk.getCurrAudio() == null) {
             sdk.prepare(audio);
         } else {
-            if (audio.id == sdk.getCurrAudio().id && sdk.getCurrState() == AudioPlayState.STARTED) {
+            if (audio.id == sdk.getCurrAudio().id && sdk.getCurrState() == AudioPlayState.PLAYING) {
                 Toast.makeText(this, "正在播放", Toast.LENGTH_SHORT).show();
             } else {
                 sdk.prepare(audio);

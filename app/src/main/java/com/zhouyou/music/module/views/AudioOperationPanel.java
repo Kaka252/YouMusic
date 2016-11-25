@@ -62,13 +62,7 @@ public class AudioOperationPanel extends LinearLayout {
      * @param state
      */
     public void updatePanel(Audio audio, int state) {
-        if (state == AudioPlayState.ERROR) {
-            Toast.makeText(context, "音频文件出错", Toast.LENGTH_SHORT).show();
-            handler.sendEmptyMessageDelayed(1, 2000);
-        }
-        if (audio != null) {
-            duration = audio.duration;
-        }
+        if (audio != null) duration = audio.duration;
         updateStartAndEndTime(0, duration);
     }
 

@@ -4,6 +4,10 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
@@ -77,23 +81,13 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
-     * 改变音乐的播放状态
-     *
-     * @param state
-     */
-    private void changeState(int state) {
-        currState = state;
-        AudioManagerFactory.get().createAudioStateManager().notifySubscribers(currAudio, currState);
-    }
-
-    /**
      * 重置状态
      *
      * @return
      */
     private boolean isReset() {
         return currState == AudioPlayState.IDLE || currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.PREPARED ||
-                currState == AudioPlayState.STARTED || currState == AudioPlayState.PAUSED || currState == AudioPlayState.STOPPED ||
+                currState == AudioPlayState.PLAYING || currState == AudioPlayState.PAUSED || currState == AudioPlayState.STOPPED ||
                 currState == AudioPlayState.COMPLETED || currState == AudioPlayState.ERROR;
     }
 
@@ -128,29 +122,29 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         }
     }
 
-    /**
-     * 开始播放
-     */
-    public void play() {
-        mediaPlayer.start();
-        changeState(AudioPlayState.STARTED);
-    }
-
-    /**
-     * 暂停
-     */
-    public void pause() {
-        mediaPlayer.pause();
-        changeState(AudioPlayState.PAUSED);
-    }
-
-    /**
-     * 停止
-     */
-    public void stop() {
-        mediaPlayer.stop();
-        changeState(AudioPlayState.STOPPED);
-    }
+//    /**
+//     * 开始播放
+//     */
+//    public void play() {
+//        mediaPlayer.start();
+//        changeState(AudioPlayState.STARTED);
+//    }
+//
+//    /**
+//     * 暂停
+//     */
+//    public void pause() {
+//        mediaPlayer.pause();
+//        changeState(AudioPlayState.PAUSED);
+//    }
+//
+//    /**
+//     * 停止
+//     */
+//    public void stop() {
+//        mediaPlayer.stop();
+//        changeState(AudioPlayState.STOPPED);
+//    }
 
     /**
      * 获取播放进度
@@ -223,8 +217,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        stop();
-        playNext();
+        changeState(AudioPlayState.COMPLETED);
     }
 
     @Override
@@ -235,6 +228,76 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        play();
+        changeState(AudioPlayState.PREPARED);
     }
+
+    /**
+     * 改变音乐的播放状态
+     *
+     * @param state
+     */
+    public void changeState(int state) {
+        currState = state;
+        switch (currState) {
+            case AudioPlayState.IDLE: // 闲置
+                Log.d("MusicState", "changeState: " + AudioPlayState.IDLE + " - 闲置");
+                break;
+            case AudioPlayState.INITIALIZED: // 初始化
+                Log.d("MusicState", "changeState: " + AudioPlayState.INITIALIZED + " - 初始化");
+                break;
+            case AudioPlayState.PREPARING: // 正在准备
+                Log.d("MusicState", "changeState: " + AudioPlayState.PREPARING + " - 正在准备");
+                break;
+            case AudioPlayState.PREPARED: // 准备就绪
+                Log.d("MusicState", "changeState: " + AudioPlayState.PREPARED + " - 准备就绪");
+                changeState(AudioPlayState.PLAYING);
+                break;
+            case AudioPlayState.PLAYING: // 正在播放
+                Log.d("MusicState", "changeState: " + AudioPlayState.PLAYING + " - 正在播放");
+                mediaPlayer.start();
+                break;
+            case AudioPlayState.PAUSED: // 暂停
+                Log.d("MusicState", "changeState: " + AudioPlayState.PAUSED + " - 暂停");
+                mediaPlayer.pause();
+                break;
+            case AudioPlayState.COMPLETED: // 播放完成
+                Log.d("MusicState", "changeState: " + AudioPlayState.COMPLETED + " - 播放完成");
+                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 500);
+                break;
+            case AudioPlayState.STOPPED: // 播放终断
+                Log.d("MusicState", "changeState: " + AudioPlayState.STOPPED + " - 播放终断");
+                mediaPlayer.stop();
+                break;
+            case AudioPlayState.END: // 结束
+                Log.d("MusicState", "changeState: " + AudioPlayState.END + " - 结束");
+                mediaPlayer.stop();
+                break;
+            case AudioPlayState.ERROR: // 错误
+                Log.d("MusicState", "changeState: " + AudioPlayState.ERROR + " - 错误");
+                mediaPlayer.stop();
+                Toast.makeText(context, "音频文件出错", Toast.LENGTH_SHORT).show();
+                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
+                break;
+            default:
+                break;
+        }
+        // 发送通知
+        AudioManagerFactory.get().createAudioStateManager().notifySubscribers(currAudio, currState);
+    }
+
+    private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case ACTION_PLAY_NEXT:
+                    playNext();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    });
 }
