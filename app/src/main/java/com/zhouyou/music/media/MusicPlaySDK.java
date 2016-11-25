@@ -28,7 +28,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     private Audio currAudio;
     private MediaPlayer mediaPlayer;
 
-
     private static class SDKHolder {
         private static final MusicPlaySDK SDK = new MusicPlaySDK();
     }
@@ -85,6 +84,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      */
     private void changeState(int state) {
         currState = state;
+        // TODO 优化1：不用广播，采用观察者模式
         sendPlayStateBroadcast();
     }
 
@@ -177,13 +177,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 播放下一首
      */
     public void playNext() {
-        // TODO 单曲播放
-
-        // TODO 随机播放
-
-        // TODO 顺序播放
-
-        // TODO 循环播放
         List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
@@ -208,11 +201,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      * 播放上一首
      */
     public void playBack() {
-        // TODO 单曲播放
-
-        // TODO 随机播放
-
-        // TODO 循环播放
         List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
@@ -231,15 +219,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             currAudio = ListUtils.getElement(list, index);
         }
         prepare(currAudio);
-    }
-
-    /**
-     * 获取上一次选中的音频文件
-     *
-     * @return
-     */
-    public void initLastSelectedAudio() {
-        currAudio = ListUtils.getElement(getPlayList(), 0);
     }
 
     /**
