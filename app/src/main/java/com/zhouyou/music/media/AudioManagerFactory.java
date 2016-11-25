@@ -9,10 +9,12 @@ import com.zhouyou.music.media.state.IAudioStateManager;
  */
 public class AudioManagerFactory {
 
-    private static AudioManagerFactory factory = new AudioManagerFactory();
+    private static class AMFHolder {
+        private static final AudioManagerFactory FACTORY = new AudioManagerFactory();
+    }
 
     public static AudioManagerFactory get() {
-        return factory;
+        return AMFHolder.FACTORY;
     }
 
     private AudioManagerFactory() {
