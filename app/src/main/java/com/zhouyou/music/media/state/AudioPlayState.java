@@ -10,7 +10,7 @@ public interface AudioPlayState {
     int INITIALIZED = 1;
     int PREPARED = 2;
     int PREPARING = 3;
-    int PLAYING = 4;
+    int IN_PROGRESS = 4;
     int PAUSED = 5;
     int STOPPED = 6;
     int COMPLETED = 7;

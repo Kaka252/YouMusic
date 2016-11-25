@@ -54,7 +54,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
         tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
         ivPlayNow.setOnClickListener(this);
-        view.findViewById(R.id.rl_playing_panel).setOnClickListener(this);
+        view.findViewById(R.id.rl_play_panel).setOnClickListener(this);
         view.findViewById(R.id.iv_play_next).setOnClickListener(this);
     }
 
@@ -74,7 +74,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
             case AudioPlayState.ERROR:
                 ivPlayNow.setImageResource(R.mipmap.ic_play);
                 break;
-            case AudioPlayState.PLAYING:
+            case AudioPlayState.IN_PROGRESS:
                 ivPlayNow.setImageResource(R.mipmap.ic_pause);
                 break;
             default:
@@ -97,26 +97,30 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_playing_panel:
+            case R.id.rl_play_panel:
                 Intent intent = new Intent(context, AudioDetailActivity.class);
                 context.startActivity(intent);
                 break;
             case R.id.iv_play_now:
-                int state = MusicPlaySDK.get().getCurrState();
-                if (state == AudioPlayState.PAUSED) {
-                    MusicPlaySDK.get().changeState(AudioPlayState.PLAYING);
-                } else if (state == AudioPlayState.PLAYING) {
-                    MusicPlaySDK.get().changeState(AudioPlayState.PAUSED);
-                } else {
-                    Audio audio = MusicPlaySDK.get().getCurrAudio();
-                    MusicPlaySDK.get().prepare(audio);
-                }
+                doPlayAction();
                 break;
             case R.id.iv_play_next:
                 MusicPlaySDK.get().changeState(AudioPlayState.COMPLETED);
                 break;
             default:
                 break;
+        }
+    }
+
+    private void doPlayAction() {
+        int state = MusicPlaySDK.get().getCurrState();
+        if (state == AudioPlayState.PAUSED) {
+            MusicPlaySDK.get().changeState(AudioPlayState.PREPARED);
+        } else if (state == AudioPlayState.IN_PROGRESS) {
+            MusicPlaySDK.get().changeState(AudioPlayState.PAUSED);
+        } else {
+            Audio audio = MusicPlaySDK.get().getCurrAudio();
+            MusicPlaySDK.get().prepare(audio);
         }
     }
 }

@@ -69,7 +69,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      */
     private boolean isReset() {
         return currState == AudioPlayState.IDLE || currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.PREPARED ||
-                currState == AudioPlayState.PLAYING || currState == AudioPlayState.PAUSED || currState == AudioPlayState.STOPPED ||
+                currState == AudioPlayState.IN_PROGRESS || currState == AudioPlayState.PAUSED || currState == AudioPlayState.STOPPED ||
                 currState == AudioPlayState.COMPLETED || currState == AudioPlayState.ERROR;
     }
 
@@ -112,7 +112,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             }
             if (currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.STOPPED) {
-                mediaPlayer.prepareAsync();
                 currAudio = audio;
                 changeState(AudioPlayState.PREPARING);
             }
@@ -222,15 +221,16 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 Log.d("MusicState", "changeState: " + AudioPlayState.INITIALIZED + " - 初始化");
                 break;
             case AudioPlayState.PREPARING: // 正在准备
+                mediaPlayer.prepareAsync();
                 Log.d("MusicState", "changeState: " + AudioPlayState.PREPARING + " - 正在准备");
                 break;
             case AudioPlayState.PREPARED: // 准备就绪
                 Log.d("MusicState", "changeState: " + AudioPlayState.PREPARED + " - 准备就绪");
-                changeState(AudioPlayState.PLAYING);
-                break;
-            case AudioPlayState.PLAYING: // 正在播放
-                Log.d("MusicState", "changeState: " + AudioPlayState.PLAYING + " - 正在播放");
                 mediaPlayer.start();
+                changeState(AudioPlayState.IN_PROGRESS);
+                break;
+            case AudioPlayState.IN_PROGRESS: // 正在播放
+                Log.d("MusicState", "changeState: " + AudioPlayState.IN_PROGRESS + " - 正在播放");
                 break;
             case AudioPlayState.PAUSED: // 暂停
                 Log.d("MusicState", "changeState: " + AudioPlayState.PAUSED + " - 暂停");

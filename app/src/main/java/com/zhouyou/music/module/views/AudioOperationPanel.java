@@ -89,19 +89,4 @@ public class AudioOperationPanel extends LinearLayout {
             seekBar.setProgress(hasPlayed);
         }
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    MusicPlaySDK.get().playNext();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    });
-
 }
