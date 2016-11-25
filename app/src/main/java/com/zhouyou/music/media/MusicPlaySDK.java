@@ -63,24 +63,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
-     * 初始化
-     */
-    public void init() {
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-            changeState(AudioPlayState.IDLE);
-        } else {
-            if (isReset()) {
-                mediaPlayer.reset();
-                changeState(AudioPlayState.IDLE);
-            }
-        }
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnCompletionListener(this);
-    }
-
-    /**
      * 重置状态
      *
      * @return
@@ -89,6 +71,24 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         return currState == AudioPlayState.IDLE || currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.PREPARED ||
                 currState == AudioPlayState.PLAYING || currState == AudioPlayState.PAUSED || currState == AudioPlayState.STOPPED ||
                 currState == AudioPlayState.COMPLETED || currState == AudioPlayState.ERROR;
+    }
+
+    /**
+     * 初始化
+     */
+    public void init() {
+        if (mediaPlayer == null) {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setOnErrorListener(this);
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnCompletionListener(this);
+            changeState(AudioPlayState.IDLE);
+        } else {
+            if (isReset()) {
+                mediaPlayer.reset();
+                changeState(AudioPlayState.IDLE);
+            }
+        }
     }
 
     /**
@@ -121,30 +121,6 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             changeState(AudioPlayState.ERROR);
         }
     }
-
-//    /**
-//     * 开始播放
-//     */
-//    public void play() {
-//        mediaPlayer.start();
-//        changeState(AudioPlayState.STARTED);
-//    }
-//
-//    /**
-//     * 暂停
-//     */
-//    public void pause() {
-//        mediaPlayer.pause();
-//        changeState(AudioPlayState.PAUSED);
-//    }
-//
-//    /**
-//     * 停止
-//     */
-//    public void stop() {
-//        mediaPlayer.stop();
-//        changeState(AudioPlayState.STOPPED);
-//    }
 
     /**
      * 获取播放进度
@@ -262,7 +238,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 break;
             case AudioPlayState.COMPLETED: // 播放完成
                 Log.d("MusicState", "changeState: " + AudioPlayState.COMPLETED + " - 播放完成");
-                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 500);
+                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 100);
                 break;
             case AudioPlayState.STOPPED: // 播放终断
                 Log.d("MusicState", "changeState: " + AudioPlayState.STOPPED + " - 播放终断");

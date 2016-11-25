@@ -89,25 +89,10 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
      */
     public void updateAudio(Audio audio, int state) {
         updateAudioPlayingStatus(state);
-        if (audio != null) {
-            tvAudioTitle.setText(audio.title);
-            tvAudioArtist.setText(audio.artist);
-        }
+        if (audio == null) return;
+        tvAudioTitle.setText(audio.title);
+        tvAudioArtist.setText(audio.artist);
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    MusicPlaySDK.get().playNext();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    });
 
     @Override
     public void onClick(View v) {
@@ -117,25 +102,21 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
                 context.startActivity(intent);
                 break;
             case R.id.iv_play_now:
-                doPlayAction();
+                int state = MusicPlaySDK.get().getCurrState();
+                if (state == AudioPlayState.PAUSED) {
+                    MusicPlaySDK.get().changeState(AudioPlayState.PLAYING);
+                } else if (state == AudioPlayState.PLAYING) {
+                    MusicPlaySDK.get().changeState(AudioPlayState.PAUSED);
+                } else {
+                    Audio audio = MusicPlaySDK.get().getCurrAudio();
+                    MusicPlaySDK.get().prepare(audio);
+                }
                 break;
             case R.id.iv_play_next:
                 MusicPlaySDK.get().changeState(AudioPlayState.COMPLETED);
                 break;
             default:
                 break;
-        }
-    }
-
-    private void doPlayAction() {
-        int state = MusicPlaySDK.get().getCurrState();
-        if (state == AudioPlayState.PAUSED) {
-            MusicPlaySDK.get().changeState(AudioPlayState.PLAYING);
-        } else if (state == AudioPlayState.PLAYING) {
-            MusicPlaySDK.get().changeState(AudioPlayState.PAUSED);
-        } else {
-            Audio audio = MusicPlaySDK.get().getCurrAudio();
-            MusicPlaySDK.get().prepare(audio);
         }
     }
 }
