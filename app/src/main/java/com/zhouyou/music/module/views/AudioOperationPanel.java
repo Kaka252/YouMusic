@@ -100,19 +100,16 @@ public class AudioOperationPanel extends LinearLayout {
         if (progress <= 0) {
             tvStartTime.setText(StringUtils.formatTime(0));
             tvEndTime.setText(StringUtils.formatTime(duration));
-            MusicPlaySDK.get().seekTo(0);
             seekBar.setProgress(0);
         } else if (progress >= 100) {
             tvStartTime.setText(StringUtils.formatTime(duration));
             tvEndTime.setText(StringUtils.formatTime(0));
-            MusicPlaySDK.get().seekTo(duration);
             seekBar.setProgress(duration);
         } else {
             int hasPlayed = duration * progress / 100;
             int hasNotPlayed = duration - hasPlayed;
             tvStartTime.setText(StringUtils.formatTime(hasPlayed));
             tvEndTime.setText(StringUtils.formatTime(hasNotPlayed));
-            MusicPlaySDK.get().seekTo(hasPlayed);
             seekBar.setProgress(hasPlayed);
         }
 
