@@ -132,7 +132,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     /**
      * 播放下一首
      */
-    public void playNext() {
+    private void playNext() {
         List<Audio> list = getPlayList();
         if (ListUtils.isEmpty(list)) return;
         if (currAudio == null) {
@@ -229,8 +229,9 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                 mediaPlayer.start();
                 changeState(AudioPlayState.IN_PROGRESS);
                 break;
-            case AudioPlayState.IN_PROGRESS: // 正在播放
+            case AudioPlayState.IN_PROGRESS:
                 Log.d("MusicState", "changeState: " + AudioPlayState.IN_PROGRESS + " - 正在播放");
+                AudioManagerFactory.get().createProgressPublisher().notifySubscribers(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
                 break;
             case AudioPlayState.PAUSED: // 暂停
                 Log.d("MusicState", "changeState: " + AudioPlayState.PAUSED + " - 暂停");

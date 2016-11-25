@@ -1,7 +1,9 @@
 package com.zhouyou.music.media;
 
-import com.zhouyou.music.media.state.AudioStateManager;
-import com.zhouyou.music.media.state.IAudioStateManager;
+import com.zhouyou.music.media.state.AudioProgressPublisher;
+import com.zhouyou.music.media.state.AudioStatePublisher;
+import com.zhouyou.music.media.state.IAudioProgressPublisher;
+import com.zhouyou.music.media.state.IAudioStatePublisher;
 
 /**
  * 作者：ZhouYou
@@ -21,9 +23,15 @@ public class AudioManagerFactory {
 
     }
 
-    private IAudioStateManager audioStateManager = new AudioStateManager();
+    private IAudioProgressPublisher progressPublisher = new AudioProgressPublisher();
 
-    public IAudioStateManager createAudioStateManager() {
-        return audioStateManager;
+    public IAudioProgressPublisher createProgressPublisher() {
+        return progressPublisher;
+    }
+
+    private IAudioStatePublisher statePublisher = new AudioStatePublisher();
+
+    public IAudioStatePublisher createAudioStateManager() {
+        return statePublisher;
     }
 }
