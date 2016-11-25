@@ -9,8 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
-import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.media.MediaCoreSDK;
 
 /**
  * 作者：ZhouYou
@@ -18,11 +17,11 @@ import com.zhouyou.music.media.MusicPlaySDK;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-    protected MusicPlaySDK sdk;
+    protected MediaCoreSDK sdk;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        sdk = MusicPlaySDK.get();
+        sdk = MediaCoreSDK.get();
         super.onCreate(savedInstanceState);
         registerHomeKeyEventReceiver(this);
     }

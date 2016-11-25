@@ -2,21 +2,18 @@ package com.zhouyou.music.module.views;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.state.AudioPlayState;
-import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.media.MediaCoreSDK;
 
 /**
  * 作者：ZhouYou
@@ -105,7 +102,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
                 doPlayAction();
                 break;
             case R.id.iv_play_next:
-                MusicPlaySDK.get().changeState(AudioPlayState.COMPLETED);
+                MediaCoreSDK.get().changeState(AudioPlayState.COMPLETED);
                 break;
             default:
                 break;
@@ -113,14 +110,14 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     }
 
     private void doPlayAction() {
-        int state = MusicPlaySDK.get().getCurrState();
+        int state = MediaCoreSDK.get().getCurrState();
         if (state == AudioPlayState.PAUSED) {
-            MusicPlaySDK.get().changeState(AudioPlayState.PREPARED);
+            MediaCoreSDK.get().changeState(AudioPlayState.PREPARED);
         } else if (state == AudioPlayState.IN_PROGRESS) {
-            MusicPlaySDK.get().changeState(AudioPlayState.PAUSED);
+            MediaCoreSDK.get().changeState(AudioPlayState.PAUSED);
         } else {
-            Audio audio = MusicPlaySDK.get().getCurrAudio();
-            MusicPlaySDK.get().prepare(audio);
+            Audio audio = MediaCoreSDK.get().getCurrAudio();
+            MediaCoreSDK.get().prepare(audio);
         }
     }
 }

@@ -1,21 +1,16 @@
 package com.zhouyou.music.module.views;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.state.AudioPlayState;
-import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.module.utils.StringUtils;
 
 /**
@@ -55,18 +50,18 @@ public class AudioOperationPanel extends LinearLayout {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                MusicPlaySDK.get().setProgressControlledByUser(fromUser);
+                MediaCoreSDK.get().setProgressControlledByUser(fromUser);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                MusicPlaySDK.get().setProgressControlledByUser(true);
+                MediaCoreSDK.get().setProgressControlledByUser(true);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                MusicPlaySDK.get().setProgressControlledByUser(false);
-                MusicPlaySDK.get().updateProgress(seekBar.getProgress());
+                MediaCoreSDK.get().setProgressControlledByUser(false);
+                MediaCoreSDK.get().updateProgress(seekBar.getProgress());
             }
         });
     }

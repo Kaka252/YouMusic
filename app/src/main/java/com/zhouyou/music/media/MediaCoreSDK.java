@@ -21,7 +21,7 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/11/21.
  */
-public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
+public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
 
@@ -32,10 +32,10 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     private MediaPlayer mediaPlayer;
 
     private static class SDKHolder {
-        private static final MusicPlaySDK SDK = new MusicPlaySDK();
+        private static final MediaCoreSDK SDK = new MediaCoreSDK();
     }
 
-    public static MusicPlaySDK get() {
+    public static MediaCoreSDK get() {
         return SDKHolder.SDK;
     }
 
@@ -57,7 +57,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
         return currAudio;
     }
 
-    private MusicPlaySDK() {
+    private MediaCoreSDK() {
         context = App.get().getApplicationContext();
         currAudio = ListUtils.getElement(getPlayList(), 0);
     }

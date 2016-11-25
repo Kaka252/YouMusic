@@ -8,7 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.zhouyou.music.media.MusicPlaySDK;
+import com.zhouyou.music.media.MediaCoreSDK;
 
 /**
  * 作者：ZhouYou
@@ -23,7 +23,7 @@ public class AudioMediaService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        MusicPlaySDK.get().init();
+        MediaCoreSDK.get().init();
         return null;
     }
 
