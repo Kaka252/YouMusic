@@ -1,4 +1,4 @@
-package com.zhouyou.music.media;
+package com.zhouyou.music.service;
 
 import com.zhouyou.music.entity.Audio;
 

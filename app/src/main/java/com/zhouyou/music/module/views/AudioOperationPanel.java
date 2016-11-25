@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.AudioPlayState;
+import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.MusicPlaySDK;
 import com.zhouyou.music.module.utils.StringUtils;
 

@@ -1,16 +1,15 @@
 package com.zhouyou.music.media;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
-import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.state.AudioPlayState;
 
 import java.util.List;
 
@@ -84,19 +83,7 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
      */
     private void changeState(int state) {
         currState = state;
-        // TODO 优化1：不用广播，采用观察者模式
-        sendPlayStateBroadcast();
-    }
-
-    /**
-     * 发送一个更改状态的广播
-     */
-    private void sendPlayStateBroadcast() {
-        Intent intent = new Intent(Constants.RECEIVER_AUDIO_STATE_CHANGE);
-        intent.putExtra(Constants.DATA_INT, currState);
-        intent.putExtra(Constants.DATA_ENTITY, currAudio);
-        intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
+        AudioManagerFactory.get().createAudioStateManager().notifySubscribers(currAudio, currState);
     }
 
     /**

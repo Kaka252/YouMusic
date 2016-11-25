@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.zhouyou.music.R;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.AudioPlayState;
+import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.MusicPlaySDK;
 
 /**

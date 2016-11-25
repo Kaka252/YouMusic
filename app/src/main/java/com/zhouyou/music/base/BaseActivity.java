@@ -9,11 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
-import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MusicPlaySDK;
-import com.zhouyou.music.media.receiver.AudioStateChangeBroadcastReceiver;
-import com.zhouyou.music.media.receiver.OnAudioStateChangeListener;
 
 /**
  * 作者：ZhouYou
@@ -28,38 +25,12 @@ public abstract class BaseActivity extends FragmentActivity {
         sdk = MusicPlaySDK.get();
         super.onCreate(savedInstanceState);
         registerHomeKeyEventReceiver(this);
-        registerAudioStateChangeReceiver();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        onAudioStateChanged(MusicPlaySDK.get().getCurrAudio(), MusicPlaySDK.get().getCurrState());
-    }
-
-    private AudioStateChangeBroadcastReceiver receiver;
-
-    /**
-     * 注册音频播放状态变化广播
-     */
-    private void registerAudioStateChangeReceiver() {
-        receiver = new AudioStateChangeBroadcastReceiver();
-        receiver.setOnAudioStateChangeListener(new OnAudioStateChangeListener() {
-            @Override
-            public void onAudioStateChange(Audio audio, int state) {
-                onAudioStateChanged(audio, state);
-            }
-        });
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.RECEIVER_AUDIO_STATE_CHANGE);
-        registerReceiver(receiver, filter);
-    }
-
-    /**
-     * 解除注册音频播放状态变化广播
-     */
-    private void unregisterAudioStateChangeReceiver() {
-        if (receiver != null) unregisterReceiver(receiver);
+        onAudioStateChanged(sdk.getCurrAudio(), sdk.getCurrState());
     }
 
     /**
@@ -115,6 +86,5 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterHomeKeyEventReceiver(this);
-        unregisterAudioStateChangeReceiver();
     }
 }

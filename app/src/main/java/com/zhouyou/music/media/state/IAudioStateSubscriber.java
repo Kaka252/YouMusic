@@ -1,4 +1,4 @@
-package com.zhouyou.music.media;
+package com.zhouyou.music.media.state;
 
 import com.zhouyou.music.entity.Audio;
 
@@ -15,5 +15,5 @@ public interface IAudioStateSubscriber {
      * @param audio 音频
      * @param state 状态
      */
-    void notifyStateChanged(Audio audio, int state);
+    void onUpdateChange(Audio audio, int state);
 }

@@ -1,25 +1,24 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.zhouyou.music.media.MusicPlaySDK;
-import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.AudioPlayState;
+import com.zhouyou.music.media.AudioManagerFactory;
+import com.zhouyou.music.media.state.AudioPlayState;
+import com.zhouyou.music.media.state.IAudioStateSubscriber;
+import com.zhouyou.music.module.views.AudioPlayPanel;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, IAudioStateSubscriber {
 
     private ListView listView;
 
@@ -29,6 +28,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AudioManagerFactory.get().createAudioStateManager().register(this);
+        initViews();
+    }
+
+    private void initViews() {
         listView = (ListView) findViewById(R.id.list_view);
         playingPanel = (AudioPlayPanel) findViewById(R.id.playing_panel);
         listView.setOnItemClickListener(this);
@@ -45,6 +49,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
      */
     @Override
     protected void onAudioStateChanged(Audio audio, int state) {
+        onUpdateChange(audio, state);
+    }
+
+    /**
+     * 通知状态改变
+     *
+     * @param audio 音频
+     * @param state 状态
+     */
+    @Override
+    public void onUpdateChange(Audio audio, int state) {
         playingPanel.updateAudio(audio, state);
     }
 
@@ -77,5 +92,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AudioManagerFactory.get().createAudioStateManager().unregister(this);
     }
 }

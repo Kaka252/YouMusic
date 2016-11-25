@@ -1,4 +1,4 @@
-package com.zhouyou.music.media;
+package com.zhouyou.music.media.mode;
 
 /**
  * 作者：ZhouYou

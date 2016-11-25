@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.zhouyou.music.media.MusicPlaySDK;
-import com.zhouyou.music.media.OnAudioPlayCallback;
 
 /**
  * 作者：ZhouYou
@@ -24,7 +23,6 @@ public class AudioMediaService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-//        MusicPlaySDK.get().initLastSelectedAudio();
         MusicPlaySDK.get().init();
         return null;
     }
