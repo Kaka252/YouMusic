@@ -138,6 +138,15 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
+     * 进度是否由用户控制
+     */
+    private boolean isProgressControlledByUser = false;
+
+    public void setProgressControlledByUser(boolean progressControlledByUser) {
+        isProgressControlledByUser = progressControlledByUser;
+    }
+
+    /**
      * 播放下一首
      */
     private void playNext() {
@@ -183,6 +192,12 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
             currAudio = ListUtils.getElement(list, index);
         }
         prepare(currAudio);
+    }
+
+    public void updateProgress(int progress) {
+        float percent = progress * 1.0f / 100;
+        int mesc = (int) (percent * mediaPlayer.getDuration());
+        mediaPlayer.seekTo(mesc);
     }
 
     /**
@@ -281,8 +296,12 @@ public class MusicPlaySDK implements MediaPlayer.OnErrorListener,
                     playNext();
                     break;
                 case ACTION_PROGRESS_UPDATE:
-                    AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
-                    handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
+                    if (!isProgressControlledByUser) {
+                        AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
+                        handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
+                    } else {
+                        handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
+                    }
                     break;
                 default:
                     break;

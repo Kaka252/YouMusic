@@ -46,14 +46,29 @@ public class AudioOperationPanel extends LinearLayout {
     private TextView tvStartTime;
     private TextView tvEndTime;
     private SeekBar seekBar;
-    private int duration = 0;
 
     private void init() {
         View view = inflater.inflate(R.layout.view_audio_operation_panel, this);
         tvStartTime = (TextView) view.findViewById(R.id.tv_start_time);
         tvEndTime = (TextView) view.findViewById(R.id.tv_end_time);
         seekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-//        seekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                MusicPlaySDK.get().setProgressControlledByUser(fromUser);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                MusicPlaySDK.get().setProgressControlledByUser(true);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                MusicPlaySDK.get().setProgressControlledByUser(false);
+                MusicPlaySDK.get().updateProgress(seekBar.getProgress());
+            }
+        });
     }
 
     /**
@@ -73,9 +88,20 @@ public class AudioOperationPanel extends LinearLayout {
      * @param duration        时长
      */
     public void updateProgress(int currentPosition, int duration) {
+        updateProgress(currentPosition, duration, false);
+    }
+
+    /**
+     * 更新音频播放的起始时间
+     *
+     * @param currentPosition 进度
+     * @param duration        时长
+     * @param fromUser        是否由用户触发
+     */
+    public void updateProgress(int currentPosition, int duration, boolean fromUser) {
+        if (fromUser) return;
         float f = currentPosition * 1.0f / duration;
         int progress = (int) (f * 100);
-        Log.d("AudioOperationPanel", "updateProgress: " + progress);
         if (progress <= 0) {
             tvStartTime.setText(StringUtils.formatTime(0));
             tvEndTime.setText(StringUtils.formatTime(duration));
