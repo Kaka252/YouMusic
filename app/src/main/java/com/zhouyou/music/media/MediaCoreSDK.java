@@ -252,6 +252,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         switch (currState) {
             case AudioPlayState.IDLE: // 闲置
                 Log.d("MusicState", "changeState: " + AudioPlayState.IDLE + " - 闲置");
+                handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                 break;
             case AudioPlayState.INITIALIZED: // 初始化
                 Log.d("MusicState", "changeState: " + AudioPlayState.INITIALIZED + " - 初始化");
@@ -313,11 +314,15 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                     playBack();
                     break;
                 case ACTION_PROGRESS_UPDATE:
-                    if (!isProgressControlledByUser) {
+                    if (!mediaPlayer.isPlaying()) {
                         AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
-                        handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
                     } else {
-                        handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
+                        if (!isProgressControlledByUser) {
+                            AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
+                            handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
+                        } else {
+                            handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
+                        }
                     }
                     break;
                 default:

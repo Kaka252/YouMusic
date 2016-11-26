@@ -132,6 +132,12 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
      */
     public void updateProgress(int currentPosition, int duration, boolean fromUser) {
         if (fromUser) return;
+        if (duration <= 0) {
+            tvStartTime.setText(StringUtils.formatTime(0));
+            tvEndTime.setText(StringUtils.formatTime(0));
+            seekBar.setProgress(0);
+            return;
+        }
         float f = currentPosition * 1.0f / duration;
         int progress = (int) (f * 100);
         if (progress <= 0) {
