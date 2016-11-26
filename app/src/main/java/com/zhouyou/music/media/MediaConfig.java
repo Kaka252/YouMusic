@@ -1,21 +1,15 @@
 package com.zhouyou.music.media;
 
-import com.zhouyou.music.entity.Audio;
-
 /**
  * 作者：ZhouYou
  * 日期：2016/11/25.
  */
-public class CoreSdkConfig {
+public class MediaConfig {
 
     /**
      * 当前播放状态
      */
     public int currState;
-    /**
-     * 当前播放的音频
-     */
-    public Audio currAudio;
     /**
      * 当前播放的音频毫秒数
      */
@@ -30,5 +24,13 @@ public class CoreSdkConfig {
      */
     public boolean isProgressControlledByUser = false;
 
+    /**
+     * 是否播放上一首
+     */
+    public boolean isPlayBack;
+
+    public void setConfig() {
+
+    }
 
 }
