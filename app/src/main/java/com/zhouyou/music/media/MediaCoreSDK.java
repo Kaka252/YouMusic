@@ -301,7 +301,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
 
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
     private static final int ACTION_PLAY_BACK = 2; // 播放上一首
-    private static final int ACTION_PROGRESS_UPDATE = 3; // 播放下一首
+    private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
