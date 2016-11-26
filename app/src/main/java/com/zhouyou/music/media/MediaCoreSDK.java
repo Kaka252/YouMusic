@@ -134,9 +134,14 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
      * 获取当前播放音频的时长
      */
     public int getCurrentAudioDuration() {
-        if (mediaPlayer == null || currAudio == null) return 0;
-        if (!mediaPlayer.isPlaying()) return currAudio.duration;
-        return mediaPlayer.getDuration();
+        int duration = 0;
+        if (currAudio != null) {
+            duration = currAudio.duration;
+        }
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            duration = mediaPlayer.getDuration();
+        }
+        return duration;
     }
 
     /**
@@ -252,7 +257,6 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         switch (currState) {
             case AudioPlayState.IDLE: // 闲置
                 Log.d("MusicState", "changeState: " + AudioPlayState.IDLE + " - 闲置");
-                handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                 break;
             case AudioPlayState.INITIALIZED: // 初始化
                 Log.d("MusicState", "changeState: " + AudioPlayState.INITIALIZED + " - 初始化");
@@ -314,15 +318,11 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                     playBack();
                     break;
                 case ACTION_PROGRESS_UPDATE:
-                    if (!mediaPlayer.isPlaying()) {
+                    if (!isProgressControlledByUser) {
                         AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
+                        handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
                     } else {
-                        if (!isProgressControlledByUser) {
-                            AudioManagerFactory.get().createProgressPublisher().notifySubscribers(getCurrentAudioProgress(), getCurrentAudioDuration());
-                            handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
-                        } else {
-                            handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
-                        }
+                        handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                     }
                     break;
                 default:
