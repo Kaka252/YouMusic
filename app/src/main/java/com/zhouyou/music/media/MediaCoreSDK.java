@@ -126,6 +126,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
      */
     public int getCurrentAudioProgress() {
         if (mediaPlayer == null || currAudio == null) return 0;
+        if (!mediaPlayer.isPlaying()) return 0;
         return mediaPlayer.getCurrentPosition();
     }
 
@@ -134,6 +135,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
      */
     public int getCurrentAudioDuration() {
         if (mediaPlayer == null || currAudio == null) return 0;
+        if (!mediaPlayer.isPlaying()) return currAudio.duration;
         return mediaPlayer.getDuration();
     }
 
@@ -237,6 +239,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         changeState(AudioPlayState.PREPARED);
+        int duration = mp.getDuration();
     }
 
     /**
@@ -284,7 +287,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                 break;
             case AudioPlayState.ERROR: // 错误
                 Log.d("MusicState", "changeState: " + AudioPlayState.ERROR + " - 错误");
-                mediaPlayer.stop();
+                mediaPlayer.reset();
                 Toast.makeText(context, "音频文件出错", Toast.LENGTH_SHORT).show();
 //                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
