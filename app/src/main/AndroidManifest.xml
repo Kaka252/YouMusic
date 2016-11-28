@@ -33,8 +33,8 @@
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".service.AudioMediaService"
-            android:process=":music_service" />
+            android:name=".service.AudioMediaService" />
+            <!--android:process=":music_service" />-->
     </application>
 
 </manifest>

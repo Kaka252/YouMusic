@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zhouyou.library.utils.ListUtils;
+import com.zhouyou.library.utils.T;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
@@ -294,7 +295,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
             case AudioPlayState.ERROR: // 错误
                 Log.d("MusicState", "changeState: " + AudioPlayState.ERROR + " - 错误");
                 mediaPlayer.reset();
-                Toast.makeText(context, "音频文件出错", Toast.LENGTH_SHORT).show();
+                T.ss("音频文件出错");
 //                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
