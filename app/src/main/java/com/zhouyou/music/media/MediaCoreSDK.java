@@ -123,6 +123,24 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
     }
 
     /**
+     * 更新进度
+     *
+     * @param progress
+     */
+    public void updateProgress(int progress) {
+        float percent = progress * 1.0f / 100;
+        if (mediaPlayer == null || currAudio == null) return;
+        int mesc;
+        if (mediaPlayer.isPlaying()) {
+            mesc = (int) (percent * mediaPlayer.getDuration());
+            mediaPlayer.seekTo(mesc);
+        } else {
+            mesc = (int) (percent * currAudio.duration);
+            currAudio.currentPosition = mesc;
+        }
+    }
+
+    /**
      * 获取播放进度
      */
     public int getCurrentAudioProgress() {
@@ -211,12 +229,6 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         }
         prepare(currAudio);
         isPlayBack = false;
-    }
-
-    public void updateProgress(int progress) {
-        float percent = progress * 1.0f / 100;
-        int mesc = (int) (percent * mediaPlayer.getDuration());
-        mediaPlayer.seekTo(mesc);
     }
 
     /**
