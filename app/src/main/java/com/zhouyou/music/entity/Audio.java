@@ -29,7 +29,6 @@ public class Audio implements Parcelable {
     public int track;
 
     public int duration = 0;
-    public int currentPosition = 0;
     public int size = 0;
 
     public boolean isRingtone = false;
@@ -87,7 +86,6 @@ public class Audio implements Parcelable {
         dest.writeInt(this.year);
         dest.writeInt(this.track);
         dest.writeInt(this.duration);
-        dest.writeInt(this.currentPosition);
         dest.writeInt(this.size);
         dest.writeByte(this.isRingtone ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isPodcast ? (byte) 1 : (byte) 0);
@@ -113,7 +111,6 @@ public class Audio implements Parcelable {
         this.year = in.readInt();
         this.track = in.readInt();
         this.duration = in.readInt();
-        this.currentPosition = in.readInt();
         this.size = in.readInt();
         this.isRingtone = in.readByte() != 0;
         this.isPodcast = in.readByte() != 0;

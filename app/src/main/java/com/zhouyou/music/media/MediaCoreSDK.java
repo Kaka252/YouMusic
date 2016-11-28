@@ -122,6 +122,8 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         }
     }
 
+    private int currentPosition = 0;
+
     /**
      * 更新进度
      *
@@ -130,13 +132,11 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
     public void updateProgress(int progress) {
         float percent = progress * 1.0f / 100;
         if (mediaPlayer == null || currAudio == null) return;
-        int mesc;
         if (mediaPlayer.isPlaying()) {
-            mesc = (int) (percent * mediaPlayer.getDuration());
-            mediaPlayer.seekTo(mesc);
+            currentPosition = (int) (percent * mediaPlayer.getDuration());
+            mediaPlayer.seekTo(currentPosition);
         } else {
-            mesc = (int) (percent * currAudio.duration);
-            currAudio.currentPosition = mesc;
+            currentPosition = (int) (percent * currAudio.duration);
         }
     }
 
@@ -145,9 +145,9 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
      */
     public int getCurrentAudioProgress() {
         if (mediaPlayer == null || currAudio == null) return 0;
-        if (!mediaPlayer.isPlaying()) return currAudio.currentPosition;
-        currAudio.currentPosition = mediaPlayer.getCurrentPosition();
-        return currAudio.currentPosition;
+        if (!mediaPlayer.isPlaying()) return currentPosition;
+        currentPosition = mediaPlayer.getCurrentPosition();
+        return currentPosition;
     }
 
     /**
@@ -269,9 +269,11 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         currState = state;
         switch (currState) {
             case AudioPlayState.IDLE: // 闲置
+                handler.sendEmptyMessage(ACTION_INIT);
                 Log.d("MusicState", "changeState: " + AudioPlayState.IDLE + " - 闲置");
                 break;
             case AudioPlayState.INITIALIZED: // 初始化
+                handler.sendEmptyMessage(ACTION_INIT);
                 Log.d("MusicState", "changeState: " + AudioPlayState.INITIALIZED + " - 初始化");
                 break;
             case AudioPlayState.PREPARING: // 正在准备
@@ -280,6 +282,9 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                 break;
             case AudioPlayState.PREPARED: // 准备就绪
                 Log.d("MusicState", "changeState: " + AudioPlayState.PREPARED + " - 准备就绪");
+                if (currentPosition > 0 && currentPosition <= getCurrentAudioDuration()) {
+                    mediaPlayer.seekTo(currentPosition);
+                }
                 mediaPlayer.start();
                 changeState(AudioPlayState.IN_PROGRESS);
                 break;
@@ -299,15 +304,18 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
             case AudioPlayState.STOPPED: // 播放终断
                 Log.d("MusicState", "changeState: " + AudioPlayState.STOPPED + " - 播放终断");
                 mediaPlayer.stop();
+                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case AudioPlayState.END: // 结束
                 Log.d("MusicState", "changeState: " + AudioPlayState.END + " - 结束");
                 mediaPlayer.stop();
+                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case AudioPlayState.ERROR: // 错误
                 Log.d("MusicState", "changeState: " + AudioPlayState.ERROR + " - 错误");
                 mediaPlayer.reset();
                 T.ss("音频文件出错");
+                handler.sendEmptyMessage(ACTION_INIT);
 //                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
@@ -317,6 +325,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         AudioManagerFactory.get().createAudioStatePublisher().notifySubscribers(currAudio, currState);
     }
 
+    private static final int ACTION_INIT = 0;
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
     private static final int ACTION_PLAY_BACK = 2; // 播放上一首
     private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
@@ -326,6 +335,9 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
+                case ACTION_INIT:
+                    currentPosition = 0;
+                    break;
                 case ACTION_PLAY_NEXT:
                     playNext();
                     break;
