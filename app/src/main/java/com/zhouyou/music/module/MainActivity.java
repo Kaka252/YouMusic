@@ -20,8 +20,6 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, IAudioStateSubscriber {
 
-    private ListView listView;
-
     private AudioPlayPanel playingPanel;
 
     @Override
@@ -33,7 +31,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void initViews() {
-        listView = (ListView) findViewById(R.id.list_view);
+        ListView listView = (ListView) findViewById(R.id.list_view);
         playingPanel = (AudioPlayPanel) findViewById(R.id.playing_panel);
         listView.setOnItemClickListener(this);
         List<Audio> data = sdk.getPlayList();
@@ -84,7 +82,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             moveTaskToBack(false);
-            return true;
+            return false;
         }
         return super.onKeyDown(keyCode, event);
     }
