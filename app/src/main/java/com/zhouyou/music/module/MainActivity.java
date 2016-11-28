@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, IAudioStateSubscriber {
 
-    private AudioPlayPanel playingPanel;
+    private AudioPlayPanel playPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void initViews() {
         ListView listView = (ListView) findViewById(R.id.list_view);
-        playingPanel = (AudioPlayPanel) findViewById(R.id.playing_panel);
+        playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         listView.setOnItemClickListener(this);
         List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
      */
     @Override
     public void onUpdateChange(Audio audio, int state) {
-        playingPanel.updateAudio(audio, state);
+        playPanel.updateAudio(audio, state);
     }
 
     @Override
