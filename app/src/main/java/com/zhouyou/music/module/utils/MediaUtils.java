@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -15,6 +16,8 @@ import java.io.FileNotFoundException;
  * 日期：2016/11/24.
  */
 public class MediaUtils {
+
+    private static final String TAG = MediaUtils.class.getSimpleName();
 
     private static final Uri ALBUM_URI = Uri.parse("content://media/external/audio/albumart");
 
@@ -62,6 +65,7 @@ public class MediaUtils {
 
             //根据options参数，减少所需要的内存
             bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
+            Log.d(TAG, "getAlbumCoverFromFile = " + bm.getByteCount() + " bytes");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

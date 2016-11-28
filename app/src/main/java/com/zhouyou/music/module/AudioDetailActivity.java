@@ -2,12 +2,14 @@ package com.zhouyou.music.module;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
+import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.views.AudioOperationPanel;
@@ -21,6 +23,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
 
     private TextView tvAudioTitle;
     private TextView tvAudioArtist;
+    private ImageView ivAlbum;
 
     private AudioOperationPanel operationPanel;
 
@@ -36,6 +39,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     private void initViews() {
         tvAudioTitle = (TextView) findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) findViewById(R.id.tv_audio_artist);
+        ivAlbum = (ImageView) findViewById(R.id.iv_album);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
     }
 
@@ -54,11 +58,12 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
      */
     @Override
     public void onUpdateChange(Audio audio, int state) {
-        if (audio != null) {
+        operationPanel.updatePanel(audio, state);
+        if (audio == null) return;
+        if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
         }
-        operationPanel.updatePanel(audio, state);
     }
 
     /**

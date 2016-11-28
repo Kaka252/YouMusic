@@ -29,6 +29,7 @@ public class Audio implements Parcelable {
     public int track;
 
     public int duration = 0;
+    public int currentPosition = 0;
     public int size = 0;
 
     public boolean isRingtone = false;
@@ -63,43 +64,6 @@ public class Audio implements Parcelable {
         isNotification = bundle.getInt(MediaStore.Audio.Media.IS_NOTIFICATION) == 1;
     }
 
-    protected Audio(Parcel in) {
-        title = in.readString();
-        titleKey = in.readString();
-        artist = in.readString();
-        artistKey = in.readString();
-        composer = in.readString();
-        album = in.readString();
-        albumKey = in.readString();
-        displayName = in.readString();
-        mimeType = in.readString();
-        path = in.readString();
-        id = in.readInt();
-        artistId = in.readInt();
-        albumId = in.readInt();
-        year = in.readInt();
-        track = in.readInt();
-        duration = in.readInt();
-        size = in.readInt();
-        isRingtone = in.readByte() != 0;
-        isPodcast = in.readByte() != 0;
-        isAlarm = in.readByte() != 0;
-        isMusic = in.readByte() != 0;
-        isNotification = in.readByte() != 0;
-    }
-
-    public static final Creator<Audio> CREATOR = new Creator<Audio>() {
-        @Override
-        public Audio createFromParcel(Parcel in) {
-            return new Audio(in);
-        }
-
-        @Override
-        public Audio[] newArray(int size) {
-            return new Audio[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
@@ -107,27 +71,66 @@ public class Audio implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(titleKey);
-        dest.writeString(artist);
-        dest.writeString(artistKey);
-        dest.writeString(composer);
-        dest.writeString(album);
-        dest.writeString(albumKey);
-        dest.writeString(displayName);
-        dest.writeString(mimeType);
-        dest.writeString(path);
-        dest.writeInt(id);
-        dest.writeInt(artistId);
-        dest.writeInt(albumId);
-        dest.writeInt(year);
-        dest.writeInt(track);
-        dest.writeInt(duration);
-        dest.writeInt(size);
-        dest.writeByte((byte) (isRingtone ? 1 : 0));
-        dest.writeByte((byte) (isPodcast ? 1 : 0));
-        dest.writeByte((byte) (isAlarm ? 1 : 0));
-        dest.writeByte((byte) (isMusic ? 1 : 0));
-        dest.writeByte((byte) (isNotification ? 1 : 0));
+        dest.writeString(this.title);
+        dest.writeString(this.titleKey);
+        dest.writeString(this.artist);
+        dest.writeString(this.artistKey);
+        dest.writeString(this.composer);
+        dest.writeString(this.album);
+        dest.writeString(this.albumKey);
+        dest.writeString(this.displayName);
+        dest.writeString(this.mimeType);
+        dest.writeString(this.path);
+        dest.writeInt(this.id);
+        dest.writeInt(this.artistId);
+        dest.writeInt(this.albumId);
+        dest.writeInt(this.year);
+        dest.writeInt(this.track);
+        dest.writeInt(this.duration);
+        dest.writeInt(this.currentPosition);
+        dest.writeInt(this.size);
+        dest.writeByte(this.isRingtone ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isPodcast ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isAlarm ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isMusic ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isNotification ? (byte) 1 : (byte) 0);
     }
+
+    protected Audio(Parcel in) {
+        this.title = in.readString();
+        this.titleKey = in.readString();
+        this.artist = in.readString();
+        this.artistKey = in.readString();
+        this.composer = in.readString();
+        this.album = in.readString();
+        this.albumKey = in.readString();
+        this.displayName = in.readString();
+        this.mimeType = in.readString();
+        this.path = in.readString();
+        this.id = in.readInt();
+        this.artistId = in.readInt();
+        this.albumId = in.readInt();
+        this.year = in.readInt();
+        this.track = in.readInt();
+        this.duration = in.readInt();
+        this.currentPosition = in.readInt();
+        this.size = in.readInt();
+        this.isRingtone = in.readByte() != 0;
+        this.isPodcast = in.readByte() != 0;
+        this.isAlarm = in.readByte() != 0;
+        this.isMusic = in.readByte() != 0;
+        this.isNotification = in.readByte() != 0;
+    }
+
+    public static final Creator<Audio> CREATOR = new Creator<Audio>() {
+        @Override
+        public Audio createFromParcel(Parcel source) {
+            return new Audio(source);
+        }
+
+        @Override
+        public Audio[] newArray(int size) {
+            return new Audio[size];
+        }
+    };
 }

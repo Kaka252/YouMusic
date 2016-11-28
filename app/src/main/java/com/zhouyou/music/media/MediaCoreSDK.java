@@ -126,8 +126,9 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
      */
     public int getCurrentAudioProgress() {
         if (mediaPlayer == null || currAudio == null) return 0;
-        if (!mediaPlayer.isPlaying()) return 0;
-        return mediaPlayer.getCurrentPosition();
+        if (!mediaPlayer.isPlaying()) return currAudio.currentPosition;
+        currAudio.currentPosition = mediaPlayer.getCurrentPosition();
+        return currAudio.currentPosition;
     }
 
     /**
@@ -244,7 +245,6 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         changeState(AudioPlayState.PREPARED);
-        int duration = mp.getDuration();
     }
 
     /**
@@ -277,6 +277,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
             case AudioPlayState.PAUSED: // 暂停
                 Log.d("MusicState", "changeState: " + AudioPlayState.PAUSED + " - 暂停");
                 mediaPlayer.pause();
+                handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 break;
             case AudioPlayState.COMPLETED: // 播放完成
                 Log.d("MusicState", "changeState: " + AudioPlayState.COMPLETED + " - 播放完成");
@@ -306,6 +307,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
     private static final int ACTION_PLAY_BACK = 2; // 播放上一首
     private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
+    private static final int ACTION_PROGRESS_SUSPEND = 4; // 暂停
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -324,6 +326,9 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                     } else {
                         handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                     }
+                    break;
+                case ACTION_PROGRESS_SUSPEND:
+                    handler.removeMessages(ACTION_PROGRESS_UPDATE);
                     break;
                 default:
                     break;

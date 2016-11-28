@@ -2,6 +2,7 @@ package com.zhouyou.music.module.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -120,18 +121,6 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
      * @param duration        时长
      */
     public void updateProgress(int currentPosition, int duration) {
-        updateProgress(currentPosition, duration, false);
-    }
-
-    /**
-     * 更新音频播放的起始时间
-     *
-     * @param currentPosition 进度
-     * @param duration        时长
-     * @param fromUser        是否由用户触发
-     */
-    public void updateProgress(int currentPosition, int duration, boolean fromUser) {
-        if (fromUser) return;
         if (duration <= 0) {
             tvStartTime.setText(StringUtils.formatTime(0));
             tvEndTime.setText(StringUtils.formatTime(0));
@@ -140,6 +129,7 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
         }
         float f = currentPosition * 1.0f / duration;
         int progress = (int) (f * 100);
+        Log.d("progress", "updateProgress: " + progress);
         if (progress <= 0) {
             tvStartTime.setText(StringUtils.formatTime(0));
             tvEndTime.setText(StringUtils.formatTime(duration));
