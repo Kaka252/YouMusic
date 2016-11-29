@@ -28,21 +28,17 @@ public class MediaUtils {
     private static final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
     private static Bitmap mCachedBit = null;
 
-    public static Bitmap getArtwork(Context context, long audioId, long albumId,
-                                    boolean allowdefault) {
+    public static Bitmap getAlbumCoverImage(Context context, long audioId, long albumId) {
         if (albumId < 0) {
             // This is something that is not in the database, so get the album art directly
             // from the file.
             if (audioId >= 0) {
-                Bitmap bm = getArtworkFromFile(context, audioId, -1);
+                Bitmap bm = getAlbumCoverImageFromFile(context, audioId, -1);
                 if (bm != null) {
                     return bm;
                 }
             }
-            if (allowdefault) {
-                return getDefaultArtwork(context);
-            }
-            return null;
+            return getDefaultCoverImage(context);
         }
         ContentResolver res = context.getContentResolver();
         Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
@@ -54,16 +50,16 @@ public class MediaUtils {
             } catch (FileNotFoundException ex) {
                 // The album art thumbnail does not actually exist. Maybe the user deleted it, or
                 // maybe it never existed to begin with.
-                Bitmap bm = getArtworkFromFile(context, audioId, albumId);
+                Bitmap bm = getAlbumCoverImageFromFile(context, audioId, albumId);
                 if (bm != null) {
                     if (bm.getConfig() == null) {
                         bm = bm.copy(Bitmap.Config.RGB_565, false);
-                        if (bm == null && allowdefault) {
-                            return getDefaultArtwork(context);
+                        if (bm == null) {
+                            return getDefaultCoverImage(context);
                         }
                     }
-                } else if (allowdefault) {
-                    bm = getDefaultArtwork(context);
+                } else {
+                    bm = getDefaultCoverImage(context);
                 }
                 return bm;
             } finally {
@@ -71,7 +67,8 @@ public class MediaUtils {
                     if (in != null) {
                         in.close();
                     }
-                } catch (IOException ex) {
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -79,37 +76,35 @@ public class MediaUtils {
         return null;
     }
 
-    private static Bitmap getDefaultArtwork(Context context) {
+    private static Bitmap getDefaultCoverImage(Context context) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_music_default_bg, opts);
     }
 
-    private static Bitmap getArtworkFromFile(Context context, long songid, long albumid) {
+    private static Bitmap getAlbumCoverImageFromFile(Context context, long audioId, long albumId) {
         Bitmap bm = null;
-        byte[] art = null;
-        String path = null;
-        if (albumid < 0 && songid < 0) {
+        if (albumId < 0 && audioId < 0) {
             throw new IllegalArgumentException("Must specify an album or a song id");
         }
         try {
-            if (albumid < 0) {
-                Uri uri = Uri.parse("content://media/external/audio/media/" + songid + "/albumart");
+            if (albumId < 0) {
+                Uri uri = Uri.parse("content://media/external/audio/media/" + audioId + "/albumart");
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
                 if (pfd != null) {
                     FileDescriptor fd = pfd.getFileDescriptor();
                     bm = BitmapFactory.decodeFileDescriptor(fd);
                 }
             } else {
-                Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumid);
+                Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
                 if (pfd != null) {
                     FileDescriptor fd = pfd.getFileDescriptor();
                     bm = BitmapFactory.decodeFileDescriptor(fd);
                 }
             }
-        } catch (FileNotFoundException ex) {
-
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
         if (bm != null) {
             mCachedBit = bm;
