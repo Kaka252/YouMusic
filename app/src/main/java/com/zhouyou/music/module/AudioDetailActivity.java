@@ -48,8 +48,13 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     @Override
     protected void onResume() {
         super.onResume();
-        onUpdateChange(sdk.getCurrAudio(), sdk.getCurrState());
+        Audio audio = sdk.getCurrAudio();
+        onUpdateChange(audio, sdk.getCurrState());
         onProgressChange(sdk.getCurrentAudioProgress(), sdk.getCurrentAudioDuration());
+        if (audio != null) {
+            Bitmap bm = MediaUtils.getArtwork(this, audio.id, audio.albumId, true);
+            ivAlbum.setImageBitmap(bm);
+        }
     }
 
     /**
@@ -65,8 +70,6 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
-            Bitmap bm = MediaUtils.getArtwork(this, audio.id, audio.albumId, true);
-            ivAlbum.setImageBitmap(bm);
         }
     }
 
