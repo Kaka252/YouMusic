@@ -14,6 +14,7 @@ import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.utils.MediaUtils;
+import com.zhouyou.music.module.views.AlbumImageView;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 
 /**
@@ -25,7 +26,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
 
     private TextView tvAudioTitle;
     private TextView tvAudioArtist;
-    private ImageView ivAlbum;
+    private AlbumImageView ivAlbum;
 
     private AudioOperationPanel operationPanel;
 
@@ -41,20 +42,15 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     private void initViews() {
         tvAudioTitle = (TextView) findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) findViewById(R.id.tv_audio_artist);
-        ivAlbum = (ImageView) findViewById(R.id.iv_album);
+        ivAlbum = (AlbumImageView) findViewById(R.id.iv_album);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Audio audio = sdk.getCurrAudio();
-        onUpdateChange(audio, sdk.getCurrState());
+        onUpdateChange(sdk.getCurrAudio(), sdk.getCurrState());
         onProgressChange(sdk.getCurrentAudioProgress(), sdk.getCurrentAudioDuration());
-        if (audio != null) {
-            Bitmap bm = MediaUtils.getArtwork(this, audio.id, audio.albumId, true);
-            ivAlbum.setImageBitmap(bm);
-        }
     }
 
     /**
@@ -70,6 +66,10 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
+        }
+        if (state == AudioPlayState.IN_PROGRESS) {
+            Bitmap bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
+            ivAlbum.setImageBitmap(bm);
         }
     }
 

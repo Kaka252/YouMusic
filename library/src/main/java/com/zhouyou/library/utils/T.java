@@ -201,7 +201,7 @@ public class T {
     private static final int TEXT_SIZE = 16;
 
     private static View getToastView(Context context, CharSequence text) {
-        int padding = Scale.dip2px(context, 10);
+        int padding = Scale.dp2px(context, 10);
         TextView mTextView = new TextView(context);
         WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = mWindowManager.getDefaultDisplay();

@@ -1,60 +1,57 @@
 package com.zhouyou.library.utils;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.util.TypedValue;
+import android.view.WindowManager;
 
 /**
- * Created by 陈磊 on 2014/12/19.
+ * Created by monch on 16/7/7.
  */
 public class Scale {
 
-    private Scale() {
+    private static int mDisplayWidth, mDisplayHeight;
+
+    public static int dp2px(Context context, float value) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                value, context.getResources().getDisplayMetrics());
     }
 
-    /**
-     * dip转px
-     *
-     * @param context
-     * @param dipValue
-     * @return
-     */
-    public static int dip2px(Context context, float dipValue) {
+    public static int sp2px(Context context, float value) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                value, context.getResources().getDisplayMetrics());
+    }
+
+    public static float px2dp(Context context, float value) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
+        return (int) (value / scale + 0.5f);
     }
 
-    /**
-     * px转dip
-     *
-     * @param context
-     * @param pxValue
-     * @return
-     */
-    public static int px2dip(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    /**
-     * px转sp
-     *
-     * @param context
-     * @param pxValue
-     * @return
-     */
     public static int px2sp(Context context, float pxValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);
     }
 
-    /**
-     * sp转px
-     *
-     * @param context
-     * @param spValue
-     * @return
-     */
-    public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
+    public static int getDisplayWidth(Context context) {
+        if (mDisplayWidth == 0) {
+            Point point = new Point();
+            WindowManager windowManager = (WindowManager)
+                    context.getSystemService(Context.WINDOW_SERVICE);
+            windowManager.getDefaultDisplay().getSize(point);
+            mDisplayWidth = point.x;
+        }
+        return mDisplayWidth;
     }
+
+    public static int getDisplayHeight(Context context) {
+        if (mDisplayHeight == 0) {
+            Point point = new Point();
+            WindowManager windowManager = (WindowManager)
+                    context.getSystemService(Context.WINDOW_SERVICE);
+            windowManager.getDefaultDisplay().getSize(point);
+            mDisplayHeight = point.y;
+        }
+        return mDisplayHeight;
+    }
+
 }

@@ -38,7 +38,7 @@
         android:layout_weight="1"
         android:gravity="center">
 
-        <ImageView
+        <com.zhouyou.music.module.views.AlbumImageView
             android:id="@+id/iv_album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

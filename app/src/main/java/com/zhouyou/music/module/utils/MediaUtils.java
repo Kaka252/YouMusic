@@ -111,4 +111,8 @@ public class MediaUtils {
         }
         return bm;
     }
+
+    public static Bitmap getCachedBitmap() {
+        return mCachedBit;
+    }
 }
