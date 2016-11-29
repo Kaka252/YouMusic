@@ -1,5 +1,6 @@
 package com.zhouyou.music.module.utils;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,8 +9,12 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import com.zhouyou.music.R;
+
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 作者：ZhouYou
@@ -20,54 +25,94 @@ public class MediaUtils {
     private static final String TAG = MediaUtils.class.getSimpleName();
 
     private static final Uri ALBUM_URI = Uri.parse("content://media/external/audio/albumart");
+    private static final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
+    private static Bitmap mCachedBit = null;
 
-    /**
-     * 从文件当中获取专辑封面位图
-     *
-     * @param context
-     * @param audioId
-     * @param albumId
-     * @return
-     */
-    public static Bitmap getAlbumCoverFromFile(Context context, long audioId, long albumId) {
+    public static Bitmap getArtwork(Context context, long audioId, long albumId,
+                                    boolean allowdefault) {
+        if (albumId < 0) {
+            // This is something that is not in the database, so get the album art directly
+            // from the file.
+            if (audioId >= 0) {
+                Bitmap bm = getArtworkFromFile(context, audioId, -1);
+                if (bm != null) {
+                    return bm;
+                }
+            }
+            if (allowdefault) {
+                return getDefaultArtwork(context);
+            }
+            return null;
+        }
+        ContentResolver res = context.getContentResolver();
+        Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
+        if (uri != null) {
+            InputStream in = null;
+            try {
+                in = res.openInputStream(uri);
+                return BitmapFactory.decodeStream(in, null, sBitmapOptions);
+            } catch (FileNotFoundException ex) {
+                // The album art thumbnail does not actually exist. Maybe the user deleted it, or
+                // maybe it never existed to begin with.
+                Bitmap bm = getArtworkFromFile(context, audioId, albumId);
+                if (bm != null) {
+                    if (bm.getConfig() == null) {
+                        bm = bm.copy(Bitmap.Config.RGB_565, false);
+                        if (bm == null && allowdefault) {
+                            return getDefaultArtwork(context);
+                        }
+                    }
+                } else if (allowdefault) {
+                    bm = getDefaultArtwork(context);
+                }
+                return bm;
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException ex) {
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static Bitmap getDefaultArtwork(Context context) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
+        return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_music_default_bg, opts);
+    }
+
+    private static Bitmap getArtworkFromFile(Context context, long songid, long albumid) {
         Bitmap bm = null;
-        if (albumId < 0 && audioId < 0) {
+        byte[] art = null;
+        String path = null;
+        if (albumid < 0 && songid < 0) {
             throw new IllegalArgumentException("Must specify an album or a song id");
         }
         try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            FileDescriptor fd = null;
-            if (albumId < 0) {
-                Uri uri = Uri.parse("content://media/external/audio/media/" + audioId + "/albumart");
+            if (albumid < 0) {
+                Uri uri = Uri.parse("content://media/external/audio/media/" + songid + "/albumart");
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
                 if (pfd != null) {
-                    fd = pfd.getFileDescriptor();
+                    FileDescriptor fd = pfd.getFileDescriptor();
+                    bm = BitmapFactory.decodeFileDescriptor(fd);
                 }
             } else {
-                Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
+                Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumid);
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
                 if (pfd != null) {
-                    fd = pfd.getFileDescriptor();
+                    FileDescriptor fd = pfd.getFileDescriptor();
+                    bm = BitmapFactory.decodeFileDescriptor(fd);
                 }
             }
-            options.inSampleSize = 1;
-            // 只进行大小判断
-            options.inJustDecodeBounds = true;
-            // 调用此方法得到options得到图片大小
-            BitmapFactory.decodeFileDescriptor(fd, null, options);
-            // 我们的目标是在800pixel的画面上显示
-            // 所以需要调用computeSampleSize得到图片缩放的比例
-            options.inSampleSize = 100;
-            // 我们得到了缩放的比例，现在开始正式读入Bitmap数据
-            options.inJustDecodeBounds = false;
-            options.inDither = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        } catch (FileNotFoundException ex) {
 
-            //根据options参数，减少所需要的内存
-            bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
-            Log.d(TAG, "getAlbumCoverFromFile = " + bm.getByteCount() + " bytes");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        }
+        if (bm != null) {
+            mCachedBit = bm;
         }
         return bm;
     }

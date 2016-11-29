@@ -1,5 +1,6 @@
 package com.zhouyou.music.module;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
+import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 
 /**
@@ -63,6 +65,8 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
+            Bitmap bm = MediaUtils.getArtwork(this, audio.id, audio.albumId, true);
+            ivAlbum.setImageBitmap(bm);
         }
     }
 
