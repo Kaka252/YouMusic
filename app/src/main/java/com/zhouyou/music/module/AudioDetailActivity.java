@@ -3,15 +3,12 @@ package com.zhouyou.music.module;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wonderkiln.blurkit.BlurKit;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
-import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
@@ -75,10 +72,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         if (bm == null) {
             bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
         }
-        if (bm != null) {
-            bm = BlurKit.getInstance().blur(bm, 12);
-        }
-        ivAlbum.setImageBitmap(bm);
+        ivAlbum.setBitmap(bm);
     }
 
     /**

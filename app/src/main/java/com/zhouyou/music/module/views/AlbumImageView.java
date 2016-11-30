@@ -2,8 +2,11 @@ package com.zhouyou.music.module.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -20,6 +23,12 @@ public class AlbumImageView extends ImageView {
 
     private Bitmap bitmap;
 
+    private int radius;
+
+    private BitmapShader shader;
+
+    private Matrix matrix;
+
     public AlbumImageView(Context context) {
         this(context, null);
     }
@@ -35,18 +44,40 @@ public class AlbumImageView extends ImageView {
     }
 
     private void init() {
+        matrix = new Matrix();
         paint = new Paint();
         paint.setAntiAlias(true);
+    }
+
+    private void setupShader() {
+        float scale;
+        shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        int bSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
+        scale = getWidth() * 1.0f / bSize;
+        // shader的变换矩阵，我们这里主要用于放大或者缩小
+        matrix.setScale(scale, scale);
+        // 设置变换矩阵
+        shader.setLocalMatrix(matrix);
+        // 设置shader
+        paint.setShader(shader);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = Scale.getDisplayWidth(context) - Scale.dp2px(context, 100);
+        radius = width / 2;
+        setMeasuredDimension(width, width);
+    }
 
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        setupShader();
+        canvas.drawCircle(radius, radius, radius, paint);
     }
 }
