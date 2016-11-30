@@ -115,4 +115,8 @@ public class MediaUtils {
     public static Bitmap getCachedBitmap() {
         return mCachedBit;
     }
+
+    public static void clearCacheBitmap() {
+        mCachedBit = null;
+    }
 }

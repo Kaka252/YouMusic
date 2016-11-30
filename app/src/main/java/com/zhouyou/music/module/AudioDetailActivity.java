@@ -10,6 +10,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
+import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
@@ -66,11 +67,14 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
             tvAudioTitle.setText(audio.title);
             tvAudioArtist.setText(audio.artist);
+            MediaUtils.clearCacheBitmap();
         }
-        if (state == AudioPlayState.IN_PROGRESS) {
-            Bitmap bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
-            ivAlbum.setImageBitmap(bm);
+        // 加载专辑图片
+        Bitmap bm = MediaUtils.getCachedBitmap();
+        if (bm == null) {
+            bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
         }
+        ivAlbum.setImageBitmap(bm);
     }
 
     /**
