@@ -10,6 +10,7 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.wonderkiln.blurkit.BlurKit;
 import com.zhouyou.library.utils.Scale;
 
 /**
@@ -20,14 +21,16 @@ public class AlbumImageView extends ImageView {
 
     private Context context;
     private Paint paint;
-
-    private Bitmap bitmap;
-
-    private int radius;
-
     private BitmapShader shader;
-
     private Matrix matrix;
+    // 加载的图片
+    private Bitmap bitmap;
+    // 圆形半径
+    private int radius;
+    // 设置图片模糊
+    private boolean isBlur;
+    // 设置图片为圆形
+    private boolean isCircle;
 
     public AlbumImageView(Context context) {
         this(context, null);
@@ -70,14 +73,27 @@ public class AlbumImageView extends ImageView {
         setMeasuredDimension(width, width);
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         setupShader();
-        canvas.drawCircle(radius, radius, radius, paint);
+        if (isCircle) {
+            canvas.drawCircle(radius, radius, radius, paint);
+        } else {
+            canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
+        }
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        if (isBlur) bitmap = BlurKit.getInstance().blur(bitmap, 18);
+        this.bitmap = bitmap;
+    }
+
+    public void setCircle(boolean circle) {
+        isCircle = circle;
+    }
+
+    public void setBlur(boolean blur) {
+        isBlur = blur;
     }
 }

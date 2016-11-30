@@ -42,6 +42,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         tvAudioTitle = (TextView) findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) findViewById(R.id.tv_audio_artist);
         ivAlbum = (AlbumImageView) findViewById(R.id.iv_album);
+        ivAlbum.setCircle(true);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
     }
 
