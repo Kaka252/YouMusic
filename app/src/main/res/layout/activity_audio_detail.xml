@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <com.zhouyou.music.module.views.AlbumImageView
             android:id="@+id/iv_album"
@@ -22,19 +22,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
             android:ellipsize="end"
-            android:text=""
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/text_c2"
             android:textSize="@dimen/text_d1" />
 
         <TextView
             android:id="@+id/tv_audio_artist"
             android:layout_width="wrap_content"
-            android:layout_marginTop="5dip"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
             android:ellipsize="end"
-            android:text=""
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/text_c2"
             android:textSize="@dimen/text_d5" />
 
@@ -43,7 +43,8 @@
     <com.zhouyou.music.module.views.AudioOperationPanel
         android:id="@+id/operation_panel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip" />
 
 
 </LinearLayout>
