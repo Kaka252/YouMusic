@@ -2,6 +2,7 @@ package com.zhouyou.music.base;
 
 import android.app.Application;
 
+import com.wonderkiln.blurkit.BlurKit;
 import com.zhouyou.library.utils.Lib;
 import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.service.AudioMediaService;
@@ -23,7 +24,8 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         Lib.init(this);
+        BlurKit.init(this);
         PrefUtils.init(this);
-        AudioMediaService.startService(getApplicationContext());
+        AudioMediaService.startService(this);
     }
 }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wonderkiln.blurkit.BlurKit;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
@@ -73,6 +74,9 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         Bitmap bm = MediaUtils.getCachedBitmap();
         if (bm == null) {
             bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
+        }
+        if (bm != null) {
+            bm = BlurKit.getInstance().blur(bm, 12);
         }
         ivAlbum.setImageBitmap(bm);
     }
