@@ -60,6 +60,7 @@ public class AlbumImageView extends ImageView {
         int bSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
         scale = getWidth() * 1.0f / bSize;
         matrix.setScale(scale, scale);
+        matrix.postRotate(degree, radius, radius);
         shader.setLocalMatrix(matrix);
         paint.setShader(shader);
     }
@@ -75,19 +76,20 @@ public class AlbumImageView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        setupShader();
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (isCircle) {
+            setupShader();
             canvas.drawCircle(radius, radius, radius, paint);
-//            degree += 0.5f;
-//            if (degree >= 360) {
-//                degree = 0;
-//            }
-//            postInvalidate();
+            degree += 0.5f;
+            if (degree >= 360) {
+                degree = 0;
+            }
+            postInvalidate();
         } else {
             canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
