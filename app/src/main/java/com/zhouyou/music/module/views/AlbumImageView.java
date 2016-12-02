@@ -31,6 +31,8 @@ public class AlbumImageView extends ImageView {
     private boolean isBlur;
     // 设置图片为圆形
     private boolean isCircle;
+    // 图片旋转的角度
+    private float degree = 0f;
 
     public AlbumImageView(Context context) {
         this(context, null);
@@ -57,11 +59,8 @@ public class AlbumImageView extends ImageView {
         shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         int bSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
         scale = getWidth() * 1.0f / bSize;
-        // shader的变换矩阵，我们这里主要用于放大或者缩小
         matrix.setScale(scale, scale);
-        // 设置变换矩阵
         shader.setLocalMatrix(matrix);
-        // 设置shader
         paint.setShader(shader);
     }
 
@@ -74,11 +73,21 @@ public class AlbumImageView extends ImageView {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        setupShader();
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        setupShader();
         if (isCircle) {
             canvas.drawCircle(radius, radius, radius, paint);
+//            degree += 0.5f;
+//            if (degree >= 360) {
+//                degree = 0;
+//            }
+//            postInvalidate();
         } else {
             canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
