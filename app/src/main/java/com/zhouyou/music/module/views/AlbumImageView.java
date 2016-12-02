@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -18,6 +20,8 @@ import com.zhouyou.library.utils.Scale;
  * 日期：2016/11/29.
  */
 public class AlbumImageView extends ImageView {
+
+    private static final int CHANGE_STATE = 1;
 
     private Context context;
     private Paint paint;
@@ -33,6 +37,8 @@ public class AlbumImageView extends ImageView {
     private boolean isCircle;
     // 图片旋转的角度
     private float degree = 0f;
+    // 是否在旋转中
+    private boolean isSpanning;
 
     public AlbumImageView(Context context) {
         this(context, null);
@@ -60,6 +66,7 @@ public class AlbumImageView extends ImageView {
         int bSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
         scale = getWidth() * 1.0f / bSize;
         matrix.setScale(scale, scale);
+        matrix.postRotate(degree, radius, radius);
         shader.setLocalMatrix(matrix);
         paint.setShader(shader);
     }
@@ -73,21 +80,12 @@ public class AlbumImageView extends ImageView {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        setupShader();
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (isCircle) {
+            setupShader();
             canvas.drawCircle(radius, radius, radius, paint);
-//            degree += 0.5f;
-//            if (degree >= 360) {
-//                degree = 0;
-//            }
-//            postInvalidate();
+            handler.sendEmptyMessage(CHANGE_STATE);
         } else {
             canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
@@ -98,11 +96,38 @@ public class AlbumImageView extends ImageView {
         this.bitmap = bitmap;
     }
 
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case CHANGE_STATE:
+                    if (isSpanning) {
+                        degree += 0.2f;
+                        if (degree >= 360) {
+                            degree = 0;
+                        }
+                        postInvalidate();
+                    } else {
+                        handler.removeMessages(CHANGE_STATE);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    });
+
     public void setCircle(boolean circle) {
         isCircle = circle;
     }
 
     public void setBlur(boolean blur) {
         isBlur = blur;
+    }
+
+    public void setSpanning(boolean spanning) {
+        isSpanning = spanning;
+        handler.sendEmptyMessage(CHANGE_STATE);
     }
 }
