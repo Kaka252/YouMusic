@@ -63,9 +63,10 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     public void onUpdateChange(Audio audio, int state) {
         operationPanel.updatePanel(audio, state);
         if (audio == null) return;
+        tvAudioTitle.setText(audio.title);
+        tvAudioArtist.setText(audio.artist);
         if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
-            tvAudioTitle.setText(audio.title);
-            tvAudioArtist.setText(audio.artist);
+            ivAlbum.initSpanningDegree();
             MediaUtils.clearCacheBitmap();
         }
         // 加载专辑图片
@@ -74,6 +75,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
             bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
         }
         ivAlbum.setBitmap(bm);
+        ivAlbum.setSpanning(state == AudioPlayState.IN_PROGRESS);
     }
 
     /**
