@@ -13,12 +13,15 @@ import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.state.AudioPlayState;
+import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.views.AudioPlayPanel;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, IAudioStateSubscriber {
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener,
+        IAudioStateSubscriber,
+        IAudioProgressSubscriber {
 
     private AudioPlayPanel playPanel;
 
@@ -27,6 +30,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AudioManagerFactory.get().createAudioStatePublisher().register(this);
+        AudioManagerFactory.get().createProgressPublisher().register(this);
         initViews();
     }
 
@@ -43,6 +47,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onResume() {
         super.onResume();
         onUpdateChange(sdk.getCurrAudio(), sdk.getCurrState());
+        onProgressChange(sdk.getCurrentAudioProgress(), sdk.getCurrentAudioDuration());
     }
 
     /**
@@ -54,6 +59,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onUpdateChange(Audio audio, int state) {
         playPanel.updateAudio(audio, state);
+    }
+
+    /**
+     * 播放进度改变
+     *
+     * @param currentPosition 播放进度
+     * @param duration        音频时长
+     */
+    @Override
+    public void onProgressChange(int currentPosition, int duration) {
+        playPanel.updateProgress(currentPosition, duration);
     }
 
     @Override
@@ -91,5 +107,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onDestroy() {
         super.onDestroy();
         AudioManagerFactory.get().createAudioStatePublisher().unregister(this);
+        AudioManagerFactory.get().createProgressPublisher().unregister(this);
     }
 }

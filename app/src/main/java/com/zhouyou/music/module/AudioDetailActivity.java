@@ -66,8 +66,8 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         tvAudioTitle.setText(audio.title);
         tvAudioArtist.setText(audio.artist);
         if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
-            ivAlbum.initSpanningDegree();
             MediaUtils.clearCacheBitmap();
+            ivAlbum.initSpanningDegree();
         }
         // 加载专辑图片
         Bitmap bm = MediaUtils.getCachedBitmap();

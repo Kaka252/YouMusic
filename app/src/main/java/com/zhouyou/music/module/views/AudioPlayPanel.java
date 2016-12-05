@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
+import com.zhouyou.music.base.App;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.state.AudioPlayState;
@@ -44,11 +47,14 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     private TextView tvAudioArtist;
     /*播放/暂停*/
     private ImageView ivPlayNow;
+    /*播放进度*/
+    private View viewProgress;
 
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_audio_play_panel, this);
         tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
         tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
+        viewProgress = view.findViewById(R.id.view_progress);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
         ivPlayNow.setOnClickListener(this);
         view.findViewById(R.id.rl_play_panel).setOnClickListener(this);
@@ -89,6 +95,27 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
         if (audio == null) return;
         tvAudioTitle.setText(audio.title);
         tvAudioArtist.setText(audio.artist);
+    }
+
+    /**
+     * 更新歌曲进度
+     *
+     * @param currentPosition
+     * @param duration
+     */
+    public void updateProgress(int currentPosition, int duration) {
+        float f = currentPosition * 1.0f / duration;
+        int progress = (int) (f * Scale.getDisplayWidth(context));
+        int height = Scale.dp2px(context, 2);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewProgress.getLayoutParams();
+        if (params == null) {
+            params = new RelativeLayout.LayoutParams(progress, height);
+        } else {
+            params.width = progress;
+            params.height = height;
+        }
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        viewProgress.setLayoutParams(params);
     }
 
     @Override
