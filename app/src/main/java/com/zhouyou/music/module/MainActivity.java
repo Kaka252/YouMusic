@@ -1,11 +1,11 @@
 package com.zhouyou.music.module;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
@@ -80,7 +80,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             sdk.prepare(audio);
         } else {
             if (audio.id == sdk.getCurrAudio().id && sdk.getCurrState() == AudioPlayState.IN_PROGRESS) {
-                Toast.makeText(this, "正在播放", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, AudioDetailActivity.class);
+                startActivity(intent);
             } else {
                 sdk.prepare(audio);
             }
