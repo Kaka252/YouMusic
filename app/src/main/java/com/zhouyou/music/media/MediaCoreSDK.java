@@ -10,8 +10,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zhouyou.library.utils.ListUtils;
+import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.base.App;
+import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.state.AudioPlayState;
@@ -60,7 +62,10 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
 
     private MediaCoreSDK() {
         context = App.get().getApplicationContext();
-        currAudio = ListUtils.getElement(getPlayList(), 0);
+        currAudio = AudioLocalDataManager.get().getLastPlayedAudio();
+        if (currAudio == null) {
+            currAudio = ListUtils.getElement(getPlayList(), 0);
+        }
     }
 
     /**
@@ -114,6 +119,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
             }
             if (currState == AudioPlayState.INITIALIZED || currState == AudioPlayState.STOPPED) {
                 currAudio = audio;
+                PrefUtils.put(Constants.DATA_INT, audio.id);
                 changeState(AudioPlayState.PREPARING);
             }
         } catch (Exception e) {
@@ -270,6 +276,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         switch (currState) {
             case AudioPlayState.IDLE: // 闲置
                 handler.sendEmptyMessage(ACTION_INIT);
+//                PrefUtils.put(Constants.DATA_LONG, currentPosition);
                 Log.d("MusicState", "changeState: " + AudioPlayState.IDLE + " - 闲置");
                 break;
             case AudioPlayState.INITIALIZED: // 初始化

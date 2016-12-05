@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
+import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.base.App;
+import com.zhouyou.music.config.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,7 @@ public class AudioLocalDataManager {
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.YEAR,
+            MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.TRACK,
             MediaStore.Audio.Media.IS_RINGTONE,
             MediaStore.Audio.Media.IS_PODCAST,
@@ -61,6 +64,23 @@ public class AudioLocalDataManager {
 
     public List<Audio> getAudioCacheList() {
         return audioList;
+    }
+
+    /**
+     * 获取上次播放的音频
+     *
+     * @return
+     */
+    public synchronized Audio getLastPlayedAudio() {
+        int audioId = PrefUtils.getInt(Constants.DATA_INT);
+        Audio audio = null;
+        for (Audio mAudio : audioList) {
+            if (mAudio == null) continue;
+            if (mAudio.id == audioId) {
+                audio = mAudio;
+            }
+        }
+        return audio;
     }
 
     /**
