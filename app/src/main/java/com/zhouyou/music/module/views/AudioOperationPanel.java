@@ -77,6 +77,7 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
         public void onStopTrackingTouch(SeekBar seekBar) {
             MediaCoreSDK.get().setProgressControlledByUser(false);
             MediaCoreSDK.get().updateProgress(seekBar.getProgress());
+            updateProgress(MediaCoreSDK.get().getCurrentAudioProgress(), MediaCoreSDK.get().getCurrentAudioDuration());
         }
     };
 
