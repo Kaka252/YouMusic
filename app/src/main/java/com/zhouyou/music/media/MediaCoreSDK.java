@@ -275,8 +275,8 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         currState = state;
         switch (currState) {
             case AudioPlayState.IDLE: // 闲置
-//                PrefUtils.put(Constants.DATA_LONG, currentPosition);
                 Log.d("MusicState", "changeState: " + AudioPlayState.IDLE + " - 闲置");
+                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case AudioPlayState.INITIALIZED: // 初始化
                 Log.d("MusicState", "changeState: " + AudioPlayState.INITIALIZED + " - 初始化");

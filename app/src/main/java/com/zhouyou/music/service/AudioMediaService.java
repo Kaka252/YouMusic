@@ -87,7 +87,6 @@ public class AudioMediaService extends Service {
         isServiceRunning = false;
         stopForeground(true);
         startService(getApplicationContext());
-//        PrefUtils.put(Constants.DATA_LONG, MediaCoreSDK.get().getCurrentAudioProgress());
         super.onDestroy();
     }
 }
