@@ -44,14 +44,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String[] permissions = getPermissions();
-        if (!ListUtils.isEmpty(permissions)) {
-            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
-        } else {
-            AudioManagerFactory.get().createAudioStatePublisher().register(this);
-            AudioManagerFactory.get().createProgressPublisher().register(this);
-            initViews();
-        }
+//        String[] permissions = getPermissions();
+//        if (!ListUtils.isEmpty(permissions)) {
+//            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
+//        } else {
+//
+//        }
+        AudioManagerFactory.get().createAudioStatePublisher().register(this);
+        AudioManagerFactory.get().createProgressPublisher().register(this);
+        initViews();
     }
 
     private void initViews() {
