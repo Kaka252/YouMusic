@@ -1,27 +1,40 @@
 package com.zhouyou.music.module;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.zhouyou.library.utils.ListUtils;
+import com.zhouyou.library.utils.PermissionUtils;
 import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.entity.Song;
 import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.views.AudioPlayPanel;
+import com.zhouyou.music.net.GetAlbumListRequest;
+import com.zhouyou.music.net.response.GetAlbumListResponse;
+import com.zhouyou.network.IRespCallback;
+import com.zhouyou.network.NetCoreApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener,
         IAudioStateSubscriber,
         IAudioProgressSubscriber {
+
+    private static final int PERMISSION_REQUEST_CODE = 0x1;
 
     private AudioPlayPanel playPanel;
 
@@ -29,9 +42,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AudioManagerFactory.get().createAudioStatePublisher().register(this);
-        AudioManagerFactory.get().createProgressPublisher().register(this);
-        initViews();
+
+        String[] permissions = getPermissions();
+        if (!ListUtils.isEmpty(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
+        } else {
+            AudioManagerFactory.get().createAudioStatePublisher().register(this);
+            AudioManagerFactory.get().createProgressPublisher().register(this);
+            initViews();
+        }
     }
 
     private void initViews() {
@@ -41,6 +60,14 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                testRequest();
+            }
+        });
+        t.start();
     }
 
     @Override
@@ -109,5 +136,78 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onDestroy();
         AudioManagerFactory.get().createAudioStatePublisher().unregister(this);
         AudioManagerFactory.get().createProgressPublisher().unregister(this);
+    }
+
+
+    private void testRequest() {
+        GetAlbumListRequest request = new GetAlbumListRequest(new IRespCallback<GetAlbumListResponse>() {
+            @Override
+            public void onSuccess(int what, GetAlbumListResponse resp) {
+                if (resp == null) return;
+                int songs = resp.songCount;
+                List<Song> list = resp.songs;
+            }
+
+            @Override
+            public void onError(int what, GetAlbumListResponse error) {
+
+            }
+        });
+        request.type = 1;
+        request.limit = 10;
+        request.s = "银魂";
+        request.offset = 0;
+        NetCoreApi.doGet(request);
+//
+//
+//        String url = "http://s.music.163.com/search/get/";
+//
+//        RequestQueue requestQueue = NoHttp.newRequestQueue();
+//        Request<JSONObject> request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+//        Map<String, String> map = new ArrayMap<>();
+//        map.put("type", "1");
+//        map.put("s", "银魂");
+//        map.put("limit", "10");
+//        map.put("offset", "0");
+//        request.add(map);
+//        requestQueue.add(0, request, new OnResponseListener<JSONObject>() {
+//            @Override
+//            public void onStart(int what) {
+//
+//            }
+//
+//            @Override
+//            public void onSucceed(int what, Response<JSONObject> response) {
+//                JSONObject jo = response.get();
+//                if (jo == null) return;
+//                Log.e("REQUEST", jo.toString());
+//            }
+//
+//            @Override
+//            public void onFailed(int what, Response<JSONObject> response) {
+//                Log.e("REQUEST", "FAILED");
+//            }
+//
+//            @Override
+//            public void onFinish(int what) {
+//
+//            }
+//        });
+//        requestQueue.start();
+    }
+
+    private String[] getPermissions() {
+        List<String> list = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            // 读取扩展卡数据权限
+            if (!PermissionUtils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) &&
+                    !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+        }
+        if (!list.isEmpty()) {
+            return list.toArray(new String[list.size()]);
+        }
+        return null;
     }
 }

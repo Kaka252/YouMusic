@@ -8,8 +8,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- SD卡读取权限，用户写入离线定位数据 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <application
         android:name=".base.App"
@@ -32,9 +36,8 @@
             android:name=".module.AudioDetailActivity"
             android:screenOrientation="portrait" />
 
-        <service
-            android:name=".service.AudioMediaService" />
-            <!--android:process=":music_service" />-->
+        <service android:name=".service.AudioMediaService" />
+        <!--android:process=":music_service" />-->
     </application>
 
 </manifest>

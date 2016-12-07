@@ -3,6 +3,8 @@ package com.zhouyou.music.base;
 import android.app.Application;
 
 import com.wonderkiln.blurkit.BlurKit;
+import com.yolanda.nohttp.Logger;
+import com.yolanda.nohttp.NoHttp;
 import com.zhouyou.library.utils.Lib;
 import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.service.AudioMediaService;
@@ -26,6 +28,9 @@ public class App extends Application {
         Lib.init(this);
         BlurKit.init(this);
         PrefUtils.init(this);
+        NoHttp.initialize(this, new NoHttp.Config().setConnectTimeout(30 * 1000).setReadTimeout(30 * 1000));
+        Logger.setDebug(true);
+        Logger.setTag("http");
         AudioMediaService.startService(this);
     }
 }
