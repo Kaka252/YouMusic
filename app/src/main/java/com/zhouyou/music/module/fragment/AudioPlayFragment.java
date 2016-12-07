@@ -85,4 +85,10 @@ public class AudioPlayFragment extends BaseFragment implements IAudioStateSubscr
         ivAlbum.setBitmap(bm);
         ivAlbum.setSpanning(state == AudioPlayState.IN_PROGRESS);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AudioManagerFactory.get().createAudioStatePublisher().unregister(this);
+    }
 }
