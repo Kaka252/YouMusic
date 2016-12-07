@@ -1,4 +1,4 @@
-package com.zhouyou.music.entity;
+package com.zhouyou.music.net.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,7 +13,7 @@ public class MusicResultBean implements Parcelable {
 
     public int songCount;
 
-    public List<Song> songs;
+    public List<SongBean> songs;
 
     public MusicResultBean() {
     }
@@ -32,7 +32,7 @@ public class MusicResultBean implements Parcelable {
 
     protected MusicResultBean(Parcel in) {
         this.songCount = in.readInt();
-        this.songs = in.createTypedArrayList(Song.CREATOR);
+        this.songs = in.createTypedArrayList(SongBean.CREATOR);
     }
 
     public static final Creator<MusicResultBean> CREATOR = new Creator<MusicResultBean>() {

@@ -1,10 +1,7 @@
 package com.zhouyou.music.net.response;
 
-import com.zhouyou.music.entity.MusicResultBean;
-import com.zhouyou.music.entity.Song;
+import com.zhouyou.music.net.bean.MusicResultBean;
 import com.zhouyou.network.AbsApiResponse;
-
-import java.util.List;
 
 /**
  * 作者：ZhouYou

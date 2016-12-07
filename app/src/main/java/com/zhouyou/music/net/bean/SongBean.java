@@ -1,4 +1,4 @@
-package com.zhouyou.music.entity;
+package com.zhouyou.music.net.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,38 +9,38 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/6.
  */
-public class Song implements Parcelable {
+public class SongBean implements Parcelable {
 
     public long id;
     public String name;
-    public List<Artist> artists;
-    public Album album;
+    public List<ArtistBean> artists;
+    public AlbumBean album;
     public String audio;
     public int djProgramId;
     public String page;
 
-    public Song() {
+    public SongBean() {
     }
 
-    protected Song(Parcel in) {
+    protected SongBean(Parcel in) {
         id = in.readLong();
         name = in.readString();
-        artists = in.createTypedArrayList(Artist.CREATOR);
-        album = in.readParcelable(Album.class.getClassLoader());
+        artists = in.createTypedArrayList(ArtistBean.CREATOR);
+        album = in.readParcelable(AlbumBean.class.getClassLoader());
         audio = in.readString();
         djProgramId = in.readInt();
         page = in.readString();
     }
 
-    public static final Creator<Song> CREATOR = new Creator<Song>() {
+    public static final Creator<SongBean> CREATOR = new Creator<SongBean>() {
         @Override
-        public Song createFromParcel(Parcel in) {
-            return new Song(in);
+        public SongBean createFromParcel(Parcel in) {
+            return new SongBean(in);
         }
 
         @Override
-        public Song[] newArray(int size) {
-            return new Song[size];
+        public SongBean[] newArray(int size) {
+            return new SongBean[size];
         }
     };
 
@@ -62,7 +62,7 @@ public class Song implements Parcelable {
 
     @Override
     public String toString() {
-        return "Song{" +
+        return "SongBean{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", artists=" + artists +

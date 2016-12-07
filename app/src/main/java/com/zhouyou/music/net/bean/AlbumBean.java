@@ -1,4 +1,4 @@
-package com.zhouyou.music.entity;
+package com.zhouyou.music.net.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,31 +7,31 @@ import android.os.Parcelable;
  * 作者：ZhouYou
  * 日期：2016/12/6.
  */
-public class Album implements Parcelable {
+public class AlbumBean implements Parcelable {
     public long id;
     public String name;
-    public Artist artist;
+    public ArtistBean artist;
     public String picUrl;
 
-    public Album() {
+    public AlbumBean() {
     }
 
-    protected Album(Parcel in) {
+    protected AlbumBean(Parcel in) {
         id = in.readLong();
         name = in.readString();
-        artist = in.readParcelable(Artist.class.getClassLoader());
+        artist = in.readParcelable(ArtistBean.class.getClassLoader());
         picUrl = in.readString();
     }
 
-    public static final Creator<Album> CREATOR = new Creator<Album>() {
+    public static final Creator<AlbumBean> CREATOR = new Creator<AlbumBean>() {
         @Override
-        public Album createFromParcel(Parcel in) {
-            return new Album(in);
+        public AlbumBean createFromParcel(Parcel in) {
+            return new AlbumBean(in);
         }
 
         @Override
-        public Album[] newArray(int size) {
-            return new Album[size];
+        public AlbumBean[] newArray(int size) {
+            return new AlbumBean[size];
         }
     };
 
