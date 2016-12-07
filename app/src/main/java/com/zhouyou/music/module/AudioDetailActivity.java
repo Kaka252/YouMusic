@@ -1,18 +1,23 @@
 package com.zhouyou.music.module;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.widget.ImageView;
 
+import com.wonderkiln.blurkit.BlurKit;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
+import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment;
+import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ import java.util.List;
 public class AudioDetailActivity extends BaseActivity implements IAudioStateSubscriber,
         IAudioProgressSubscriber {
 
+    private ImageView ivBg;
     private AudioOperationPanel operationPanel;
 
     @Override
@@ -38,6 +44,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
 
     private void initViews() {
         ViewPager vp = (ViewPager) findViewById(R.id.vp);
+        ivBg = (ImageView) findViewById(R.id.iv_bg);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
         List<BaseFragment> fragments = new ArrayList<>();
         AudioPlayFragment playFragment = AudioPlayFragment.getInstance(null);
@@ -63,6 +70,18 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     @Override
     public void onUpdateChange(Audio audio, int state) {
         operationPanel.updatePanel(audio, state);
+        // 加载专辑图片
+        if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
+            MediaUtils.clearCacheBitmap();
+        }
+        Bitmap bm = MediaUtils.getCachedBitmap();
+        if (bm == null) {
+            bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
+        }
+        if (bm != null) {
+            bm = BlurKit.getInstance().blur(bm, 23);
+        }
+        ivBg.setImageBitmap(bm);
     }
 
     /**
