@@ -13,6 +13,9 @@ public class Album implements Parcelable {
     public Artist artist;
     public String picUrl;
 
+    public Album() {
+    }
+
     protected Album(Parcel in) {
         id = in.readLong();
         name = in.readString();

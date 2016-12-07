@@ -12,6 +12,9 @@ public class Artist implements Parcelable {
     public String name;
     public String picUrl;
 
+    public Artist() {
+    }
+
     protected Artist(Parcel in) {
         id = in.readLong();
         name = in.readString();

@@ -51,11 +51,9 @@ public abstract class AbsApiRequest<T extends AbsApiResponse> {
         };
     }
 
-    public abstract String getUrl();
+    protected abstract String getUrl();
 
-    protected RequestMethod getMethod() {
-        return RequestMethod.POST;
-    }
+    protected abstract RequestMethod getMethod();
 
     /**
      * 制作带参数的路径

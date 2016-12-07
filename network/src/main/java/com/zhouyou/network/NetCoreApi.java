@@ -23,16 +23,14 @@ public class NetCoreApi {
     public static <T extends AbsApiResponse> void doGet(AbsApiRequest<T> request) {
         ParameterizedType parameterizedType = (ParameterizedType) request.getClass().getGenericSuperclass();
         Class clazz = (Class) parameterizedType.getActualTypeArguments()[0];
-        ObjRequestHandler<T> handler = new ObjRequestHandler<>(request.getUrl(), RequestMethod.GET, clazz);
-        Params params = request.getParams();
-        handler.add(params.getMap());
+        ObjRequestHandler<T> handler = new ObjRequestHandler<>(request.makeURLForParams(), request.getMethod(), clazz);
         requestQueue.add(0, handler, request.httpRespCallback());
     }
 
     public static <T extends AbsApiResponse> void doPost(AbsApiRequest<T> request) {
         ParameterizedType parameterizedType = (ParameterizedType) request.getClass().getGenericSuperclass();
         Class clazz = (Class) parameterizedType.getActualTypeArguments()[0];
-        ObjRequestHandler<T> handler = new ObjRequestHandler<>(request.getUrl(), RequestMethod.POST, clazz);
+        ObjRequestHandler<T> handler = new ObjRequestHandler<>(request.getUrl(), request.getMethod(), clazz);
         Params params = request.getParams();
         handler.add(params.getMap());
         requestQueue.add(0, handler, request.httpRespCallback());

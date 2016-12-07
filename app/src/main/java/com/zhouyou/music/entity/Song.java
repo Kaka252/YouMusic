@@ -19,6 +19,9 @@ public class Song implements Parcelable {
     public int djProgramId;
     public String page;
 
+    public Song() {
+    }
+
     protected Song(Parcel in) {
         id = in.readLong();
         name = in.readString();
