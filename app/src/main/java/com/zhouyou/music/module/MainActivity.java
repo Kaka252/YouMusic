@@ -10,10 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.PermissionUtils;
 import com.zhouyou.music.R;
-import com.zhouyou.music.adapter.AudioAdapter;
+import com.zhouyou.music.module.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
@@ -53,7 +52,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         AudioManagerFactory.get().createAudioStatePublisher().register(this);
         AudioManagerFactory.get().createProgressPublisher().register(this);
         initViews();
-//        testRequest();
+        testRequest();
     }
 
     private void initViews() {

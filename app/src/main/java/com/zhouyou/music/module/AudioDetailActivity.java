@@ -1,20 +1,22 @@
 package com.zhouyou.music.module;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.TextView;
+import android.support.v4.view.ViewPager;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
+import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
-import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
-import com.zhouyou.music.module.utils.MediaUtils;
-import com.zhouyou.music.module.views.AlbumImageView;
+import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
+import com.zhouyou.music.module.fragment.AudioPlayFragment;
 import com.zhouyou.music.module.views.AudioOperationPanel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者：ZhouYou
@@ -22,10 +24,6 @@ import com.zhouyou.music.module.views.AudioOperationPanel;
  */
 public class AudioDetailActivity extends BaseActivity implements IAudioStateSubscriber,
         IAudioProgressSubscriber {
-
-    private TextView tvAudioTitle;
-    private TextView tvAudioArtist;
-    private AlbumImageView ivAlbum;
 
     private AudioOperationPanel operationPanel;
 
@@ -39,11 +37,14 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     }
 
     private void initViews() {
-        tvAudioTitle = (TextView) findViewById(R.id.tv_audio_title);
-        tvAudioArtist = (TextView) findViewById(R.id.tv_audio_artist);
-        ivAlbum = (AlbumImageView) findViewById(R.id.iv_album);
-        ivAlbum.setCircle(true);
+        ViewPager vp = (ViewPager) findViewById(R.id.vp);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
+        List<BaseFragment> fragments = new ArrayList<>();
+        AudioPlayFragment playFragment = AudioPlayFragment.getInstance(null);
+        fragments.add(playFragment);
+        AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
+        vp.setAdapter(adapter);
+        vp.setCurrentItem(0);
     }
 
     @Override
@@ -62,20 +63,6 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
     @Override
     public void onUpdateChange(Audio audio, int state) {
         operationPanel.updatePanel(audio, state);
-        if (audio == null) return;
-        tvAudioTitle.setText(audio.title);
-        tvAudioArtist.setText(audio.artist);
-        if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
-            MediaUtils.clearCacheBitmap();
-            ivAlbum.initSpanningDegree();
-        }
-        // 加载专辑图片
-        Bitmap bm = MediaUtils.getCachedBitmap();
-        if (bm == null) {
-            bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
-        }
-        ivAlbum.setBitmap(bm);
-        ivAlbum.setSpanning(state == AudioPlayState.IN_PROGRESS);
     }
 
     /**
