@@ -16,6 +16,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.entity.MusicResultBean;
 import com.zhouyou.music.entity.Song;
 import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.state.AudioPlayState;
@@ -144,8 +145,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             @Override
             public void onSuccess(int what, GetAlbumListResponse resp) {
                 if (resp == null) return;
-                int songs = resp.songCount;
-                List<Song> list = resp.songs;
+                MusicResultBean bean = resp.getResult();
+                if (bean == null) return;
+                int count = bean.songCount;
+                List<Song> list = bean.songs;
             }
 
             @Override
@@ -158,42 +161,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         request.s = "银魂";
         request.offset = 0;
         NetCoreApi.doGet(request);
-//
-//
-//        String url = "http://s.music.163.com/search/get/";
-//
-//        RequestQueue requestQueue = NoHttp.newRequestQueue();
-//        Request<JSONObject> request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
-//        Map<String, String> map = new ArrayMap<>();
-//        map.put("type", "1");
-//        map.put("s", "银魂");
-//        map.put("limit", "10");
-//        map.put("offset", "0");
-//        request.add(map);
-//        requestQueue.add(0, request, new OnResponseListener<JSONObject>() {
-//            @Override
-//            public void onStart(int what) {
-//
-//            }
-//
-//            @Override
-//            public void onSucceed(int what, Response<JSONObject> response) {
-//                JSONObject jo = response.get();
-//                if (jo == null) return;
-//                Log.e("REQUEST", jo.toString());
-//            }
-//
-//            @Override
-//            public void onFailed(int what, Response<JSONObject> response) {
-//                Log.e("REQUEST", "FAILED");
-//            }
-//
-//            @Override
-//            public void onFinish(int what) {
-//
-//            }
-//        });
-//        requestQueue.start();
     }
 
     private String[] getPermissions() {

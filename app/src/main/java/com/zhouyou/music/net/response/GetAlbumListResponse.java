@@ -1,5 +1,6 @@
 package com.zhouyou.music.net.response;
 
+import com.zhouyou.music.entity.MusicResultBean;
 import com.zhouyou.music.entity.Song;
 import com.zhouyou.network.AbsApiResponse;
 
@@ -11,7 +12,12 @@ import java.util.List;
  */
 public class GetAlbumListResponse extends AbsApiResponse {
 
-    public int songCount;
+    public GetAlbumListResponse() {
+    }
 
-    public List<Song> songs;
+    public MusicResultBean result;
+
+    public MusicResultBean getResult() {
+        return result;
+    }
 }
