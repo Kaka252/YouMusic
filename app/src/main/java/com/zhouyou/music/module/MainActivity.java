@@ -16,14 +16,14 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.adapter.AudioAdapter;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.entity.MusicResultBean;
-import com.zhouyou.music.entity.Song;
 import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.net.GetAlbumListRequest;
+import com.zhouyou.music.net.bean.MusicResultBean;
+import com.zhouyou.music.net.bean.SongBean;
 import com.zhouyou.music.net.response.GetAlbumListResponse;
 import com.zhouyou.network.IRespCallback;
 import com.zhouyou.network.NetCoreApi;
@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 MusicResultBean bean = resp.getResult();
                 if (bean == null) return;
                 int count = bean.songCount;
-                List<Song> list = bean.songs;
+                List<SongBean> list = bean.songs;
             }
 
             @Override
