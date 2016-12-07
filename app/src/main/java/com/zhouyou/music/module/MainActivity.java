@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         AudioManagerFactory.get().createAudioStatePublisher().register(this);
         AudioManagerFactory.get().createProgressPublisher().register(this);
         initViews();
+//        testRequest();
     }
 
     private void initViews() {
@@ -62,14 +63,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                testRequest();
-            }
-        });
-        t.start();
     }
 
     @Override
