@@ -2,9 +2,13 @@ package com.zhouyou.music.entity;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.base.App;
@@ -32,6 +36,12 @@ public class AudioLocalDataManager {
 
     private AudioLocalDataManager() {
         Context context = App.get().getApplicationContext();
+        try {
+            context.grantUriPermission(App.get().getPackageName(), MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        } catch (Exception e) {
+            Log.e("Permission", e.toString());
+        }
         resolver = context.getContentResolver();
         audioList = getAudioList();
     }

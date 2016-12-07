@@ -1,5 +1,6 @@
 package com.zhouyou.music.base;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +9,18 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.jaeger.library.StatusBarUtil;
+import com.zhouyou.library.utils.PermissionUtils;
 import com.zhouyou.music.media.MediaCoreSDK;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者：ZhouYou
@@ -21,21 +28,24 @@ import com.zhouyou.music.media.MediaCoreSDK;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-    protected MediaCoreSDK sdk;
+//    protected MediaCoreSDK sdk;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        sdk = MediaCoreSDK.get();
         super.onCreate(savedInstanceState);
-        StatusBarUtil.setColor(this, Color.TRANSPARENT);
-        StatusBarUtil.setTransparent(this);
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            View decorView = getWindow().getDecorView();
-//            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-//            decorView.setSystemUiVisibility(option);
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }
+        // 透明状态栏
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         registerHomeKeyEventReceiver(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     /**
@@ -78,6 +88,33 @@ public abstract class BaseActivity extends FragmentActivity {
             }
         }
     };
+
+    private static final int PERMISSION_REQUEST_CODE = 0x1;
+
+    protected boolean isApplyingPermissions() {
+        String[] permissions = getPermissions();
+        if (permissions != null && permissions.length > 0) {
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
+            return true;
+        }
+        return false;
+    }
+
+    private String[] getPermissions() {
+        List<String> list = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            // 读取扩展卡数据权限
+            if (!PermissionUtils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) &&
+                    !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                Log.d("===Permission add===", "READ_EXTERNAL_STORAGE");
+            }
+        }
+        if (!list.isEmpty()) {
+            return list.toArray(new String[list.size()]);
+        }
+        return null;
+    }
 
     @Override
     protected void onDestroy() {

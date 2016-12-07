@@ -31,6 +31,5 @@ public class App extends Application {
         NoHttp.initialize(this, new NoHttp.Config().setConnectTimeout(30 * 1000).setReadTimeout(30 * 1000));
         Logger.setDebug(true);
         Logger.setTag("http");
-        AudioMediaService.startService(this);
     }
 }

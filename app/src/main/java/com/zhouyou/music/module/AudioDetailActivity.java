@@ -12,6 +12,7 @@ import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
+import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
@@ -30,12 +31,14 @@ import java.util.List;
 public class AudioDetailActivity extends BaseActivity implements IAudioStateSubscriber,
         IAudioProgressSubscriber {
 
+    private MediaCoreSDK sdk;
     private ImageView ivBg;
     private AudioOperationPanel operationPanel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sdk = MediaCoreSDK.get();
         AudioManagerFactory.get().createAudioStatePublisher().register(this);
         AudioManagerFactory.get().createProgressPublisher().register(this);
         setContentView(R.layout.activity_audio_detail);
