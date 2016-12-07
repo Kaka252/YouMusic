@@ -46,8 +46,6 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
     private SeekBar seekBar;
 
     private ImageView ivPlayNow;
-    private ImageView ivPlayBack;
-    private ImageView ivPlayNext;
 
     private void init() {
         View view = inflater.inflate(R.layout.view_audio_operation_panel, this);

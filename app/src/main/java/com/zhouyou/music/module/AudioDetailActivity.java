@@ -50,8 +50,7 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         ivBg = (ImageView) findViewById(R.id.iv_bg);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
         List<BaseFragment> fragments = new ArrayList<>();
-        AudioPlayFragment playFragment = AudioPlayFragment.getInstance(null);
-        fragments.add(playFragment);
+        fragments.add(AudioPlayFragment.getInstance(null));
         AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
         vp.setAdapter(adapter);
         vp.setCurrentItem(0);
