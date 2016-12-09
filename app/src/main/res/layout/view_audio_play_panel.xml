@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:background="@android:color/holo_blue_dark" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -24,21 +24,25 @@
         android:paddingBottom="5dip"
         android:paddingTop="5dip">
 
-        <TextView
-            android:id="@+id/tv_audio_title"
+        <com.zhouyou.music.module.views.AlbumImageView
+            android:id="@+id/iv_album"
             android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"/>
+
+        <TextView
+            android:id="@+id/tv_audio_info"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_album"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dip"
+            android:text="sdfsdfsdf"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_d4" />
-
-        <TextView
-            android:id="@+id/tv_audio_artist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_d5" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

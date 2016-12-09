@@ -39,6 +39,8 @@ public class AlbumImageView extends ImageView {
     private float degree = 0f;
     // 是否在旋转中
     private boolean isSpanning;
+    // 是否是缩略图
+    private boolean isThumbnail;
 
     public AlbumImageView(Context context) {
         this(context, null);
@@ -74,7 +76,12 @@ public class AlbumImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = Scale.getDisplayWidth(context) - Scale.dp2px(context, 100);
+        int width;
+        if (isThumbnail) {
+            width = Scale.dp2px(context, 40);
+        } else {
+            width = Scale.getDisplayWidth(context) - Scale.dp2px(context, 100);
+        }
         radius = width / 2;
         setMeasuredDimension(width, width);
     }
@@ -85,7 +92,9 @@ public class AlbumImageView extends ImageView {
         if (isCircle) {
             setupShader();
             canvas.drawCircle(radius, radius, radius, paint);
-            handler.sendEmptyMessage(CHANGE_STATE);
+            if (!isThumbnail) {
+                handler.sendEmptyMessage(CHANGE_STATE);
+            }
         } else {
             canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
@@ -124,6 +133,10 @@ public class AlbumImageView extends ImageView {
 
     public void setBlur(boolean blur) {
         isBlur = blur;
+    }
+
+    public void setThumbnail(boolean thumbnail) {
+        isThumbnail = thumbnail;
     }
 
     public void initSpanningDegree() {

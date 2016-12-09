@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
@@ -29,16 +30,19 @@ public class MediaUtils {
     private static Bitmap mCachedBit = null;
 
     public static Bitmap getAlbumCoverImage(Context context, long audioId, long albumId) {
+        return getAlbumCoverImage(context, audioId, albumId, false);
+    }
+
+    public static Bitmap getAlbumCoverImage(Context context, long audioId, long albumId, boolean isThumbnail) {
+        Bitmap bm = null;
         if (albumId < 0) {
             // This is something that is not in the database, so get the album art directly
             // from the file.
             if (audioId >= 0) {
-                Bitmap bm = getAlbumCoverImageFromFile(context, audioId, -1);
-                if (bm != null) {
-                    return bm;
-                }
+                bm = getAlbumCoverImageFromFile(context, audioId, -1);
+            } else {
+                bm = getDefaultCoverImage(context);
             }
-            return getDefaultCoverImage(context);
         }
         ContentResolver res = context.getContentResolver();
         Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
@@ -46,22 +50,21 @@ public class MediaUtils {
             InputStream in = null;
             try {
                 in = res.openInputStream(uri);
-                return BitmapFactory.decodeStream(in, null, sBitmapOptions);
+                bm = BitmapFactory.decodeStream(in, null, sBitmapOptions);
             } catch (FileNotFoundException ex) {
                 // The album art thumbnail does not actually exist. Maybe the user deleted it, or
                 // maybe it never existed to begin with.
-                Bitmap bm = getAlbumCoverImageFromFile(context, audioId, albumId);
+                bm = getAlbumCoverImageFromFile(context, audioId, albumId);
                 if (bm != null) {
                     if (bm.getConfig() == null) {
                         bm = bm.copy(Bitmap.Config.RGB_565, false);
                         if (bm == null) {
-                            return getDefaultCoverImage(context);
+                            bm = getDefaultCoverImage(context);
                         }
                     }
                 } else {
                     bm = getDefaultCoverImage(context);
                 }
-                return bm;
             } finally {
                 try {
                     if (in != null) {
@@ -72,8 +75,10 @@ public class MediaUtils {
                 }
             }
         }
-
-        return null;
+        if (isThumbnail) {
+            bm = getAlbumCoverThumbnail(bm, true);
+        }
+        return bm;
     }
 
     private static Bitmap getDefaultCoverImage(Context context) {
@@ -110,6 +115,32 @@ public class MediaUtils {
             mCachedBit = bm;
         }
         return bm;
+    }
+
+    /**
+     * 获得专辑图片的缩略图
+     * @param bitMap
+     * @param needRecycle
+     * @return
+     */
+    public static Bitmap getAlbumCoverThumbnail(Bitmap bitMap, boolean needRecycle) {
+        if (bitMap == null) return null;
+        int width = bitMap.getWidth();
+        int height = bitMap.getHeight();
+        // 设置想要的大小
+        int newWidth = 120;
+        int newHeight = 120;
+        // 计算缩放比例
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片
+        Bitmap newBitMap = Bitmap.createBitmap(bitMap, 0, 0, width, height,
+                matrix, true);
+        if (needRecycle) bitMap.recycle();
+        return newBitMap;
     }
 
     public static Bitmap getCachedBitmap() {
