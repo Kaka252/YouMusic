@@ -2,6 +2,8 @@ package com.zhouyou.music.module.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.MediaCoreSDK;
+import com.zhouyou.music.module.utils.MediaUtils;
 
 /**
  * 作者：ZhouYou
@@ -41,10 +44,10 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
         init();
     }
 
-    /*音乐名*/
-    private TextView tvAudioTitle;
-    /*艺术家*/
-    private TextView tvAudioArtist;
+    /*专辑图片*/
+    private AlbumImageView ivAlbum;
+    /*音乐信息*/
+    private TextView tvAudioInfo;
     /*播放/暂停*/
     private ImageView ivPlayNow;
     /*播放进度*/
@@ -52,8 +55,10 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
 
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_audio_play_panel, this);
-        tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
-        tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
+        ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
+        ivAlbum.setCircle(true);
+        ivAlbum.setThumbnail(true);
+        tvAudioInfo = (TextView) view.findViewById(R.id.tv_audio_info);
         viewProgress = view.findViewById(R.id.view_progress);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
         ivPlayNow.setOnClickListener(this);
@@ -93,8 +98,22 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     public void updateAudio(Audio audio, int state) {
         updateAudioPlayingStatus(state);
         if (audio == null) return;
-        tvAudioTitle.setText(audio.title);
-        tvAudioArtist.setText(audio.artist);
+        StringBuilder sb = new StringBuilder();
+        if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
+        if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
+        tvAudioInfo.setText(sb.toString());
+        if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
+            MediaUtils.clearCacheBitmap();
+        }
+        // 加载专辑图片
+        Bitmap bm = MediaUtils.getCachedBitmap();
+        if (bm == null) {
+            bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId);
+        }
+        if (bm != null) {
+            bm = MediaUtils.getAlbumCoverThumbnail(bm, true);
+        }
+        ivAlbum.setBitmap(bm);
     }
 
     /**
