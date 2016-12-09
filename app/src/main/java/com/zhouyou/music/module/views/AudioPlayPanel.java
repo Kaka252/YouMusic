@@ -57,6 +57,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_audio_play_panel, this);
         ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
+        ivAlbum.setCircle(true);
         ivAlbum.setThumbnail(true);
         tvAudioInfo = (TextView) view.findViewById(R.id.tv_audio_info);
         viewProgress = view.findViewById(R.id.view_progress);
