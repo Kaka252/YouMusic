@@ -30,51 +30,49 @@ public class MediaUtils {
     private static Bitmap mCachedBit = null;
 
     public static Bitmap getAlbumCoverImage(Context context, long audioId, long albumId) {
+        Bitmap bm = null;
         if (albumId < 0) {
             // This is something that is not in the database, so get the album art directly
             // from the file.
             if (audioId >= 0) {
-                Bitmap bm = getAlbumCoverImageFromFile(context, audioId, -1);
-                if (bm != null) {
-                    return bm;
-                }
+                bm = getAlbumCoverImageFromFile(context, audioId, -1);
+            } else {
+                bm = getDefaultCoverImage(context);
             }
-            return getDefaultCoverImage(context);
-        }
-        ContentResolver res = context.getContentResolver();
-        Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
-        if (uri != null) {
-            InputStream in = null;
-            try {
-                in = res.openInputStream(uri);
-                return BitmapFactory.decodeStream(in, null, sBitmapOptions);
-            } catch (FileNotFoundException ex) {
-                // The album art thumbnail does not actually exist. Maybe the user deleted it, or
-                // maybe it never existed to begin with.
-                Bitmap bm = getAlbumCoverImageFromFile(context, audioId, albumId);
-                if (bm != null) {
-                    if (bm.getConfig() == null) {
-                        bm = bm.copy(Bitmap.Config.RGB_565, false);
-                        if (bm == null) {
-                            return getDefaultCoverImage(context);
-                        }
-                    }
-                } else {
-                    bm = getDefaultCoverImage(context);
-                }
-                return bm;
-            } finally {
+        } else {
+            ContentResolver res = context.getContentResolver();
+            Uri uri = ContentUris.withAppendedId(ALBUM_URI, albumId);
+            if (uri != null) {
+                InputStream in = null;
                 try {
-                    if (in != null) {
-                        in.close();
+                    in = res.openInputStream(uri);
+                    return BitmapFactory.decodeStream(in, null, sBitmapOptions);
+                } catch (FileNotFoundException ex) {
+                    // The album art thumbnail does not actually exist. Maybe the user deleted it, or
+                    // maybe it never existed to begin with.
+                    bm = getAlbumCoverImageFromFile(context, audioId, albumId);
+                    if (bm != null) {
+                        if (bm.getConfig() == null) {
+                            bm = bm.copy(Bitmap.Config.RGB_565, false);
+                            if (bm == null) {
+                                bm = getDefaultCoverImage(context);
+                            }
+                        }
+                    } else {
+                        bm = getDefaultCoverImage(context);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
-
-        return null;
+        return bm;
     }
 
     private static Bitmap getDefaultCoverImage(Context context) {
