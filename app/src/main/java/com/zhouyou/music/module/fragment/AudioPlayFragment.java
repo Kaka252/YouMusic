@@ -3,6 +3,7 @@ package com.zhouyou.music.module.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class AudioPlayFragment extends BaseFragment implements IAudioStateSubscr
         tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
         ivAlbum.setCircle(true);
+        ViewCompat.setTransitionName(ivAlbum, "album");
     }
 
     @Override

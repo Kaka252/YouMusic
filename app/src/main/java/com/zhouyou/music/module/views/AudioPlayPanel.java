@@ -1,8 +1,12 @@
 package com.zhouyou.music.module.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -143,8 +147,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_play_panel:
-                Intent intent = new Intent(context, AudioDetailActivity.class);
-                context.startActivity(intent);
+                viewDetail();
                 break;
             case R.id.iv_play_now:
                 doPlayAction();
@@ -155,6 +158,12 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
             default:
                 break;
         }
+    }
+
+    public void viewDetail() {
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
+        Intent intent = new Intent(context, AudioDetailActivity.class);
+        ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
     }
 
     private void doPlayAction() {

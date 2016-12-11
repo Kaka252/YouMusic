@@ -95,8 +95,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             sdk.prepare(audio);
         } else {
             if (audio.id == sdk.getCurrAudio().id && sdk.getCurrState() == AudioPlayState.IN_PROGRESS) {
-                Intent intent = new Intent(this, AudioDetailActivity.class);
-                startActivity(intent);
+                playPanel.viewDetail();
             } else {
                 sdk.prepare(audio);
             }
