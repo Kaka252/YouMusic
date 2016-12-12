@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.PrefUtils;
@@ -17,6 +16,7 @@ import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.state.AudioPlayState;
+import com.zhouyou.music.notification.NotificationReceiver;
 
 import java.util.List;
 
@@ -296,11 +296,13 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
             case AudioPlayState.IN_PROGRESS: // 播放中
                 Log.d("MusicState", "changeState: " + AudioPlayState.IN_PROGRESS + " - 正在播放");
                 handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
+                handler.sendEmptyMessage(ACTION_NOTIFICATION);
                 break;
             case AudioPlayState.PAUSED: // 暂停
                 Log.d("MusicState", "changeState: " + AudioPlayState.PAUSED + " - 暂停");
                 mediaPlayer.pause();
                 handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
+                handler.sendEmptyMessage(ACTION_NOTIFICATION);
                 break;
             case AudioPlayState.COMPLETED: // 播放完成
                 Log.d("MusicState", "changeState: " + AudioPlayState.COMPLETED + " - 播放完成");
@@ -336,6 +338,7 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
     private static final int ACTION_PLAY_BACK = 2; // 播放上一首
     private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
     private static final int ACTION_PROGRESS_SUSPEND = 4; // 暂停
+    private static final int ACTION_NOTIFICATION = 5; // 发送通知栏消息
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -359,6 +362,10 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                     }
                     break;
                 case ACTION_PROGRESS_SUSPEND:
+                    handler.removeMessages(ACTION_PROGRESS_UPDATE);
+                    break;
+                case ACTION_NOTIFICATION:
+                    NotificationReceiver.get().sendNotification();
                     handler.removeMessages(ACTION_PROGRESS_UPDATE);
                     break;
                 default:

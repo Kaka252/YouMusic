@@ -98,7 +98,7 @@ public class MediaUtils {
             }
         }
         if (isThumbnail) {
-            bm = getAlbumCoverThumbnail(bm, true);
+            bm = getAlbumCoverThumbnail(bm, 120, 120, true);
         }
         return bm;
     }
@@ -141,20 +141,21 @@ public class MediaUtils {
 
     /**
      * 获得专辑图片的缩略图
+     *
      * @param bitMap
      * @param needRecycle
      * @return
      */
-    public static Bitmap getAlbumCoverThumbnail(Bitmap bitMap, boolean needRecycle) {
+    public static Bitmap getAlbumCoverThumbnail(Bitmap bitMap, int w, int h, boolean needRecycle) {
         if (bitMap == null) return null;
         int width = bitMap.getWidth();
         int height = bitMap.getHeight();
         // 设置想要的大小
-        int newWidth = 120;
-        int newHeight = 120;
+//        int newWidth = w;
+//        int newHeight = h;
         // 计算缩放比例
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
+        float scaleWidth = ((float) w) / width;
+        float scaleHeight = ((float) h) / height;
         // 取得想要缩放的matrix参数
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
