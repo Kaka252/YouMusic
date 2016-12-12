@@ -54,8 +54,6 @@ public class AudioDetailActivity extends BaseActivity implements IAudioStateSubs
         AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
         vp.setAdapter(adapter);
         vp.setCurrentItem(0);
-
-
     }
 
     @Override
