@@ -103,6 +103,7 @@ public class AlbumImageView extends ImageView {
     public void setBitmap(Bitmap bitmap) {
         if (isBlur) bitmap = BlurKit.getInstance().blur(bitmap, 18);
         this.bitmap = bitmap;
+        postInvalidate();
     }
 
     private Handler handler = new Handler(new Handler.Callback() {

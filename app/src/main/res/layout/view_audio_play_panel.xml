@@ -35,12 +35,11 @@
         <TextView
             android:id="@+id/tv_audio_info"
             android:layout_centerVertical="true"
-            android:lineSpacingExtra="5dip"
             android:layout_toRightOf="@+id/iv_album"
             android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dip"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:text="dfsfsdf"
             android:textSize="@dimen/text_d4" />
     </RelativeLayout>
 

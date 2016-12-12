@@ -28,8 +28,6 @@ import java.util.List;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-//    protected MediaCoreSDK sdk;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

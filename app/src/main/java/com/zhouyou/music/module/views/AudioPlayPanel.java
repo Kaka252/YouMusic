@@ -1,8 +1,12 @@
 package com.zhouyou.music.module.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,11 +18,10 @@ import android.widget.TextView;
 
 import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
-import com.zhouyou.music.base.App;
-import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.media.MediaCoreSDK;
+import com.zhouyou.music.media.state.AudioPlayState;
+import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
 
 /**
@@ -108,10 +111,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
         // 加载专辑图片
         Bitmap bm = MediaUtils.getCachedBitmap();
         if (bm == null) {
-            bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId);
-        }
-        if (bm != null) {
-            bm = MediaUtils.getAlbumCoverThumbnail(bm, true);
+            bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, true);
         }
         ivAlbum.setBitmap(bm);
     }
@@ -141,8 +141,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_play_panel:
-                Intent intent = new Intent(context, AudioDetailActivity.class);
-                context.startActivity(intent);
+                viewDetail();
                 break;
             case R.id.iv_play_now:
                 doPlayAction();
@@ -153,6 +152,12 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
             default:
                 break;
         }
+    }
+
+    public void viewDetail() {
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
+        Intent intent = new Intent(context, AudioDetailActivity.class);
+        ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
     }
 
     private void doPlayAction() {
