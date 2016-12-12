@@ -1,19 +1,16 @@
 package com.zhouyou.music.notification;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.zhouyou.library.utils.Scale;
@@ -24,7 +21,6 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.module.AudioDetailActivity;
-import com.zhouyou.music.module.MainActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
 
 /**
@@ -37,6 +33,7 @@ public class NotificationReceiver {
     private static final int REQUEST_PAUSE = 1;
     private static final int REQUEST_PLAY = 2;
     private static final int REQUEST_NEXT = 3;
+    private static final int REQUEST_SHUT_DOWN = 999;
 
     private static class NotificationHelper {
         private static final NotificationReceiver HELPER = new NotificationReceiver();
@@ -128,6 +125,13 @@ public class NotificationReceiver {
         intentNext.putExtra(Constants.DATA_INT, REQUEST_NEXT);
         PendingIntent actionNext = PendingIntent.getBroadcast(context, REQUEST_NEXT, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_play_next, actionNext);
+
+        // 关闭
+        Intent intentClose = new Intent();
+        intentClose.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
+        intentClose.putExtra(Constants.DATA_INT, REQUEST_SHUT_DOWN);
+        PendingIntent actionClose = PendingIntent.getBroadcast(context, REQUEST_SHUT_DOWN, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.iv_shut_down, actionClose);
     }
 
     private BroadcastReceiver notifyActionReceiver = new BroadcastReceiver() {
@@ -138,18 +142,29 @@ public class NotificationReceiver {
                 if (action == REQUEST_PAUSE) {
                     MediaCoreSDK.get().changeState(AudioPlayState.PAUSED);
                 } else if (action == REQUEST_PLAY) {
-                    MediaCoreSDK.get().changeState(AudioPlayState.IN_PROGRESS);
+                    MediaCoreSDK.get().changeState(AudioPlayState.PREPARED);
                 } else if (action == REQUEST_NEXT) {
                     MediaCoreSDK.get().changeState(AudioPlayState.COMPLETED);
+                } else if (action == REQUEST_SHUT_DOWN) {
+                    MediaCoreSDK.get().changeState(AudioPlayState.STOPPED);
+                    cancel();
                 }
             }
         }
     };
 
-    public void cancel() {
-        context.unregisterReceiver(notifyActionReceiver);
+
+    private void cancel() {
         if (remoteViews != null) {
             manager.cancel(100);
+            remoteViews = null;
+        }
+    }
+
+    public void destroy() {
+        cancel();
+        if (context != null && notifyActionReceiver != null) {
+            context.unregisterReceiver(notifyActionReceiver);
         }
     }
 }

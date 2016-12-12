@@ -62,7 +62,7 @@
             android:src="@mipmap/ic_play_next" />
 
         <ImageView
-            android:id="@+id/iv_clear"
+            android:id="@+id/iv_shut_down"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
