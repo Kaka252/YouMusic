@@ -18,4 +18,6 @@ public class Constants {
      * 发送音频播放的状态广播
      */
     public static final String RECEIVER_AUDIO_STATE_CHANGE = PACKAGE + "RECEIVER_AUDIO_STATE_CHANGE";
+
+    public static final String RECEIVER_AUDIO_NOTIFICATION = PACKAGE + "RECEIVER_AUDIO_NOTIFICATION";
 }

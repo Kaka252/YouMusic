@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import android.widget.RemoteViews;
 import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.App;
+import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
@@ -39,7 +42,13 @@ public class NotificationReceiver {
         return NotificationHelper.HELPER;
     }
 
+    private Context context;
+
     private NotificationReceiver() {
+        context = App.get().getApplicationContext();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
+        context.registerReceiver(notifyActionReceiver, filter);
     }
 
     private RemoteViews remoteViews;
@@ -47,9 +56,8 @@ public class NotificationReceiver {
 
     @SuppressLint("NewApi")
     public void sendNotification() {
-        Context context = App.get().getApplicationContext();
-        if (!setupRemoteViews(context)) return;
-        setupAction(context);
+        if (!setupRemoteViews()) return;
+        setupAction();
         manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notify = builder.build();
@@ -60,7 +68,7 @@ public class NotificationReceiver {
         manager.notify(100, notify);
     }
 
-    private boolean setupRemoteViews(Context context) {
+    private boolean setupRemoteViews() {
         Audio audio = MediaCoreSDK.get().getCurrAudio();
         if (audio == null) return false;
         remoteViews = new RemoteViews(App.get().getPackageName(), R.layout.view_notification_bar);
@@ -87,7 +95,7 @@ public class NotificationReceiver {
     /**
      * 设置点击事件
      */
-    private void setupAction(Context context) {
+    private void setupAction() {
         // 返回主页面
         Intent intentMain = new Intent(context, MainActivity.class);
         PendingIntent actionMain = PendingIntent.getActivity(context, REQUEST_MAIN_ACTIVITY, intentMain, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -97,24 +105,43 @@ public class NotificationReceiver {
         int state = MediaCoreSDK.get().getCurrState();
         if (state == AudioPlayState.IN_PROGRESS) {
             Intent intentPause = new Intent();
-            intentPause.setAction("Pause");
+            intentPause.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
+            intentPause.putExtra(Constants.DATA_INT, REQUEST_PAUSE);
             PendingIntent actionPause = PendingIntent.getBroadcast(context, REQUEST_PAUSE, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPause);
         } else if (state == AudioPlayState.PAUSED) {
             Intent intentPlay = new Intent();
-            intentPlay.setAction("Play");
+            intentPlay.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
+            intentPlay.putExtra(Constants.DATA_INT, REQUEST_PLAY);
             PendingIntent actionPlay = PendingIntent.getBroadcast(context, REQUEST_PLAY, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPlay);
         }
 
         Intent intentNext = new Intent();
-        intentNext.setAction("Next");
+        intentNext.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
+        intentNext.putExtra(Constants.DATA_INT, REQUEST_NEXT);
         PendingIntent actionNext = PendingIntent.getBroadcast(context, REQUEST_NEXT, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_play_next, actionNext);
-
     }
 
+    private BroadcastReceiver notifyActionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (TextUtils.equals(intent.getAction(), Constants.RECEIVER_AUDIO_NOTIFICATION)) {
+                int state = intent.getIntExtra(Constants.DATA_INT, 0);
+                if (state == REQUEST_PAUSE) {
+                    MediaCoreSDK.get().changeState(AudioPlayState.PAUSED);
+                } else if (state == REQUEST_PLAY) {
+                    MediaCoreSDK.get().changeState(AudioPlayState.IN_PROGRESS);
+                } else if (state == REQUEST_NEXT) {
+                    MediaCoreSDK.get().changeState(AudioPlayState.COMPLETED);
+                }
+            }
+        }
+    };
+
     public void cancel() {
+        context.unregisterReceiver(notifyActionReceiver);
         if (remoteViews != null) {
             manager.cancel(100);
         }
