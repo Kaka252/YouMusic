@@ -25,7 +25,6 @@ public class AudioMediaService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-
         MediaCoreSDK.get().init();
         return null;
     }
