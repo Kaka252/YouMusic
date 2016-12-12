@@ -1,5 +1,6 @@
 package com.zhouyou.music.module;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ListView;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
+import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.MediaCoreSDK;
@@ -62,6 +64,14 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (sdk == null) return;
         onUpdateChange(sdk.getCurrAudio(), sdk.getCurrState());
         onProgressChange(sdk.getCurrentAudioProgress(), sdk.getCurrentAudioDuration());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        boolean isAccessDetail = intent.getBooleanExtra(Constants.DATA_BOOLEAN, false);
+        if (isAccessDetail) playPanel.viewDetail();
     }
 
     /**

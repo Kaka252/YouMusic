@@ -366,7 +366,6 @@ public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
                     break;
                 case ACTION_NOTIFICATION:
                     NotificationReceiver.get().sendNotification();
-                    handler.removeMessages(ACTION_PROGRESS_UPDATE);
                     break;
                 default:
                     break;

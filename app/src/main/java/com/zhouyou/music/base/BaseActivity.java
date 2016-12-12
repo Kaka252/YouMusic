@@ -15,9 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.jaeger.library.StatusBarUtil;
 import com.zhouyou.library.utils.PermissionUtils;
-import com.zhouyou.music.media.MediaCoreSDK;
 
 import java.util.ArrayList;
 import java.util.List;

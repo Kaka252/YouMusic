@@ -10,6 +10,7 @@ public class Constants {
 
     private static final String PACKAGE = App.get().getPackageName() + ".";
 
+    public static final String DATA_BOOLEAN = PACKAGE + "DATA_BOOLEAN";
     public static final String DATA_INT = PACKAGE + "DATA_INT";
     public static final String DATA_LONG = PACKAGE + "DATA_LONG";
     public static final String DATA_STRING = PACKAGE + "DATA_STRING";

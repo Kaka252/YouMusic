@@ -1,16 +1,19 @@
 package com.zhouyou.music.notification;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.zhouyou.library.utils.Scale;
@@ -20,6 +23,7 @@ import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
+import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.MainActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
 
@@ -97,7 +101,8 @@ public class NotificationReceiver {
      */
     private void setupAction() {
         // 返回主页面
-        Intent intentMain = new Intent(context, MainActivity.class);
+        Intent intentMain = new Intent(context, AudioDetailActivity.class);
+        intentMain.putExtra(Constants.DATA_BOOLEAN, true);
         PendingIntent actionMain = PendingIntent.getActivity(context, REQUEST_MAIN_ACTIVITY, intentMain, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.ll_notification, actionMain);
 
@@ -117,6 +122,7 @@ public class NotificationReceiver {
             remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPlay);
         }
 
+        // 播放下一首
         Intent intentNext = new Intent();
         intentNext.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
         intentNext.putExtra(Constants.DATA_INT, REQUEST_NEXT);
@@ -126,14 +132,14 @@ public class NotificationReceiver {
 
     private BroadcastReceiver notifyActionReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if (TextUtils.equals(intent.getAction(), Constants.RECEIVER_AUDIO_NOTIFICATION)) {
-                int state = intent.getIntExtra(Constants.DATA_INT, 0);
-                if (state == REQUEST_PAUSE) {
+        public void onReceive(Context context, Intent data) {
+            if (TextUtils.equals(data.getAction(), Constants.RECEIVER_AUDIO_NOTIFICATION)) {
+                int action = data.getIntExtra(Constants.DATA_INT, 0);
+                if (action == REQUEST_PAUSE) {
                     MediaCoreSDK.get().changeState(AudioPlayState.PAUSED);
-                } else if (state == REQUEST_PLAY) {
+                } else if (action == REQUEST_PLAY) {
                     MediaCoreSDK.get().changeState(AudioPlayState.IN_PROGRESS);
-                } else if (state == REQUEST_NEXT) {
+                } else if (action == REQUEST_NEXT) {
                     MediaCoreSDK.get().changeState(AudioPlayState.COMPLETED);
                 }
             }
