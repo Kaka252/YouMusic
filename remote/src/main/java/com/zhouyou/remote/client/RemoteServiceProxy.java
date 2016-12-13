@@ -10,7 +10,7 @@ import android.os.RemoteException;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.Music;
-import com.zhouyou.remote.MusicService;
+import com.zhouyou.remote.server.MusicService;
 
 /**
  * 作者：ZhouYou

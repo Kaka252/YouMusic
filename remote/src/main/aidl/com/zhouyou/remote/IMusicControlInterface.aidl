@@ -9,12 +9,6 @@ interface IMusicControlInterface {
     void init();
     // 播放
     boolean play(in Music music);
-    // 播放下一首
-    void playNext();
-    // 播放上一首
-    void playBack();
-    // 暂停
-    void pause();
-    // 继续播放
-    void resume();
+    // 改变音乐播放的状态
+    void changeMusicState(int state);
 }

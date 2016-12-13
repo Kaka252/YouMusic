@@ -10,11 +10,21 @@ import android.os.Parcelable;
  */
 public class Music implements Parcelable {
 
+    private int state;
     private Bundle mExtra;
 
     protected Music(Parcel in) {
+        state = in.readInt();
         ClassLoader classLoader = getClass().getClassLoader();
         mExtra = in.readBundle(classLoader);
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     public Bundle getExtras() {
@@ -42,7 +52,8 @@ public class Music implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int i) {
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(state);
         dest.writeBundle(mExtra);
     }
 }
