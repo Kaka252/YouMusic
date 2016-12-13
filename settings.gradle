@@ -1,1 +1,1 @@
-include ':app', ':library', ':network'
+include ':app', ':library', ':network', ':remote'

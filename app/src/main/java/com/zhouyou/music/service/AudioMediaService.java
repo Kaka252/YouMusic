@@ -65,7 +65,7 @@ public class AudioMediaService extends Service {
         }
     }
 
-    private static class AudioServiceConnection implements ServiceConnection {
+    private static final class AudioServiceConnection implements ServiceConnection {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
