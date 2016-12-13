@@ -8,8 +8,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.zhouyou.library.utils.PrefUtils;
-import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.media.MediaCoreSDK;
 
 /**

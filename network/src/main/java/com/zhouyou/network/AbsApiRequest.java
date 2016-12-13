@@ -73,16 +73,16 @@ public abstract class AbsApiRequest<T extends AbsApiResponse> {
     public Params getParams() {
         Params params = new Params();
         Field[] fields = getClass().getDeclaredFields();
-        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = new StringBuilder();
         for (Field field : fields) {
             try {
-                sb.append(field.getName()).append(" | ");
+//                sb.append(field.getName()).append(" | ");
                 params.put(field.getName(), field.get(this) + "");
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        Log.e("Params", sb.toString());
+//        Log.e("Params", sb.toString());
         return params;
     }
 }
