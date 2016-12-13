@@ -23,5 +23,6 @@ public class MPBinder extends IMusicControlInterface.Stub {
 
     @Override
     public void changeMusicState(int state) throws RemoteException {
+
     }
 }

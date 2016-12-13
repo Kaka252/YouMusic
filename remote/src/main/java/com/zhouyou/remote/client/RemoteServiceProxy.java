@@ -21,7 +21,6 @@ public class RemoteServiceProxy {
 
     private Context context;
 
-
     private IMusicControlInterface mIMusicControlInterface;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -32,6 +31,7 @@ public class RemoteServiceProxy {
                 mIMusicControlInterface.init();
             } catch (RemoteException e) {
                 e.printStackTrace();
+                mIMusicControlInterface = null;
             }
         }
 
@@ -79,10 +79,21 @@ public class RemoteServiceProxy {
                 b = mIMusicControlInterface.play(music);
             } catch (RemoteException e) {
                 e.printStackTrace();
-                mIMusicControlInterface = null;
             }
         }
         return b;
+    }
+
+    /**
+     * 更改状态
+     * @param state
+     */
+    public synchronized void changeMusicState(int state) {
+        try {
+            mIMusicControlInterface.changeMusicState(state);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 }

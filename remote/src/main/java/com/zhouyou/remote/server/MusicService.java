@@ -3,11 +3,7 @@ package com.zhouyou.remote.server;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.Nullable;
-
-import com.zhouyou.remote.IMusicControlInterface;
-import com.zhouyou.remote.Music;
 
 /**
  * 作者：ZhouYou
