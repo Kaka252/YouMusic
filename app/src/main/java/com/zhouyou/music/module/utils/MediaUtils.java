@@ -131,7 +131,7 @@ public class MediaUtils {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            return getDefaultCoverImage(context);
         }
         if (bm != null) {
             mCachedBit = bm;
