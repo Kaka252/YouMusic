@@ -15,7 +15,6 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.AudioManagerFactory;
 import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.state.AudioPlayState;
-import com.zhouyou.music.media.state.IAudioProgressSubscriber;
 import com.zhouyou.music.media.state.IAudioStateSubscriber;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AlbumImageView;
