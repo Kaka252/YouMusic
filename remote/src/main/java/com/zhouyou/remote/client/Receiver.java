@@ -6,6 +6,7 @@ import android.os.RemoteException;
 
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.State;
+import com.zhouyou.remote.client.observer.MusicManager;
 
 /**
  * 作者：ZhouYou
@@ -55,6 +56,7 @@ public class Receiver extends IMusicReceiver.Stub {
             default:
                 break;
         }
+        MusicManager.get().createAudioStatePublisher().notifySubscribers(currState);
     }
 
     private static final int ACTION_INIT = 0;
