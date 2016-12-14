@@ -23,9 +23,12 @@ public class MusicServiceSDK {
 
     private RemoteServiceProxy proxy;
     private Sender sender;
+    private Receiver receiver;
 
     private MusicServiceSDK() {
+        receiver = new Receiver();
         proxy = new RemoteServiceProxy(mContext);
+        proxy.setReceiver(receiver);
         sender = new Sender(proxy);
     }
 

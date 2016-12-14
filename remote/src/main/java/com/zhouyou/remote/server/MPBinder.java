@@ -138,15 +138,17 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
             default:
                 break;
         }
+        receiver.onReceive(state);
     }
 
+    private IMusicReceiver receiver;
     /**
      * 注册接收回调
      * @param receiver
      */
     @Override
     public void registerReceiver(IMusicReceiver receiver) {
-
+        this.receiver = receiver;
     }
 
     /**

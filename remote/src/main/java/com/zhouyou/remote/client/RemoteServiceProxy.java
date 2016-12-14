@@ -10,6 +10,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.zhouyou.remote.IMusicControlInterface;
+import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.server.MusicService;
 
@@ -24,6 +25,7 @@ public class RemoteServiceProxy {
     private Context context;
 
     private IMusicControlInterface mIMusicControlInterface;
+    private IMusicReceiver receiver;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -32,6 +34,7 @@ public class RemoteServiceProxy {
             mIMusicControlInterface = IMusicControlInterface.Stub.asInterface(service);
             try {
                 mIMusicControlInterface.init();
+                mIMusicControlInterface.registerReceiver(receiver);
             } catch (RemoteException e) {
                 e.printStackTrace();
                 mIMusicControlInterface = null;
@@ -45,8 +48,12 @@ public class RemoteServiceProxy {
         }
     };
 
-    RemoteServiceProxy(Context context) {
+    public RemoteServiceProxy(Context context) {
         this.context = context;
+    }
+
+    public void setReceiver(IMusicReceiver receiver) {
+        this.receiver = receiver;
     }
 
     /**
