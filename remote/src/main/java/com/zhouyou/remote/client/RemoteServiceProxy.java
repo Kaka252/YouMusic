@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.Music;
@@ -19,6 +20,7 @@ import com.zhouyou.remote.server.MusicService;
  */
 public class RemoteServiceProxy {
 
+    private static final String TAG = RemoteServiceProxy.class.getSimpleName();
     private Context context;
 
     private IMusicControlInterface mIMusicControlInterface;
@@ -26,6 +28,7 @@ public class RemoteServiceProxy {
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
+            Log.d(TAG, "onServiceConnected");
             mIMusicControlInterface = IMusicControlInterface.Stub.asInterface(service);
             try {
                 mIMusicControlInterface.init();
@@ -37,11 +40,12 @@ public class RemoteServiceProxy {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            Log.d(TAG, "onServiceDisconnected");
             mIMusicControlInterface = null;
         }
     };
 
-    public RemoteServiceProxy(Context context) {
+    RemoteServiceProxy(Context context) {
         this.context = context;
     }
 
@@ -63,6 +67,10 @@ public class RemoteServiceProxy {
         context.bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
     }
 
+    /**
+     * 检查服务是否连接
+     * @return
+     */
     private boolean isConnected() {
         return mIMusicControlInterface != null;
     }

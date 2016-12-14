@@ -1,9 +1,9 @@
 package com.zhouyou.remote.client;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.zhouyou.remote.Music;
+import com.zhouyou.remote.State;
 
 /**
  * 作者：ZhouYou
@@ -58,7 +58,24 @@ public class MusicServiceSDK {
         proxy.play(intent);
     }
 
-    public void switchMediaState(int state) {
-        proxy.switchMediaState(state);
+    /**
+     * 暂停
+     */
+    public void pause() {
+        proxy.switchMediaState(State.PAUSED);
+    }
+
+    /**
+     * 继续播放
+     */
+    public void resume() {
+        proxy.switchMediaState(State.PREPARED);
+    }
+
+    /**
+     * 完成播放
+     */
+    public void complete() {
+        proxy.switchMediaState(State.COMPLETED);
     }
 }

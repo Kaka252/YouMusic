@@ -29,7 +29,7 @@ public class App extends Application {
         Lib.init(this);
         BlurKit.init(this);
         PrefUtils.init(this);
-//        MusicServiceSDK.init(this).startMusicService();
+        MusicServiceSDK.init(this).startMusicService();
         NoHttp.initialize(this, new NoHttp.Config().setConnectTimeout(30 * 1000).setReadTimeout(30 * 1000));
         Logger.setDebug(true);
         Logger.setTag("http");

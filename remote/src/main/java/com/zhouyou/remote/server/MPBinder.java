@@ -56,16 +56,15 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
         } else {
             init();
             try {
-                int state = MusicMsgFactory.getMediaState();
-                if (state == State.IDLE) {
+                if (MusicMsgFactory.getMediaState() == State.IDLE) {
                     Uri uri = Uri.parse(audioPath);
                     mediaPlayer.setDataSource(context, uri);
                 }
                 switchMediaState(State.INITIALIZED);
-                if (state != State.ERROR) {
+                if (MusicMsgFactory.getMediaState() != State.ERROR) {
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 }
-                if (state == State.INITIALIZED || state == State.STOPPED) {
+                if (MusicMsgFactory.getMediaState() == State.INITIALIZED || MusicMsgFactory.getMediaState() == State.STOPPED) {
 //                    PrefUtils.put(Constants.DATA_INT, audio.id);
                     switchMediaState(State.PREPARING);
                 }
