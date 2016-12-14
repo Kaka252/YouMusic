@@ -35,6 +35,8 @@ public class Receiver extends IMusicReceiver.Stub {
                 break;
             case State.PREPARED: // 准备就绪
                 break;
+            case State.IN_PROGRESS: // 播放中
+                break;
             case State.PAUSED: // 暂停
                 handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 handler.sendEmptyMessage(ACTION_NOTIFICATION);
