@@ -1,13 +1,10 @@
 package com.zhouyou.remote.client;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.zhouyou.remote.IMusicReceiver;
-import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 
 /**
@@ -19,11 +16,6 @@ public class Receiver extends IMusicReceiver.Stub {
 
     @Override
     public void onReceive(int currState) throws RemoteException {
-//        Message msg = Message.obtain();
-//        Bundle b = new Bundle();
-//        b.putInt("state", currState);
-//        msg.setData(b);
-//        handler.sendMessage(msg);
         dispatch(currState);
     }
 
@@ -34,6 +26,7 @@ public class Receiver extends IMusicReceiver.Stub {
     private void dispatch(int currState) {
         switch (currState) {
             case State.IDLE: // 闲置
+                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case State.INITIALIZED: // 初始化
                 break;
