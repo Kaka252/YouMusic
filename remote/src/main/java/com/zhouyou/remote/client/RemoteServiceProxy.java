@@ -33,8 +33,8 @@ public class RemoteServiceProxy {
             Log.d(TAG, "onServiceConnected");
             mIMusicControlInterface = IMusicControlInterface.Stub.asInterface(service);
             try {
-                mIMusicControlInterface.init();
                 mIMusicControlInterface.registerReceiver(receiver);
+                mIMusicControlInterface.init();
             } catch (RemoteException e) {
                 e.printStackTrace();
                 mIMusicControlInterface = null;
