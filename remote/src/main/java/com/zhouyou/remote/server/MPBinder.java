@@ -1,13 +1,19 @@
 package com.zhouyou.remote.server;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicMsgFactory;
+
+import java.io.IOException;
 
 /**
  * 作者：ZhouYou
@@ -20,6 +26,11 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
     private static final String TAG = MPBinder.class.getSimpleName();
 
     private MediaPlayer mediaPlayer;
+    private Context context;
+
+    public MPBinder(Context context) {
+        this.context = context;
+    }
 
     @Override
     public void init() throws RemoteException {
@@ -39,7 +50,30 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
 
     @Override
     public void play(Music intent) throws RemoteException {
-
+        String audioPath = intent.getAudioPath();
+        if (TextUtils.isEmpty(audioPath)) {
+            switchMediaState(State.ERROR);
+        } else {
+            init();
+            try {
+                int state = MusicMsgFactory.getMediaState();
+                if (state == State.IDLE) {
+                    Uri uri = Uri.parse(audioPath);
+                    mediaPlayer.setDataSource(context, uri);
+                }
+                switchMediaState(State.INITIALIZED);
+                if (state != State.ERROR) {
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                }
+                if (state == State.INITIALIZED || state == State.STOPPED) {
+//                    PrefUtils.put(Constants.DATA_INT, audio.id);
+                    switchMediaState(State.PREPARING);
+                }
+            } catch (IOException e) {
+                Log.e("MusicError", e.toString());
+                switchMediaState(State.ERROR);
+            }
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ public class MusicMsgFactory {
         return intent;
     }
 
-    private static int currentState;
+    private static int currentState = 0;
 
     public static void setMediaState(int state) {
         currentState = state;
