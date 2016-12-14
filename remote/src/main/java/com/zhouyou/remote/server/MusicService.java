@@ -14,7 +14,7 @@ public class MusicService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new MPBinder(getApplicationContext());
+        return new MPOperationCenter(getApplicationContext());
     }
 
     @Override

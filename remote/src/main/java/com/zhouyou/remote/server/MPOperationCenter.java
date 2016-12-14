@@ -20,16 +20,16 @@ import java.io.IOException;
  * 作者：ZhouYou
  * 日期：2016/12/13.
  */
-public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer.OnErrorListener,
+public class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
 
-    private static final String TAG = MPBinder.class.getSimpleName();
+    private static final String TAG = MPOperationCenter.class.getSimpleName();
 
     private MediaPlayer mediaPlayer;
     private Context context;
 
-    public MPBinder(Context context) {
+    public MPOperationCenter(Context context) {
         this.context = context;
     }
 
