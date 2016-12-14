@@ -90,18 +90,14 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     public void switchMediaState(int state) throws RemoteException {
         MusicMsgFactory.setMediaState(state);
         switch (state) {
-            case State.IDLE:
-                Log.d(TAG, "AudioState: " + State.IDLE + " - 闲置");
+            case State.IDLE: // 闲置
                 break;
             case State.INITIALIZED: // 初始化
-                Log.d(TAG, "AudioState: " + State.INITIALIZED + " - 初始化");
                 break;
             case State.PREPARING: // 正在准备
                 mediaPlayer.prepareAsync();
-                Log.d(TAG, "AudioState: " + State.PREPARING + " - 正在准备");
                 break;
             case State.PREPARED: // 准备就绪
-                Log.d(TAG, "AudioState: " + State.PREPARED + " - 准备就绪");
 //                if (currentPosition > 0 && currentPosition <= getCurrentAudioDuration()) {
 //                    mediaPlayer.seekTo(currentPosition);
 //                }
@@ -109,35 +105,22 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 switchMediaState(State.IN_PROGRESS);
                 break;
             case State.PAUSED: // 暂停
-                Log.d(TAG, "AudioState: " + State.PAUSED + " - 暂停");
                 mediaPlayer.pause();
-//                handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
-//                handler.sendEmptyMessage(ACTION_NOTIFICATION);
             case State.COMPLETED: // 播放完成
-                Log.d(TAG, "AudioState: " + State.COMPLETED + " - 播放完成");
-//                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);
-//                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case State.STOPPED: // 播放终断
-                Log.d(TAG, "AudioState: " + State.STOPPED + " - 播放终断");
                 mediaPlayer.stop();
-//                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case State.END: // 结束
-                Log.d(TAG, "AudioState: " + State.END + " - 结束");
                 mediaPlayer.stop();
-//                handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case State.ERROR: // 错误
-                Log.d(TAG, "AudioState: " + State.ERROR + " - 错误");
                 mediaPlayer.reset();
-//                Toast.ss("音频文件出错");
-//                handler.sendEmptyMessage(ACTION_INIT);
-//                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
                 break;
         }
+        printLog(state); // 打印日志
         receiver.onReceive(state);
     }
 
@@ -188,6 +171,43 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             switchMediaState(State.PREPARED);
         } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 打印日志
+     */
+    private void printLog(int state) {
+        switch (state) {
+            case State.IDLE:
+                Log.d(TAG, "AudioState: " + State.IDLE + " - 闲置");
+                break;
+            case State.INITIALIZED: // 初始化
+                Log.d(TAG, "AudioState: " + State.INITIALIZED + " - 初始化");
+                break;
+            case State.PREPARING: // 正在准备
+                Log.d(TAG, "AudioState: " + State.PREPARING + " - 正在准备");
+                break;
+            case State.PREPARED: // 准备就绪
+                Log.d(TAG, "AudioState: " + State.PREPARED + " - 准备就绪");
+                break;
+            case State.PAUSED: // 暂停
+                Log.d(TAG, "AudioState: " + State.PAUSED + " - 暂停");
+                break;
+            case State.COMPLETED: // 播放完成
+                Log.d(TAG, "AudioState: " + State.COMPLETED + " - 播放完成");
+                break;
+            case State.STOPPED: // 播放终断
+                Log.d(TAG, "AudioState: " + State.STOPPED + " - 播放终断");
+                break;
+            case State.END: // 结束
+                Log.d(TAG, "AudioState: " + State.END + " - 结束");
+                break;
+            case State.ERROR: // 错误
+                Log.d(TAG, "AudioState: " + State.ERROR + " - 错误");
+                break;
+            default:
+                break;
         }
     }
 }
