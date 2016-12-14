@@ -25,6 +25,7 @@ import com.zhouyou.music.net.response.GetAlbumListResponse;
 import com.zhouyou.music.service.AudioMediaService;
 import com.zhouyou.network.IRespCallback;
 import com.zhouyou.network.NetCoreApi;
+import com.zhouyou.remote.client.MusicServiceSDK;
 
 import java.util.List;
 
@@ -106,6 +107,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             if (audio.id == sdk.getCurrAudio().id && sdk.getCurrState() == AudioPlayState.IN_PROGRESS) {
                 playPanel.viewDetail();
             } else {
+//                MusicServiceSDK.get().play();
                 sdk.prepare(audio);
             }
         }

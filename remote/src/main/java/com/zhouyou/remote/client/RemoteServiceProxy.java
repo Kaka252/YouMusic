@@ -81,4 +81,18 @@ public class RemoteServiceProxy {
             }
         }
     }
+
+    /**
+     * 切换播放的状态
+     * @param state
+     */
+    public synchronized void switchMediaState(int state) {
+        if (isConnected()) {
+            try {
+                mIMusicControlInterface.switchMediaState(state);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

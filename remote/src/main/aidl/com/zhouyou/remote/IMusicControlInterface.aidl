@@ -8,4 +8,6 @@ interface IMusicControlInterface {
     void init();
     // 播放
     void play(in Music music);
+    // 切换MediaPlayer的播放状态
+    void switchMediaState(int state);
 }

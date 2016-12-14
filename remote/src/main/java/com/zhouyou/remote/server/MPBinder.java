@@ -3,7 +3,6 @@ package com.zhouyou.remote.server;
 import android.media.MediaPlayer;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.Music;
@@ -29,34 +28,23 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
-            changeState(State.IDLE);
+            switchMediaState(State.IDLE);
         } else {
             if (isReset()) {
                 mediaPlayer.reset();
-                changeState(State.IDLE);
-            }
-        }
-    }
-
-    /**
-     * 更新状态
-     * @param state
-     */
-    private void changeState(int state) {
-        Music intent = MusicMsgFactory.getCurrPlaying();
-        if (intent != null) {
-            intent.setState(state);
-            try {
-                play(intent);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+                switchMediaState(State.IDLE);
             }
         }
     }
 
     @Override
     public void play(Music intent) throws RemoteException {
-        int state = intent.getState();
+
+    }
+
+    @Override
+    public void switchMediaState(int state) throws RemoteException {
+        MusicMsgFactory.setMediaState(state);
         switch (state) {
             case State.IDLE:
                 Log.d(TAG, "AudioState: " + State.IDLE + " - 闲置");
@@ -74,7 +62,7 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
 //                    mediaPlayer.seekTo(currentPosition);
 //                }
                 mediaPlayer.start();
-                changeState(State.IN_PROGRESS);
+                switchMediaState(State.IN_PROGRESS);
                 break;
             case State.PAUSED: // 暂停
                 Log.d(TAG, "AudioState: " + State.PAUSED + " - 暂停");
@@ -114,27 +102,37 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
      * @return
      */
     private boolean isReset() {
-        Music intent = MusicMsgFactory.getCurrPlaying();
-        if (intent == null) return false;
-        int currState = intent.getState();
-        return currState == State.IDLE || currState == State.INITIALIZED || currState == State.PREPARED ||
-                currState == State.IN_PROGRESS || currState == State.PAUSED || currState == State.STOPPED ||
-                currState == State.COMPLETED || currState == State.ERROR;
+        int currentState = MusicMsgFactory.getMediaState();
+        return currentState == State.IDLE || currentState == State.INITIALIZED || currentState == State.PREPARED ||
+                currentState == State.IN_PROGRESS || currentState == State.PAUSED || currentState == State.STOPPED ||
+                currentState == State.COMPLETED || currentState == State.ERROR;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        changeState(State.COMPLETED);
+        try {
+            switchMediaState(State.COMPLETED);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        changeState(State.ERROR);
+        try {
+            switchMediaState(State.ERROR);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        changeState(State.PREPARED);
+        try {
+            switchMediaState(State.PREPARED);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

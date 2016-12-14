@@ -8,18 +8,20 @@ import com.zhouyou.remote.Music;
  */
 public class MusicMsgFactory {
 
-    public static Music currPlaying;
-
-    public static Music createMusicMsg(int state, String audioPath, int currentPosition) {
+    public static Music setupMusic(String audioPath, int currentPosition) {
         Music intent = new Music();
-        intent.setState(state);
         intent.setAudioPath(audioPath);
         intent.setCurrentPosition(currentPosition);
-        currPlaying = intent;
         return intent;
     }
 
-    public static Music getCurrPlaying() {
-        return currPlaying;
+    private static int currentState;
+
+    public static void setMediaState(int state) {
+        currentState = state;
+    }
+
+    public static int getMediaState() {
+        return currentState;
     }
 }

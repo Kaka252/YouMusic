@@ -50,19 +50,15 @@ public class MusicServiceSDK {
     /**
      * 播放
      *
-     * @param state           播放的状态
      * @param audioPath       播放的地址
      * @param currentPosition 播放的位置
      */
-    public void play(int state, String audioPath, int currentPosition) {
-        Music intent = MusicMsgFactory.getCurrPlaying();
-        if (intent == null) {
-            intent = MusicMsgFactory.createMusicMsg(state, audioPath, currentPosition);
-        } else {
-            intent.setState(state);
-            intent.setAudioPath(audioPath);
-            intent.setCurrentPosition(currentPosition);
-        }
+    public void play(String audioPath, int currentPosition) {
+        Music intent = MusicMsgFactory.setupMusic(audioPath, currentPosition);
         proxy.play(intent);
+    }
+
+    public void switchMediaState(int state) {
+        proxy.switchMediaState(state);
     }
 }
