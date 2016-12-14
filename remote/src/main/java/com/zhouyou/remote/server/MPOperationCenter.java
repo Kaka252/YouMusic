@@ -35,22 +35,16 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     @Override
     public void init() throws RemoteException {
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setOnErrorListener(this);
-            mediaPlayer.setOnPreparedListener(this);
-            mediaPlayer.setOnCompletionListener(this);
-            switchMediaState(State.IDLE);
-        } else {
-            if (isReset()) {
-                mediaPlayer.reset();
-                switchMediaState(State.IDLE);
-            }
-        }
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnCompletionListener(this);
+        switchMediaState(State.IDLE);
     }
 
     /**
      * 播放音乐
+     *
      * @param intent 音乐数据
      * @throws RemoteException
      */
@@ -59,30 +53,35 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         String audioPath = intent.getAudioPath();
         if (TextUtils.isEmpty(audioPath)) {
             switchMediaState(State.ERROR);
-        } else {
-            init();
-            try {
-                if (MusicMsgFactory.getMediaState() == State.IDLE) {
-                    Uri uri = Uri.parse(audioPath);
-                    mediaPlayer.setDataSource(context, uri);
-                }
-                switchMediaState(State.INITIALIZED);
-                if (MusicMsgFactory.getMediaState() != State.ERROR) {
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                }
-                if (MusicMsgFactory.getMediaState() == State.INITIALIZED || MusicMsgFactory.getMediaState() == State.STOPPED) {
-//                    PrefUtils.put(Constants.DATA_INT, audio.id);
-                    switchMediaState(State.PREPARING);
-                }
-            } catch (IOException e) {
-                Log.e("MusicError", e.toString());
-                switchMediaState(State.ERROR);
+            return;
+        }
+        try {
+            if (isReset()) {
+                mediaPlayer.reset();
+                switchMediaState(State.IDLE);
             }
+            if (MusicMsgFactory.getMediaState() == State.IDLE) {
+                Uri uri = Uri.parse(audioPath);
+                mediaPlayer.setDataSource(context, uri);
+            }
+            switchMediaState(State.INITIALIZED);
+            if (MusicMsgFactory.getMediaState() != State.ERROR) {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
+            if (MusicMsgFactory.getMediaState() == State.INITIALIZED
+                    || MusicMsgFactory.getMediaState() == State.STOPPED) {
+//                    PrefUtils.put(Constants.DATA_INT, audio.id);
+                switchMediaState(State.PREPARING);
+            }
+        } catch (Exception e) {
+            Log.e("MusicError", e.toString());
+            switchMediaState(State.ERROR);
         }
     }
 
     /**
      * 切换播放状态
+     *
      * @param state 播放状态
      * @throws RemoteException
      */
@@ -127,8 +126,10 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     }
 
     private IMusicReceiver receiver;
+
     /**
      * 注册接收回调
+     *
      * @param receiver
      */
     @Override
