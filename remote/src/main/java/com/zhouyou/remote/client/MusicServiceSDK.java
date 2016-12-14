@@ -1,6 +1,7 @@
 package com.zhouyou.remote.client;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.zhouyou.remote.Music;
 
@@ -11,6 +12,7 @@ import com.zhouyou.remote.Music;
 public class MusicServiceSDK {
 
     private static Context mContext;
+
     public static MusicServiceSDK get() {
         return MusicServiceProxy.SDK;
     }
@@ -20,12 +22,14 @@ public class MusicServiceSDK {
     }
 
     private RemoteServiceProxy proxy;
+
     private MusicServiceSDK() {
         proxy = new RemoteServiceProxy(mContext);
     }
 
     /**
      * 初始化音乐服务
+     *
      * @param context
      * @return
      */
@@ -43,11 +47,22 @@ public class MusicServiceSDK {
         proxy.startMusicBackgroundService();
     }
 
-    public void play(Music music) {
-        proxy.play(music);
-    }
-
-    public void changeMusicState(int state) {
-        proxy.changeMusicState(state);
+    /**
+     * 播放
+     *
+     * @param state           播放的状态
+     * @param audioPath       播放的地址
+     * @param currentPosition 播放的位置
+     */
+    public void play(int state, String audioPath, int currentPosition) {
+        Music intent = MusicMsgFactory.getCurrPlaying();
+        if (intent == null) {
+            intent = MusicMsgFactory.createMusicMsg(state, audioPath, currentPosition);
+        } else {
+            intent.setState(state);
+            intent.setAudioPath(audioPath);
+            intent.setCurrentPosition(currentPosition);
+        }
+        proxy.play(intent);
     }
 }

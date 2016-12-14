@@ -17,12 +17,7 @@ public class MPBinder extends IMusicControlInterface.Stub {
     }
 
     @Override
-    public boolean play(Music music) throws RemoteException {
-        return false;
-    }
-
-    @Override
-    public void changeMusicState(int state) throws RemoteException {
+    public void play(Music music) throws RemoteException {
 
     }
 }

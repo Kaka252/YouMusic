@@ -72,28 +72,13 @@ public class RemoteServiceProxy {
      * @param music
      * @return
      */
-    public synchronized boolean play(Music music) {
-        boolean b = false;
+    public synchronized void play(Music music) {
         if (isConnected()) {
             try {
-                b = mIMusicControlInterface.play(music);
+                mIMusicControlInterface.play(music);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
-        return b;
     }
-
-    /**
-     * 更改状态
-     * @param state
-     */
-    public synchronized void changeMusicState(int state) {
-        try {
-            mIMusicControlInterface.changeMusicState(state);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
