@@ -22,9 +22,11 @@ public class MusicServiceSDK {
     }
 
     private RemoteServiceProxy proxy;
+    private Sender sender;
 
     private MusicServiceSDK() {
         proxy = new RemoteServiceProxy(mContext);
+        sender = new Sender(proxy);
     }
 
     /**
@@ -54,28 +56,27 @@ public class MusicServiceSDK {
      * @param currentPosition 播放的位置
      */
     public void play(String audioPath, int currentPosition) {
-        Music intent = MusicMsgFactory.setupMusic(audioPath, currentPosition);
-        proxy.play(intent);
+        sender.play(audioPath, currentPosition);
     }
 
     /**
      * 暂停
      */
     public void pause() {
-        proxy.switchMediaState(State.PAUSED);
+        sender.pause();
     }
 
     /**
      * 继续播放
      */
     public void resume() {
-        proxy.switchMediaState(State.PREPARED);
+        sender.resume();
     }
 
     /**
      * 完成播放
      */
     public void complete() {
-        proxy.switchMediaState(State.COMPLETED);
+        sender.complete();
     }
 }

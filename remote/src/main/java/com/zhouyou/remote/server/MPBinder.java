@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zhouyou.remote.IMusicControlInterface;
+import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicMsgFactory;
@@ -48,6 +49,11 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
         }
     }
 
+    /**
+     * 播放音乐
+     * @param intent 音乐数据
+     * @throws RemoteException
+     */
     @Override
     public void play(Music intent) throws RemoteException {
         String audioPath = intent.getAudioPath();
@@ -75,6 +81,11 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
         }
     }
 
+    /**
+     * 切换播放状态
+     * @param state 播放状态
+     * @throws RemoteException
+     */
     @Override
     public void switchMediaState(int state) throws RemoteException {
         MusicMsgFactory.setMediaState(state);
@@ -127,6 +138,15 @@ public class MPBinder extends IMusicControlInterface.Stub implements MediaPlayer
             default:
                 break;
         }
+    }
+
+    /**
+     * 注册接收回调
+     * @param receiver
+     */
+    @Override
+    public void registerReceiver(IMusicReceiver receiver) {
+
     }
 
     /**
