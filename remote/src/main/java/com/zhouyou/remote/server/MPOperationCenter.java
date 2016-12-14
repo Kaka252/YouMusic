@@ -104,6 +104,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 mediaPlayer.start();
                 switchMediaState(State.IN_PROGRESS);
                 break;
+            case State.IN_PROGRESS: // 播放中
+                break;
             case State.PAUSED: // 暂停
                 mediaPlayer.pause();
             case State.COMPLETED: // 播放完成
@@ -180,31 +182,34 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     private void printLog(int state) {
         switch (state) {
             case State.IDLE:
-                Log.d(TAG, "AudioState: " + State.IDLE + " - 闲置");
+                Log.d(TAG, "AudioState: " + state + " - 闲置");
                 break;
             case State.INITIALIZED: // 初始化
-                Log.d(TAG, "AudioState: " + State.INITIALIZED + " - 初始化");
+                Log.d(TAG, "AudioState: " + state + " - 初始化");
                 break;
             case State.PREPARING: // 正在准备
-                Log.d(TAG, "AudioState: " + State.PREPARING + " - 正在准备");
+                Log.d(TAG, "AudioState: " + state + " - 正在准备");
                 break;
             case State.PREPARED: // 准备就绪
-                Log.d(TAG, "AudioState: " + State.PREPARED + " - 准备就绪");
+                Log.d(TAG, "AudioState: " + state + " - 准备就绪");
+                break;
+            case State.IN_PROGRESS: // 播放中
+                Log.d(TAG, "AudioState: " + state + " - 正在播放");
                 break;
             case State.PAUSED: // 暂停
-                Log.d(TAG, "AudioState: " + State.PAUSED + " - 暂停");
+                Log.d(TAG, "AudioState: " + state + " - 暂停");
                 break;
             case State.COMPLETED: // 播放完成
-                Log.d(TAG, "AudioState: " + State.COMPLETED + " - 播放完成");
+                Log.d(TAG, "AudioState: " + state + " - 播放完成");
                 break;
             case State.STOPPED: // 播放终断
-                Log.d(TAG, "AudioState: " + State.STOPPED + " - 播放终断");
+                Log.d(TAG, "AudioState: " + state + " - 播放终断");
                 break;
             case State.END: // 结束
-                Log.d(TAG, "AudioState: " + State.END + " - 结束");
+                Log.d(TAG, "AudioState: " + state + " - 结束");
                 break;
             case State.ERROR: // 错误
-                Log.d(TAG, "AudioState: " + State.ERROR + " - 错误");
+                Log.d(TAG, "AudioState: " + state + " - 错误");
                 break;
             default:
                 break;
