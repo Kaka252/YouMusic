@@ -14,6 +14,7 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment;
+import com.zhouyou.music.module.fragment.AudioPlayFragment2;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel2;
 import com.zhouyou.remote.State;
@@ -48,7 +49,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
         ivBg = (ImageView) findViewById(R.id.iv_bg);
         operationPanel = (AudioOperationPanel2) findViewById(R.id.operation_panel);
         List<BaseFragment> fragments = new ArrayList<>();
-        fragments.add(AudioPlayFragment.getInstance(null));
+        fragments.add(AudioPlayFragment2.getInstance(null));
         AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
         vp.setAdapter(adapter);
         vp.setCurrentItem(0);
