@@ -48,11 +48,11 @@ public class RemoteServiceProxy {
         }
     };
 
-    public RemoteServiceProxy(Context context) {
+    RemoteServiceProxy(Context context) {
         this.context = context;
     }
 
-    public void setReceiver(IMusicReceiver receiver) {
+    void setReceiver(IMusicReceiver receiver) {
         this.receiver = receiver;
     }
 
@@ -89,7 +89,7 @@ public class RemoteServiceProxy {
      * @param music
      * @return
      */
-    public synchronized void play(Music music) {
+    synchronized void play(Music music) {
         if (isConnected()) {
             try {
                 mIMusicControlInterface.play(music);
@@ -104,7 +104,7 @@ public class RemoteServiceProxy {
      *
      * @param state
      */
-    public synchronized void switchMediaState(int state) {
+    synchronized void switchMediaState(int state) {
         if (isConnected()) {
             try {
                 mIMusicControlInterface.switchMediaState(state);

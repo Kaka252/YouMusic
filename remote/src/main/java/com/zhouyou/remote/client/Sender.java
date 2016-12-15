@@ -23,7 +23,7 @@ public class Sender {
      * @param audioPath       播放的地址
      * @param currentPosition 播放的位置
      */
-    public void play(int audioId, String audioPath, int currentPosition) {
+    void play(int audioId, String audioPath, int currentPosition) {
         Music intent = new Music();
         intent.setMusicId(audioId);
         intent.setMusicPath(audioPath);
@@ -34,21 +34,21 @@ public class Sender {
     /**
      * 暂停
      */
-    public void pause() {
+    void pause() {
         proxy.switchMediaState(State.PAUSED);
     }
 
     /**
      * 继续播放
      */
-    public void resume() {
+    void resume() {
         proxy.switchMediaState(State.PREPARED);
     }
 
     /**
      * 完成播放
      */
-    public void complete() {
+    void complete() {
         proxy.switchMediaState(State.COMPLETED);
     }
 }
