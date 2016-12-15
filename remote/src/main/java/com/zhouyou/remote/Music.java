@@ -9,6 +9,7 @@ import android.os.Parcelable;
  */
 public class Music implements Parcelable {
 
+    private int audioId;
     /*音乐播放的地址*/
     private String audioPath;
     /*音乐播放的进度*/
@@ -18,6 +19,7 @@ public class Music implements Parcelable {
     }
 
     protected Music(Parcel in) {
+        this.audioId = in.readInt();
         this.audioPath = in.readString();
         this.currentPosition = in.readInt();
     }
@@ -29,6 +31,7 @@ public class Music implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(audioId);
         dest.writeString(audioPath);
         dest.writeInt(currentPosition);
     }
@@ -44,6 +47,14 @@ public class Music implements Parcelable {
             return new Music[size];
         }
     };
+
+    public int getAudioId() {
+        return audioId;
+    }
+
+    public void setAudioId(int audioId) {
+        this.audioId = audioId;
+    }
 
     public String getAudioPath() {
         return audioPath;

@@ -14,8 +14,6 @@ import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicMsgFactory;
 
-import java.io.IOException;
-
 /**
  * 作者：ZhouYou
  * 日期：2016/12/13.
@@ -26,8 +24,12 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     private static final String TAG = MPOperationCenter.class.getSimpleName();
 
-    private static final MediaPlayer mediaPlayer = new MediaPlayer();
+    private static final MediaPlayer MDPLAYER = new MediaPlayer();
     private Context context;
+    /*返回主进程的接收回调*/
+    private IMusicReceiver receiver;
+    /*当前的播放状态*/
+    private int currState = 0;
 
     public MPOperationCenter(Context context) {
         this.context = context;
@@ -35,9 +37,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     @Override
     public void init() throws RemoteException {
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnCompletionListener(this);
+        MDPLAYER.setOnErrorListener(this);
+        MDPLAYER.setOnPreparedListener(this);
+        MDPLAYER.setOnCompletionListener(this);
         switchMediaState(State.IDLE);
     }
 
@@ -56,19 +58,18 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
         try {
             if (isReset()) {
-                mediaPlayer.reset();
+                MDPLAYER.reset();
                 switchMediaState(State.IDLE);
             }
-            if (MusicMsgFactory.getMediaState() == State.IDLE) {
+            if (currState == State.IDLE) {
                 Uri uri = Uri.parse(audioPath);
-                mediaPlayer.setDataSource(context, uri);
+                MDPLAYER.setDataSource(context, uri);
             }
             switchMediaState(State.INITIALIZED);
-            if (MusicMsgFactory.getMediaState() != State.ERROR) {
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (currState != State.ERROR) {
+                MDPLAYER.setAudioStreamType(AudioManager.STREAM_MUSIC);
             }
-            if (MusicMsgFactory.getMediaState() == State.INITIALIZED
-                    || MusicMsgFactory.getMediaState() == State.STOPPED) {
+            if (currState == State.INITIALIZED || currState == State.STOPPED) {
 //                    PrefUtils.put(Constants.DATA_INT, audio.id);
                 switchMediaState(State.PREPARING);
             }
@@ -86,45 +87,43 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      */
     @Override
     public void switchMediaState(int state) throws RemoteException {
-        MusicMsgFactory.setMediaState(state);
+        currState = state;
+        printLog(state); // 打印日志
         switch (state) {
             case State.IDLE: // 闲置
                 break;
             case State.INITIALIZED: // 初始化
                 break;
             case State.PREPARING: // 正在准备
-                mediaPlayer.prepareAsync();
+                MDPLAYER.prepareAsync();
                 break;
             case State.PREPARED: // 准备就绪
 //                if (currentPosition > 0 && currentPosition <= getCurrentAudioDuration()) {
 //                    mediaPlayer.seekTo(currentPosition);
 //                }
-                mediaPlayer.start();
+                MDPLAYER.start();
                 switchMediaState(State.IN_PROGRESS);
                 break;
             case State.IN_PROGRESS: // 播放中
                 break;
             case State.PAUSED: // 暂停
-                mediaPlayer.pause();
+                MDPLAYER.pause();
             case State.COMPLETED: // 播放完成
                 break;
             case State.STOPPED: // 播放终断
-                mediaPlayer.stop();
+                MDPLAYER.stop();
                 break;
             case State.END: // 结束
-                mediaPlayer.stop();
+                MDPLAYER.stop();
                 break;
             case State.ERROR: // 错误
-                mediaPlayer.reset();
+                MDPLAYER.reset();
                 break;
             default:
                 break;
         }
-        printLog(state); // 打印日志
         receiver.onReceive(state);
     }
-
-    private IMusicReceiver receiver;
 
     /**
      * 注册接收回调
@@ -142,10 +141,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      * @return
      */
     private boolean isReset() {
-        int currentState = MusicMsgFactory.getMediaState();
-        return currentState == State.IDLE || currentState == State.INITIALIZED || currentState == State.PREPARED ||
-                currentState == State.IN_PROGRESS || currentState == State.PAUSED || currentState == State.STOPPED ||
-                currentState == State.COMPLETED || currentState == State.ERROR;
+        return currState == State.IDLE || currState == State.INITIALIZED || currState == State.PREPARED ||
+                currState == State.IN_PROGRESS || currState == State.PAUSED || currState == State.STOPPED ||
+                currState == State.COMPLETED || currState == State.ERROR;
     }
 
     @Override

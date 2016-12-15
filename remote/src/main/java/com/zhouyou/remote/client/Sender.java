@@ -19,11 +19,15 @@ public class Sender {
     /**
      * 播放
      *
+     * @param audioId         播放的id
      * @param audioPath       播放的地址
      * @param currentPosition 播放的位置
      */
-    public void play(String audioPath, int currentPosition) {
-        Music intent = MusicMsgFactory.setupMusic(audioPath, currentPosition);
+    public void play(int audioId, String audioPath, int currentPosition) {
+        Music intent = new Music();
+        intent.setAudioId(audioId);
+        intent.setAudioPath(audioPath);
+        intent.setCurrentPosition(currentPosition);
         proxy.play(intent);
     }
 

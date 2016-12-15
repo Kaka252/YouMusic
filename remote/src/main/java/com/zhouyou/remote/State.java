@@ -8,8 +8,8 @@ public interface State {
 
     int IDLE = 0;
     int INITIALIZED = 1;
-    int PREPARED = 2;
-    int PREPARING = 3;
+    int PREPARING = 2;
+    int PREPARED = 3;
     int IN_PROGRESS = 4;
     int PAUSED = 5;
     int STOPPED = 6;

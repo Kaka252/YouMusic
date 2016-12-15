@@ -2,9 +2,6 @@ package com.zhouyou.remote.client;
 
 import android.content.Context;
 
-import com.zhouyou.remote.Music;
-import com.zhouyou.remote.State;
-
 /**
  * 作者：ZhouYou
  * 日期：2016/12/13.
@@ -55,11 +52,12 @@ public class MusicServiceSDK {
     /**
      * 播放
      *
+     * @param audioId         音频的id
      * @param audioPath       播放的地址
      * @param currentPosition 播放的位置
      */
-    public void play(String audioPath, int currentPosition) {
-        sender.play(audioPath, currentPosition);
+    public void play(int audioId, String audioPath, int currentPosition) {
+        sender.play(audioId, audioPath, currentPosition);
     }
 
     /**
