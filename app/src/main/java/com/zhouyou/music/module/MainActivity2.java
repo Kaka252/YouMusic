@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
@@ -33,7 +34,6 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (!isApplyingPermissions()) {
-//            AudioMediaService.startService(this);
             sdk = MediaCoreSDK.get();
             MusicManager.get().createAudioStatePublisher().register(this);
             initViews();
@@ -50,6 +50,12 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        onUpdateChange(MusicServiceSDK.get().getState());
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Audio audio = (Audio) parent.getItemAtPosition(position);
         if (audio == null) return;
@@ -57,7 +63,8 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
             MusicServiceSDK.get().play(audio.path, 0);
         } else {
             if (audio.id == sdk.getCurrAudio().id && MusicServiceSDK.get().getState() == State.IN_PROGRESS) {
-                playPanel.viewDetail();
+                T.ss("正在播放");
+//                playPanel.viewDetail();
             } else {
                 MusicServiceSDK.get().play(audio.path, 0);
             }
@@ -67,5 +74,11 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     @Override
     public void onUpdateChange(int state) {
 //        playPanel.updateAudio(audio, state);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MusicManager.get().createAudioStatePublisher().unregister(this);
     }
 }

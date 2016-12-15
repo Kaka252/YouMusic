@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".module.MainActivity"
+            android:name=".module.MainActivity2"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -39,11 +39,10 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".service.AudioMediaService" />
-        <!--android:process=":music_service" />-->
 
         <service
             android:name="com.zhouyou.remote.server.MusicService"
-            android:process=":music_service"/>
+            android:process=":music_service" />
     </application>
 
 </manifest>

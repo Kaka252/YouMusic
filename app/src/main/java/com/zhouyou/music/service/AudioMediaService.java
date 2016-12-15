@@ -14,6 +14,7 @@ import com.zhouyou.music.media.MediaCoreSDK;
  * 作者：ZhouYou
  * 日期：2016/11/18.
  */
+@Deprecated
 public class AudioMediaService extends Service {
 
     private boolean isServiceRunning;

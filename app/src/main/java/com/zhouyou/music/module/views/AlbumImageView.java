@@ -63,6 +63,7 @@ public class AlbumImageView extends ImageView {
     }
 
     private void setupShader() {
+        if (bitmap == null) return;
         float scale;
         shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         int bSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
