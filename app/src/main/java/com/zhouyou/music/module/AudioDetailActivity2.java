@@ -13,7 +13,6 @@ import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
-import com.zhouyou.music.module.fragment.AudioPlayFragment;
 import com.zhouyou.music.module.fragment.AudioPlayFragment2;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel2;

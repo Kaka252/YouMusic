@@ -26,8 +26,8 @@ import com.zhouyou.remote.client.observer.MusicManager;
  */
 public class AudioPlayFragment2 extends BaseFragment implements IMusicStateSubscriber {
 
-    public static AudioPlayFragment getInstance(Bundle data) {
-        AudioPlayFragment f = new AudioPlayFragment();
+    public static AudioPlayFragment2 getInstance(Bundle data) {
+        AudioPlayFragment2 f = new AudioPlayFragment2();
         f.setArguments(data);
         return f;
     }

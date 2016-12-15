@@ -2,6 +2,10 @@ package com.zhouyou.remote.client;
 
 import android.content.Context;
 
+import com.zhouyou.remote.Music;
+
+import java.util.List;
+
 /**
  * 作者：ZhouYou
  * 日期：2016/12/13.
@@ -47,6 +51,15 @@ public class MusicServiceSDK {
      */
     public void startMusicService() {
         proxy.startMusicBackgroundService();
+    }
+
+    /**
+     * 初始化播放列表
+     *
+     * @param playList 播放列表
+     */
+    public void initPlayList(List<Music> playList) {
+
     }
 
     /**
