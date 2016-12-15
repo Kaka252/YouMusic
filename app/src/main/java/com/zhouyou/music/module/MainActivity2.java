@@ -53,7 +53,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     @Override
     protected void onResume() {
         super.onResume();
-        onUpdateChange(MusicServiceSDK.get().getState());
+        onUpdateChange();
     }
 
     @Override
@@ -73,13 +73,15 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onUpdateChange(int state) {
-//        int currState = MusicServiceSDK.get().getState();
-        Audio audio = null;
-        if (state == State.IDLE || state == State.PREPARED) {
+    public void onUpdateChange() {
+        int currState = MusicServiceSDK.get().getState();
+        Audio audio;
+        if (currState == State.IDLE || currState == State.PREPARED) {
             audio = ClientCoreSDK.get().getPlayingMusic();
+        } else {
+            audio = ClientCoreSDK.get().getCurrAudio();
         }
-        playPanel.updateAudio(audio, state);
+        playPanel.updateAudio(audio, currState);
     }
 
     @Override

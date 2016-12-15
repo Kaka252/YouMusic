@@ -7,8 +7,7 @@ package com.zhouyou.remote.client.observer;
 public interface IMusicStateSubscriber {
 
     /**
-     * 通知状态改变
-     * @param state 状态
+     * 通知改变
      */
-    void onUpdateChange(int state);
+    void onUpdateChange();
 }
