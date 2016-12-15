@@ -67,4 +67,54 @@ public class ClientCoreSDK {
         }
         return audioList;
     }
+
+    /**
+     * 播放下一首
+     */
+    public Audio getNext() {
+        List<Audio> list = getPlayList();
+        if (ListUtils.isEmpty(list)) return null;
+        Audio mAudio;
+        if (currAudio == null) {
+            mAudio = ListUtils.getElement(list, 0);
+        } else {
+            int index = 0;
+            for (Audio audio : list) {
+                if (audio == null) continue;
+                if (audio.id == currAudio.id) {
+                    index = list.indexOf(audio) + 1;
+                    if (index >= list.size()) {
+                        index = 0;
+                    }
+                }
+            }
+            mAudio = ListUtils.getElement(list, index);
+        }
+        return mAudio;
+    }
+
+    /**
+     * 播放上一首
+     */
+    public Audio getLast() {
+        List<Audio> list = getPlayList();
+        if (ListUtils.isEmpty(list)) return null;
+        Audio mAudio;
+        if (currAudio == null) {
+            mAudio = ListUtils.getElement(list, 0);
+        } else {
+            int index = 0;
+            for (Audio audio : list) {
+                if (audio == null) continue;
+                if (audio.id == currAudio.id) {
+                    index = list.indexOf(audio) - 1;
+                    if (index < 0) {
+                        index = list.size() - 1;
+                    }
+                }
+            }
+            mAudio = ListUtils.getElement(list, index);
+        }
+        return mAudio;
+    }
 }

@@ -78,6 +78,9 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         Audio audio;
         if (currState == State.IDLE || currState == State.PREPARED) {
             audio = ClientCoreSDK.get().getPlayingMusic();
+        } else if (currState == State.COMPLETED || currState == State.ERROR) {
+            audio = ClientCoreSDK.get().getNext();
+            MusicServiceSDK.get().play(audio.id, audio.path, 0);
         } else {
             audio = ClientCoreSDK.get().getCurrAudio();
         }

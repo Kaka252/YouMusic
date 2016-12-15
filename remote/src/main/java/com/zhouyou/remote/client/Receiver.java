@@ -81,7 +81,7 @@ public class Receiver extends IMusicReceiver.Stub {
     private Handler mMainHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            MusicManager.get().createAudioStatePublisher().notifySubscribers(currState);
+            MusicManager.get().createAudioStatePublisher().notifySubscribers();
             return true;
         }
     });
