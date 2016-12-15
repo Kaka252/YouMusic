@@ -20,7 +20,9 @@ import com.zhouyou.library.utils.Scale;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.module.AudioDetailActivity;
+import com.zhouyou.music.module.AudioDetailActivity2;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
@@ -163,7 +165,7 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
 
     public void viewDetail() {
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
-        Intent intent = new Intent(context, AudioDetailActivity.class);
+        Intent intent = new Intent(context, AudioDetailActivity2.class);
         ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
     }
 

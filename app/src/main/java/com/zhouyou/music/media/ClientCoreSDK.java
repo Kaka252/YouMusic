@@ -21,6 +21,16 @@ public class ClientCoreSDK {
     /*当前播放的音乐*/
     private Audio currAudio;
 
+    private boolean isPlayBack;
+
+    public void setPlayBack(boolean isPlayBack) {
+        this.isPlayBack = isPlayBack;
+    }
+
+    public boolean isPlayBack() {
+        return isPlayBack;
+    }
+
     private static class ClientHolder {
         private static final ClientCoreSDK SDK = new ClientCoreSDK();
     }
