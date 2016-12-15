@@ -89,4 +89,13 @@ public class MusicServiceSDK {
     public int getState() {
         return receiver.getCurrState();
     }
+
+    /**
+     * 获取音频播放器当前播放的音乐id
+     *
+     * @return
+     */
+    public int getMusicId() {
+        return receiver.getCurrMusicId();
+    }
 }

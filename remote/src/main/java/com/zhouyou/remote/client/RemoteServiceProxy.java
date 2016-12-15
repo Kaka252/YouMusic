@@ -76,6 +76,7 @@ public class RemoteServiceProxy {
 
     /**
      * 检查服务是否连接
+     *
      * @return
      */
     private boolean isConnected() {
@@ -84,6 +85,7 @@ public class RemoteServiceProxy {
 
     /**
      * 播放音乐
+     *
      * @param music
      * @return
      */
@@ -99,6 +101,7 @@ public class RemoteServiceProxy {
 
     /**
      * 切换播放的状态
+     *
      * @param state
      */
     public synchronized void switchMediaState(int state) {

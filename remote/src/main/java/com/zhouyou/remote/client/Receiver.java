@@ -15,23 +15,32 @@ import com.zhouyou.remote.client.observer.MusicManager;
  */
 public class Receiver extends IMusicReceiver.Stub {
 
+    /*当前播放状态*/
     private int currState;
+    /*当前播放音乐id*/
+    private int currMusicId;
 
     public int getCurrState() {
         return currState;
     }
 
+    public int getCurrMusicId() {
+        return currMusicId;
+    }
+
     @Override
-    public void onReceive(int currState) throws RemoteException {
+    public void onReceive(int currMusicId, int currState) throws RemoteException {
+        this.currMusicId = currMusicId;
+        this.currState = currState;
         dispatch(currState);
     }
 
     /**
      * 消息分发
+     *
      * @param currState
      */
     private void dispatch(int currState) {
-        this.currState = currState;
         switch (currState) {
             case State.IDLE: // 闲置
                 handler.sendEmptyMessage(ACTION_INIT);

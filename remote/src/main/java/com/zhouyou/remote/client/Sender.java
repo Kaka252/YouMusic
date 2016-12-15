@@ -25,8 +25,8 @@ public class Sender {
      */
     public void play(int audioId, String audioPath, int currentPosition) {
         Music intent = new Music();
-        intent.setAudioId(audioId);
-        intent.setAudioPath(audioPath);
+        intent.setMusicId(audioId);
+        intent.setMusicPath(audioPath);
         intent.setCurrentPosition(currentPosition);
         proxy.play(intent);
     }
