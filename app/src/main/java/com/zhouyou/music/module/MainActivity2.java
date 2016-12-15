@@ -62,7 +62,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         if (sdk.getCurrAudio() == null) {
             MusicServiceSDK.get().play(audio.id, audio.path, 0);
         } else {
-            if (audio.id == sdk.getCurrAudio().id && MusicServiceSDK.get().getState() == State.IN_PROGRESS) {
+            if (audio.id == MusicServiceSDK.get().getMusicId() && MusicServiceSDK.get().getState() == State.IN_PROGRESS) {
                 T.ss("正在播放");
 //                playPanel.viewDetail();
             } else {
