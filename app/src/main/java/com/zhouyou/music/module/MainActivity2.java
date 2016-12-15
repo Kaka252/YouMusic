@@ -9,9 +9,10 @@ import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.MediaCoreSDK;
+import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.module.adapter.AudioAdapter;
 import com.zhouyou.music.module.views.AudioPlayPanel;
+import com.zhouyou.music.module.views.AudioPlayPanel2;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
@@ -26,15 +27,15 @@ import java.util.List;
 public class MainActivity2 extends BaseActivity implements AdapterView.OnItemClickListener,
         IMusicStateSubscriber {
 
-    private AudioPlayPanel playPanel;
-    private MediaCoreSDK sdk;
+    private AudioPlayPanel2 playPanel;
+    private ClientCoreSDK sdk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (!isApplyingPermissions()) {
-            sdk = MediaCoreSDK.get();
+            sdk = ClientCoreSDK.get();
             MusicManager.get().createAudioStatePublisher().register(this);
             initViews();
         }
@@ -42,7 +43,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     private void initViews() {
         ListView listView = (ListView) findViewById(R.id.list_view);
-        playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
+        playPanel = (AudioPlayPanel2) findViewById(R.id.play_panel);
         listView.setOnItemClickListener(this);
         List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
@@ -73,7 +74,11 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     @Override
     public void onUpdateChange(int state) {
-//        playPanel.updateAudio(audio, state);
+        Audio audio = null;
+        if (state == State.PREPARED) {
+            audio = ClientCoreSDK.get().getPlayingMusic();
+        }
+        playPanel.updateAudio(audio, state);
     }
 
     @Override

@@ -25,6 +25,7 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/11/21.
  */
+@Deprecated
 public class MediaCoreSDK implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
