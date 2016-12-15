@@ -33,7 +33,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
         if (!isApplyingPermissions()) {
             sdk = ClientCoreSDK.get();
             MusicManager.get().createAudioStatePublisher().register(this);
@@ -74,8 +74,9 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     @Override
     public void onUpdateChange(int state) {
+//        int currState = MusicServiceSDK.get().getState();
         Audio audio = null;
-        if (state == State.PREPARED) {
+        if (state == State.IDLE || state == State.PREPARED) {
             audio = ClientCoreSDK.get().getPlayingMusic();
         }
         playPanel.updateAudio(audio, state);

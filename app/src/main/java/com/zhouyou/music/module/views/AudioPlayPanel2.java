@@ -17,12 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zhouyou.library.utils.Scale;
+import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.MediaCoreSDK;
-import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
+import com.zhouyou.remote.State;
+import com.zhouyou.remote.client.MusicServiceSDK;
 
 /**
  * 作者：ZhouYou
@@ -55,6 +56,11 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
     /*播放进度*/
     private View viewProgress;
 
+    /*当前播放的音乐*/
+    private Audio audio;
+    /*当前播放的状态*/
+    private int currState;
+
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_audio_play_panel, this);
         ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
@@ -72,19 +78,20 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
      * 更新音乐播放的状态
      */
     private void updateAudioPlayingStatus(int state) {
+        currState = state;
         switch (state) {
-            case AudioPlayState.IDLE:
-            case AudioPlayState.INITIALIZED:
-            case AudioPlayState.PREPARED:
-            case AudioPlayState.PREPARING:
-            case AudioPlayState.PAUSED:
-            case AudioPlayState.STOPPED:
-            case AudioPlayState.COMPLETED:
-            case AudioPlayState.END:
-            case AudioPlayState.ERROR:
+            case State.IDLE:
+            case State.INITIALIZED:
+            case State.PREPARED:
+            case State.PREPARING:
+            case State.PAUSED:
+            case State.STOPPED:
+            case State.COMPLETED:
+            case State.END:
+            case State.ERROR:
                 ivPlayNow.setImageResource(R.mipmap.ic_play);
                 break;
-            case AudioPlayState.IN_PROGRESS:
+            case State.IN_PROGRESS:
                 ivPlayNow.setImageResource(R.mipmap.ic_pause);
                 break;
             default:
@@ -100,11 +107,12 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
     public void updateAudio(Audio audio, int state) {
         updateAudioPlayingStatus(state);
         if (audio == null) return;
+        this.audio = audio;
         StringBuilder sb = new StringBuilder();
         if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
         if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
         tvAudioInfo.setText(sb.toString());
-        if (state == AudioPlayState.PREPARED || state == AudioPlayState.IDLE) {
+        if (state == State.PREPARED || state == State.IDLE) {
             MediaUtils.clearCacheBitmap();
         }
         // 加载专辑图片
@@ -146,7 +154,7 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
                 doPlayAction();
                 break;
             case R.id.iv_play_next:
-                MediaCoreSDK.get().changeState(AudioPlayState.COMPLETED);
+                MusicServiceSDK.get().complete();
                 break;
             default:
                 break;
@@ -160,14 +168,16 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
     }
 
     private void doPlayAction() {
-        int state = MediaCoreSDK.get().getCurrState();
-        if (state == AudioPlayState.PAUSED) {
-            MediaCoreSDK.get().changeState(AudioPlayState.PREPARED);
-        } else if (state == AudioPlayState.IN_PROGRESS) {
-            MediaCoreSDK.get().changeState(AudioPlayState.PAUSED);
+        if (currState == State.PAUSED) {
+            MusicServiceSDK.get().resume();
+        } else if (currState == State.IN_PROGRESS) {
+            MusicServiceSDK.get().pause();
         } else {
-            Audio audio = MediaCoreSDK.get().getCurrAudio();
-            MediaCoreSDK.get().prepare(audio);
+            if (audio == null) {
+                T.ss("请选择歌曲进行播放");
+            } else {
+                MusicServiceSDK.get().play(audio.id, audio.path, 0);
+            }
         }
     }
 }

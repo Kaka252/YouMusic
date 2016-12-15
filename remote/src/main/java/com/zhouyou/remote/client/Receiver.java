@@ -1,6 +1,7 @@
 package com.zhouyou.remote.client;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 
@@ -74,8 +75,16 @@ public class Receiver extends IMusicReceiver.Stub {
             default:
                 break;
         }
-        MusicManager.get().createAudioStatePublisher().notifySubscribers(currState);
+        mMainHandler.sendEmptyMessage(0);
     }
+
+    private Handler mMainHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            MusicManager.get().createAudioStatePublisher().notifySubscribers(currState);
+            return true;
+        }
+    });
 
     private static final int ACTION_INIT = 0;
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首

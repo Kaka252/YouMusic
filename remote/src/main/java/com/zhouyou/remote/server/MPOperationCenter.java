@@ -92,6 +92,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     @Override
     public void switchMediaState(int state) throws RemoteException {
         currState = state;
+        onMainProcessCallback();
         printLog(state); // 打印日志
         switch (state) {
             case State.IDLE: // 闲置
@@ -102,11 +103,11 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 PLAYER.prepareAsync();
                 break;
             case State.PREPARED: // 准备就绪
-                saveLastMusicId();
 //                if (currentPosition > 0 && currentPosition <= getCurrentAudioDuration()) {
 //                    mediaPlayer.seekTo(currentPosition);
 //                }
                 PLAYER.start();
+                saveLastMusicId();
                 switchMediaState(State.IN_PROGRESS);
                 break;
             case State.IN_PROGRESS: // 播放中
@@ -127,7 +128,6 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             default:
                 break;
         }
-        onMainProcessCallback();
     }
 
     /**

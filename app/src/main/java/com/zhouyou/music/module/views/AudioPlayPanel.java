@@ -29,6 +29,7 @@ import com.zhouyou.music.module.utils.MediaUtils;
  * 日期：2016/11/19.
  * 底部正在播放的音乐
  */
+@Deprecated
 public class AudioPlayPanel extends LinearLayout implements View.OnClickListener {
 
     private Context context;
