@@ -107,7 +107,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             if (audio.id == sdk.getCurrAudio().id && sdk.getCurrState() == AudioPlayState.IN_PROGRESS) {
                 playPanel.viewDetail();
             } else {
-//                MusicServiceSDK.get().play();
                 sdk.prepare(audio);
             }
         }

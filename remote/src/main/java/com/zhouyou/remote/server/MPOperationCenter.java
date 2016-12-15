@@ -26,7 +26,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     private static final String TAG = MPOperationCenter.class.getSimpleName();
 
-    private MediaPlayer mediaPlayer;
+    private static final MediaPlayer mediaPlayer = new MediaPlayer();
     private Context context;
 
     public MPOperationCenter(Context context) {
@@ -35,7 +35,6 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     @Override
     public void init() throws RemoteException {
-        mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnCompletionListener(this);
