@@ -7,6 +7,7 @@ import com.zhouyou.music.entity.Audio;
  * 日期：2016/11/25.
  * 音频状态的管理者（被观察者）
  */
+@Deprecated
 public interface IAudioStatePublisher {
 
     void register(IAudioStateSubscriber subscriber);

@@ -29,6 +29,7 @@ import com.zhouyou.remote.client.MusicServiceSDK;
 
 import java.util.List;
 
+@Deprecated
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener,
         IAudioStateSubscriber,
         IAudioProgressSubscriber {

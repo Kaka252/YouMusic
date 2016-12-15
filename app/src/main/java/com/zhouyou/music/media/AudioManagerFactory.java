@@ -9,6 +9,7 @@ import com.zhouyou.music.media.state.IAudioStatePublisher;
  * 作者：ZhouYou
  * 日期：2016/11/25.
  */
+@Deprecated
 public class AudioManagerFactory {
 
     private static class AMFHolder {

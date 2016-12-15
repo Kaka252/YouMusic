@@ -7,6 +7,7 @@ import com.zhouyou.music.entity.Audio;
  * 日期：2016/11/25.
  * 音频状态的接受者（被观察者）
  */
+@Deprecated
 public interface IAudioStateSubscriber {
 
     /**

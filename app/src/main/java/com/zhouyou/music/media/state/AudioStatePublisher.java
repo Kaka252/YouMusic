@@ -9,6 +9,7 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/11/25.
  */
+@Deprecated
 public class AudioStatePublisher implements IAudioStatePublisher {
 
     private final Object lock = new Object();

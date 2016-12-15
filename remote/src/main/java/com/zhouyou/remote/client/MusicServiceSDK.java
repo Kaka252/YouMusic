@@ -82,4 +82,13 @@ public class MusicServiceSDK {
     public void complete() {
         sender.complete();
     }
+
+    /**
+     * 获取音频播放器的播放状态
+     *
+     * @return
+     */
+    public int getState() {
+        return receiver.getCurrState();
+    }
 }

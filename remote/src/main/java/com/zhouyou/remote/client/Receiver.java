@@ -15,6 +15,12 @@ import com.zhouyou.remote.client.observer.MusicManager;
  */
 public class Receiver extends IMusicReceiver.Stub {
 
+    private int currState;
+
+    public int getCurrState() {
+        return currState;
+    }
+
     @Override
     public void onReceive(int currState) throws RemoteException {
         dispatch(currState);
@@ -25,6 +31,7 @@ public class Receiver extends IMusicReceiver.Stub {
      * @param currState
      */
     private void dispatch(int currState) {
+        this.currState = currState;
         switch (currState) {
             case State.IDLE: // 闲置
                 handler.sendEmptyMessage(ACTION_INIT);

@@ -28,6 +28,7 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/11/23.
  */
+@Deprecated
 public class AudioDetailActivity extends BaseActivity implements IAudioStateSubscriber,
         IAudioProgressSubscriber {
 

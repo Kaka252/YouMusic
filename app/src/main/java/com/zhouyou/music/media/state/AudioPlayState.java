@@ -4,6 +4,7 @@ package com.zhouyou.music.media.state;
  * 作者：ZhouYou
  * 日期：2016/11/19.
  */
+@Deprecated
 public interface AudioPlayState {
 
     int IDLE = 0;
