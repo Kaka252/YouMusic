@@ -1,9 +1,12 @@
 package com.zhouyou.music.media;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.zhouyou.library.utils.ListUtils;
+import com.zhouyou.library.utils.T;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
@@ -131,16 +134,29 @@ public class ClientCoreSDK {
         return mAudio;
     }
 
-    public void generatePlayList() {
-        List<Audio> list = getPlayList();
-        List<Music> playList = new ArrayList<>();
-        for (Audio audio : list) {
+    /**
+     * 生成播放列表，并开始播放指定音乐
+     *
+     * @param data 播放列表
+     * @param audioId 播放歌曲的id
+     */
+    public void playMusic(List<Audio> data, int audioId) {
+        if (ListUtils.isEmpty(data)) {
+            T.ss("没有可用的音乐播放列表");
+            return;
+        }
+        ArrayList<Music> playList = new ArrayList<>();
+        for (Audio audio : data) {
             if (audio == null || TextUtils.isEmpty(audio.path)) continue;
             Music music = new Music();
             music.setMusicId(audio.id);
             music.setMusicPath(audio.path);
             playList.add(music);
+
         }
-        MusicServiceSDK.get().initPlayList(playList);
+        Bundle b = new Bundle();
+        b.putParcelableArrayList("playList", playList);
+        b.putInt("musicId", audioId);
+        MusicServiceSDK.get().playMusicList(b);
     }
 }

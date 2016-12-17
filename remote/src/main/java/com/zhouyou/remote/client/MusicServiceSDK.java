@@ -1,9 +1,11 @@
 package com.zhouyou.remote.client;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.zhouyou.remote.Music;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,11 +58,12 @@ public class MusicServiceSDK {
     /**
      * 初始化播放列表
      *
-     * @param playList 播放列表
+     * @param data 数据
      */
-    public void initPlayList(List<Music> playList) {
-        proxy.initPlayList(playList);
+    public void playMusicList(Bundle data) {
+        sender.playMusicList(data);
     }
+
 
     /**
      * 播放
@@ -69,6 +72,7 @@ public class MusicServiceSDK {
      * @param audioPath       播放的地址
      * @param currentPosition 播放的位置
      */
+    @Deprecated
     public void play(int audioId, String audioPath, int currentPosition) {
         sender.play(audioId, audioPath, currentPosition);
     }

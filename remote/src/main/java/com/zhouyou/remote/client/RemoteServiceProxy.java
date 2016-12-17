@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -14,7 +15,9 @@ import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.server.MusicService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * 作者：ZhouYou
@@ -86,9 +89,19 @@ public class RemoteServiceProxy {
     }
 
 
-    synchronized void initPlayList(List<Music> playList) {
-
+    /**
+     * 设置播放列表，并播放音乐
+     */
+    synchronized void playMusicList(Bundle data) {
+        if (isConnected()) {
+            try {
+                mIMusicControlInterface.playMusicList(data);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
     /**
      * 播放音乐
      *

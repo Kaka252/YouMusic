@@ -1,11 +1,14 @@
 package com.zhouyou.remote.server;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +16,8 @@ import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
+
+import java.util.ArrayList;
 
 /**
  * 作者：ZhouYou
@@ -32,6 +37,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     private int currState = 0;
     /*当前的播放音乐的id*/
     private int currMusicId = -1;
+    /*当前的播放列表*/
+    private SparseArrayCompat<String> musicMap = new SparseArrayCompat<>();
+    /*偏好*/
     private SharedPreferences sp;
 
     public MPOperationCenter(Context context) {
@@ -45,6 +53,62 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         PLAYER.setOnPreparedListener(this);
         PLAYER.setOnCompletionListener(this);
         switchMediaState(State.IDLE);
+    }
+
+    /**
+     * 获取播放列表，且开始播放指定歌曲
+     * @param data 数据
+     * @throws RemoteException
+     */
+    @Override
+    public void playMusicList(Bundle data) throws RemoteException {
+        if (data == null) {
+            switchMediaState(State.ERROR);
+            return;
+        }
+        ArrayList<Music> playList = data.getParcelableArrayList("playList");
+        int musicId = data.getInt("musicId", -1);
+        if (playList == null || playList.size() <= 0) {
+            switchMediaState(State.ERROR);
+            return;
+        }
+        if (musicId < 0) {
+            switchMediaState(State.ERROR);
+            return;
+        }
+
+        if (musicMap.get(musicId) == null) {
+            for (Music music : playList) {
+                if (music == null) continue;
+                musicMap.put(music.getMusicId(), music.getMusicPath());
+            }
+        }
+        String musicPath = musicMap.get(musicId);
+        if (TextUtils.isEmpty(musicPath)) {
+            switchMediaState(State.ERROR);
+            return;
+        }
+
+        try {
+            if (isReset()) {
+                PLAYER.reset();
+                switchMediaState(State.IDLE);
+            }
+            if (currState == State.IDLE) {
+                Uri uri = Uri.parse(musicPath);
+                PLAYER.setDataSource(context, uri);
+            }
+            switchMediaState(State.INITIALIZED);
+            if (currState != State.ERROR) {
+                PLAYER.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
+            if (currState == State.INITIALIZED || currState == State.STOPPED) {
+                switchMediaState(State.PREPARING);
+            }
+        } catch (Exception e) {
+            Log.e("MusicError", e.toString());
+            switchMediaState(State.ERROR);
+        }
     }
 
     /**

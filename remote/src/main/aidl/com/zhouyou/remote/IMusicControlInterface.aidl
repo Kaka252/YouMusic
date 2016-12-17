@@ -2,11 +2,14 @@ package com.zhouyou.remote;
 
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.IMusicReceiver;
+import android.os.Bundle;
 
 interface IMusicControlInterface {
 
     // 初始化
     void init();
+
+    void playMusicList(in Bundle data);
     // 播放
     void play(in Music music);
     // 切换MediaPlayer的播放状态

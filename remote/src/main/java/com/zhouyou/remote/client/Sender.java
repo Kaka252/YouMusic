@@ -1,8 +1,11 @@
 package com.zhouyou.remote.client;
 
+import android.os.Bundle;
+
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +21,11 @@ public class Sender {
         this.proxy = proxy;
     }
 
-    void initPlayList(List<Music> playList) {
-        proxy.initPlayList(playList);
+    /**
+     * 设置播放列表，并播放音乐
+     */
+    void playMusicList(Bundle data) {
+        proxy.playMusicList(data);
     }
 
     /**
