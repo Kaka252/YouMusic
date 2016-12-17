@@ -1,5 +1,6 @@
 package com.zhouyou.remote.client;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.zhouyou.remote.Music;
@@ -24,7 +25,7 @@ public class Sender {
     /**
      * 设置播放列表，并播放音乐
      */
-    void playMusicList(Bundle data) {
+    void playMusicList(Intent data) {
         proxy.playMusicList(data);
     }
 

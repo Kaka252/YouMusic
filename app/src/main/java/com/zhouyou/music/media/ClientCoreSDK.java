@@ -1,6 +1,7 @@
 package com.zhouyou.music.media;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
@@ -138,25 +139,23 @@ public class ClientCoreSDK {
      * 生成播放列表，并开始播放指定音乐
      *
      * @param data 播放列表
-     * @param audioId 播放歌曲的id
+     * @param selectedMusic 播放歌曲
      */
-    public void playMusic(List<Audio> data, int audioId) {
+    public void playMusic(List<Audio> data, String selectedMusic) {
         if (ListUtils.isEmpty(data)) {
             T.ss("没有可用的音乐播放列表");
             return;
         }
-        ArrayList<Music> playList = new ArrayList<>();
+        ArrayList<String> playList = new ArrayList<>();
         for (Audio audio : data) {
             if (audio == null || TextUtils.isEmpty(audio.path)) continue;
-            Music music = new Music();
-            music.setMusicId(audio.id);
-            music.setMusicPath(audio.path);
-            playList.add(music);
-
+            playList.add(audio.path);
         }
+        Intent intent = new Intent();
         Bundle b = new Bundle();
-        b.putParcelableArrayList("playList", playList);
-        b.putInt("musicId", audioId);
-        MusicServiceSDK.get().playMusicList(b);
+        b.putStringArrayList("playList", playList);
+        b.putString("selectedMusic", selectedMusic);
+        intent.putExtras(b);
+        MusicServiceSDK.get().playMusicList(intent);
     }
 }

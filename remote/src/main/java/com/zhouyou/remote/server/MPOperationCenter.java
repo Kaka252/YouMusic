@@ -38,7 +38,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     /*当前的播放音乐的id*/
     private int currMusicId = -1;
     /*当前的播放列表*/
-    private SparseArrayCompat<String> musicMap = new SparseArrayCompat<>();
+    private ArrayList<String> playList = new ArrayList<>();
     /*偏好*/
     private SharedPreferences sp;
 
@@ -61,33 +61,24 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      * @throws RemoteException
      */
     @Override
-    public void playMusicList(Bundle data) throws RemoteException {
-        if (data == null) {
+    public void playMusicList(Intent data) throws RemoteException {
+        if (data == null || data.getExtras() == null) {
             switchMediaState(State.ERROR);
             return;
         }
-        ArrayList<Music> playList = data.getParcelableArrayList("playList");
-        int musicId = data.getInt("musicId", -1);
+        Bundle b = data.getExtras();
+        ArrayList<String> playList = b.getStringArrayList("playList");
+        String selectMusic = b.getString("selectedMusic");
         if (playList == null || playList.size() <= 0) {
             switchMediaState(State.ERROR);
             return;
         }
-        if (musicId < 0) {
+        if (TextUtils.isEmpty(selectMusic)) {
             switchMediaState(State.ERROR);
             return;
         }
 
-        if (musicMap.get(musicId) == null) {
-            for (Music music : playList) {
-                if (music == null) continue;
-                musicMap.put(music.getMusicId(), music.getMusicPath());
-            }
-        }
-        String musicPath = musicMap.get(musicId);
-        if (TextUtils.isEmpty(musicPath)) {
-            switchMediaState(State.ERROR);
-            return;
-        }
+        this.playList = playList;
 
         try {
             if (isReset()) {
@@ -95,7 +86,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 switchMediaState(State.IDLE);
             }
             if (currState == State.IDLE) {
-                Uri uri = Uri.parse(musicPath);
+                Uri uri = Uri.parse(selectMusic);
                 PLAYER.setDataSource(context, uri);
             }
             switchMediaState(State.INITIALIZED);

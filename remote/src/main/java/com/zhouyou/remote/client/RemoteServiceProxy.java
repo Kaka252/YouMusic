@@ -92,7 +92,7 @@ public class RemoteServiceProxy {
     /**
      * 设置播放列表，并播放音乐
      */
-    synchronized void playMusicList(Bundle data) {
+    synchronized void playMusicList(Intent data) {
         if (isConnected()) {
             try {
                 mIMusicControlInterface.playMusicList(data);

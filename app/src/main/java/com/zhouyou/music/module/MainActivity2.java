@@ -61,12 +61,14 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         Audio audio = (Audio) parent.getItemAtPosition(position);
         if (audio == null) return;
         if (sdk.getCurrAudio() == null) {
-            MusicServiceSDK.get().play(audio.id, audio.path, 0);
+            ClientCoreSDK.get().playMusic(sdk.getPlayList(), audio.path);
+//            MusicServiceSDK.get().play(audio.id, audio.path, 0);
         } else {
             if (audio.id == MusicServiceSDK.get().getMusicId() && MusicServiceSDK.get().getState() == State.IN_PROGRESS) {
                 playPanel.viewDetail();
             } else {
-                MusicServiceSDK.get().play(audio.id, audio.path, 0);
+                ClientCoreSDK.get().playMusic(sdk.getPlayList(), audio.path);
+//                MusicServiceSDK.get().play(audio.id, audio.path, 0);
             }
         }
     }

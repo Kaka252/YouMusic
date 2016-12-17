@@ -1,6 +1,7 @@
 package com.zhouyou.remote.client;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.zhouyou.remote.Music;
@@ -60,7 +61,7 @@ public class MusicServiceSDK {
      *
      * @param data 数据
      */
-    public void playMusicList(Bundle data) {
+    public void playMusicList(Intent data) {
         sender.playMusicList(data);
     }
 
