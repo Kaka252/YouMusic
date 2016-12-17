@@ -59,7 +59,7 @@ public class MusicServiceSDK {
      * @param playList 播放列表
      */
     public void initPlayList(List<Music> playList) {
-
+        proxy.initPlayList(playList);
     }
 
     /**

@@ -14,6 +14,8 @@ import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.server.MusicService;
 
+import java.util.List;
+
 /**
  * 作者：ZhouYou
  * 日期：2016/12/13.
@@ -83,6 +85,10 @@ public class RemoteServiceProxy {
         return mIMusicControlInterface != null;
     }
 
+
+    synchronized void initPlayList(List<Music> playList) {
+
+    }
     /**
      * 播放音乐
      *

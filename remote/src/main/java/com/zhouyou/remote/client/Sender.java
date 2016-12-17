@@ -3,6 +3,8 @@ package com.zhouyou.remote.client;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 
+import java.util.List;
+
 /**
  * 作者：ZhouYou
  * 日期：2016/12/14.
@@ -14,6 +16,10 @@ public class Sender {
 
     public Sender(RemoteServiceProxy proxy) {
         this.proxy = proxy;
+    }
+
+    void initPlayList(List<Music> playList) {
+        proxy.initPlayList(playList);
     }
 
     /**

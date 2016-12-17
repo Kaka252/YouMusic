@@ -1,13 +1,16 @@
 package com.zhouyou.music.media;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
+import com.zhouyou.remote.Music;
 import com.zhouyou.remote.client.MusicServiceSDK;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -126,5 +129,18 @@ public class ClientCoreSDK {
             mAudio = ListUtils.getElement(list, index);
         }
         return mAudio;
+    }
+
+    public void generatePlayList() {
+        List<Audio> list = getPlayList();
+        List<Music> playList = new ArrayList<>();
+        for (Audio audio : list) {
+            if (audio == null || TextUtils.isEmpty(audio.path)) continue;
+            Music music = new Music();
+            music.setMusicId(audio.id);
+            music.setMusicPath(audio.path);
+            playList.add(music);
+        }
+        MusicServiceSDK.get().initPlayList(playList);
     }
 }
