@@ -7,11 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
 import com.wonderkiln.blurkit.BlurKit;
+import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment2;
 import com.zhouyou.music.module.utils.MediaUtils;
@@ -28,7 +30,7 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSubscriber {
+public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSubscriber, OnMusicPlayingActionListener {
 
     private ClientCoreSDK sdk;
     private ImageView ivBg;
@@ -47,6 +49,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
         ViewPager vp = (ViewPager) findViewById(R.id.vp);
         ivBg = (ImageView) findViewById(R.id.iv_bg);
         operationPanel = (AudioOperationPanel2) findViewById(R.id.operation_panel);
+        operationPanel.setOnMusicPlayingActionListener(this);
         List<BaseFragment> fragments = new ArrayList<>();
         fragments.add(AudioPlayFragment2.getInstance(null));
         AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
@@ -65,24 +68,11 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
      */
     @Override
     public void onUpdateChange() {
-        int currState = MusicServiceSDK.get().getState();
-        Audio audio;
+        int currState = sdk.getCurrentPlayingMusicState();
+        Audio audio = sdk.getCacheAudio();
         if (currState == State.PREPARED || currState == State.IDLE) {
             MediaUtils.clearCacheBitmap();
             audio = sdk.getPlayingMusic();
-        } else if (currState == State.COMPLETED) {
-            boolean isPlayBack = sdk.isPlayBack();
-            if (isPlayBack) {
-                audio = sdk.getLast();
-                sdk.setPlayBack(false);
-            } else {
-                audio = sdk.getNext();
-            }
-        } else if (currState == State.ERROR) {
-            audio = sdk.getNext();
-//            MusicServiceSDK.get().play(audio.id, audio.path, 0);
-        } else {
-            audio = sdk.getCurrAudio();
         }
         // 加载专辑图片
         Bitmap bm = MediaUtils.getCachedBitmap();
@@ -106,6 +96,35 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
 //    public void onProgressChange(int currentPosition, int duration) {
 //        operationPanel.updateProgress(currentPosition, duration);
 //    }
+
+    @Override
+    public void onMusicPlay() {
+        Audio audio = sdk.getCacheAudio();
+        if (audio == null) {
+            T.ss("请选择歌曲进行播放");
+        } else {
+            sdk.playMusic(sdk.getPlayList(), audio.path);
+        }
+    }
+
+    @Override
+    public void onMusicPause() {
+        sdk.pause();
+    }
+
+    @Override
+    public void onMusicResume() {
+        sdk.resume();
+    }
+
+    @Override
+    public void onMusicComplete(boolean isPlayBack) {
+        if (sdk.hasPlayListInitiated()) {
+            sdk.complete(isPlayBack);
+        } else {
+            onMusicPlay();
+        }
+    }
 
     @Override
     protected void onDestroy() {

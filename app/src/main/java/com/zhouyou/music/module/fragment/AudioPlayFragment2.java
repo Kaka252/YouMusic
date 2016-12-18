@@ -13,6 +13,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AlbumImageView;
 import com.zhouyou.remote.State;
@@ -75,14 +76,11 @@ public class AudioPlayFragment2 extends BaseFragment implements IMusicStateSubsc
 
     @Override
     public void onUpdateChange() {
-        Audio audio;
-        int currState = MusicServiceSDK.get().getState();
+        Audio audio = sdk.getCacheAudio();
+        int currState = sdk.getCurrentPlayingMusicState();
         if (currState == State.PREPARED || currState == State.IDLE) {
             MediaUtils.clearCacheBitmap();
             ivAlbum.initSpanningDegree();
-            audio = sdk.getPlayingMusic();
-        } else {
-            audio = sdk.getCurrAudio();
         }
         // 加载专辑图片
         Bitmap bm = MediaUtils.getCachedBitmap();

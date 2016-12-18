@@ -235,7 +235,7 @@ public class ClientCoreSDK {
      * @param isPlayBack 是否播放上一首
      */
     public void complete(boolean isPlayBack) {
-        MusicServiceSDK.get().complete();
+        MusicServiceSDK.get().complete(isPlayBack);
     }
 
     /**

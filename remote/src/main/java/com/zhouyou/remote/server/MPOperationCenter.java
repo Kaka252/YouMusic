@@ -191,7 +191,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      */
     private void playNext() {
         int index = playList.indexOf(currPlayingMusicPath);
-        if (index >= playList.size()) {
+        if (index >= playList.size() - 1) {
             index = 0;
         } else {
             index += 1;
@@ -209,7 +209,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      */
     private void playBack() {
         int index = playList.indexOf(currPlayingMusicPath);
-        if (index < 0) {
+        if (index <= 0) {
             index = playList.size() - 1;
         } else {
             index -= 1;

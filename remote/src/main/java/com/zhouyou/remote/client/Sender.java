@@ -46,7 +46,7 @@ public class Sender {
     /**
      * 完成播放
      */
-    void complete() {
+    void complete(boolean isPlayBack) {
         proxy.switchMediaState(State.COMPLETED);
     }
 }

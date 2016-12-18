@@ -82,8 +82,8 @@ public class MusicServiceSDK {
     /**
      * 完成播放
      */
-    public void complete() {
-        sender.complete();
+    public void complete(boolean isPlayBack) {
+        sender.complete(isPlayBack);
     }
 
     /**

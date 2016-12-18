@@ -170,7 +170,7 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
                 }
                 break;
             case R.id.iv_play_next:
-                if (listener != null) listener.onMusicComplete();
+                if (listener != null) listener.onMusicComplete(false);
                 break;
             default:
                 break;

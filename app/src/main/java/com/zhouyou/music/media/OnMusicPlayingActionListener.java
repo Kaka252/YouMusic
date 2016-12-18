@@ -12,6 +12,6 @@ public interface OnMusicPlayingActionListener {
 
     void onMusicResume();
 
-    void onMusicComplete();
+    void onMusicComplete(boolean isPlayBack);
 
 }

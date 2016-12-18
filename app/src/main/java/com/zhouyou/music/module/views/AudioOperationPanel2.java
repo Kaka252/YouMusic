@@ -15,6 +15,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.MediaCoreSDK;
+import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.module.utils.StringUtils;
 import com.zhouyou.remote.State;
@@ -51,6 +52,12 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     private ImageView ivPlayNow;
 
     private Audio audio;
+
+    private OnMusicPlayingActionListener listener;
+
+    public void setOnMusicPlayingActionListener(OnMusicPlayingActionListener listener) {
+        this.listener = listener;
+    }
 
     private void init() {
         View view = inflater.inflate(R.layout.view_audio_operation_panel, this);
@@ -153,34 +160,26 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if (listener == null) return;
         switch (v.getId()) {
             case R.id.iv_play_back:
-                ClientCoreSDK.get().setPlayBack(true);
-                MusicServiceSDK.get().complete();
+                listener.onMusicComplete(true);
                 break;
             case R.id.iv_play_next:
-                MusicServiceSDK.get().complete();
+                listener.onMusicComplete(false);
                 break;
             case R.id.iv_play_now:
-                doPlayAction();
+                int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
+                if (state == State.PAUSED) {
+                    listener.onMusicResume();
+                } else if (state == State.IN_PROGRESS) {
+                    listener.onMusicPause();
+                } else {
+                    listener.onMusicPlay();
+                }
                 break;
             default:
                 break;
-        }
-    }
-
-    private void doPlayAction() {
-        int state = MusicServiceSDK.get().getState();
-        if (state == State.PAUSED) {
-            MusicServiceSDK.get().resume();
-        } else if (state == State.IN_PROGRESS) {
-            MusicServiceSDK.get().pause();
-        } else {
-            if (audio == null) {
-                T.ss("请选择歌曲进行播放");
-            } else {
-//                MusicServiceSDK.get().play(audio.id, audio.path, 0);
-            }
         }
     }
 }

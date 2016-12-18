@@ -103,7 +103,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onMusicComplete() {
+    public void onMusicComplete(boolean isPlayBack) {
         if (sdk.hasPlayListInitiated()) {
             sdk.complete();
         } else {
