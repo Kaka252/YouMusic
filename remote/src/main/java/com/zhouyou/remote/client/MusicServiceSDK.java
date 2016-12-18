@@ -65,19 +65,6 @@ public class MusicServiceSDK {
         sender.playMusicList(data);
     }
 
-
-    /**
-     * 播放
-     *
-     * @param audioId         音频的id
-     * @param audioPath       播放的地址
-     * @param currentPosition 播放的位置
-     */
-    @Deprecated
-    public void play(int audioId, String audioPath, int currentPosition) {
-        sender.play(audioId, audioPath, currentPosition);
-    }
-
     /**
      * 暂停
      */
@@ -109,11 +96,11 @@ public class MusicServiceSDK {
     }
 
     /**
-     * 获取音频播放器当前播放的音乐id
+     * 获取音频播放器当前播放的音乐的路径
      *
      * @return
      */
-    public int getMusicId() {
-        return receiver.getCurrMusicId();
+    public String getMusicPath() {
+        return receiver.getCurrMusicPath();
     }
 }

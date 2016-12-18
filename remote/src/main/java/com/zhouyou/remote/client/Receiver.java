@@ -18,20 +18,20 @@ public class Receiver extends IMusicReceiver.Stub {
 
     /*当前播放状态*/
     private int currState;
-    /*当前播放音乐id*/
-    private int currMusicId;
+    /*当前播放音乐的路径*/
+    private String currMusicPath;
 
     public int getCurrState() {
         return currState;
     }
 
-    public int getCurrMusicId() {
-        return currMusicId;
+    public String getCurrMusicPath() {
+        return currMusicPath;
     }
 
     @Override
-    public void onReceive(int currMusicId, int currState) throws RemoteException {
-        this.currMusicId = currMusicId;
+    public void onReceive(String currMusicPath, int currState) throws RemoteException {
+        this.currMusicPath = currMusicPath;
         this.currState = currState;
         dispatch(currState);
     }

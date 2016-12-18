@@ -179,7 +179,7 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
             if (audio == null) {
                 T.ss("请选择歌曲进行播放");
             } else {
-                MusicServiceSDK.get().play(audio.id, audio.path, 0);
+//                MusicServiceSDK.get().play(audio.id, audio.path, 0);
             }
         }
     }

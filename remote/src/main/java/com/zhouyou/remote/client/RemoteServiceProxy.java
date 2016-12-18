@@ -103,22 +103,6 @@ public class RemoteServiceProxy {
     }
 
     /**
-     * 播放音乐
-     *
-     * @param music
-     * @return
-     */
-    synchronized void play(Music music) {
-        if (isConnected()) {
-            try {
-                mIMusicControlInterface.play(music);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * 切换播放的状态
      *
      * @param state

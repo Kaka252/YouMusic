@@ -80,7 +80,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
             }
         } else if (currState == State.ERROR) {
             audio = sdk.getNext();
-            MusicServiceSDK.get().play(audio.id, audio.path, 0);
+//            MusicServiceSDK.get().play(audio.id, audio.path, 0);
         } else {
             audio = sdk.getCurrAudio();
         }

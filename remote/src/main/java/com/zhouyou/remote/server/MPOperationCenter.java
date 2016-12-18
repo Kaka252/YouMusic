@@ -7,6 +7,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
@@ -35,8 +37,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     private IMusicReceiver receiver;
     /*当前的播放状态*/
     private int currState = 0;
-    /*当前的播放音乐的id*/
-    private int currMusicId = -1;
+    /*当前的播放音乐的url*/
+    private String currPlayingMusicPath;
     /*当前的播放列表*/
     private ArrayList<String> playList = new ArrayList<>();
     /*偏好*/
@@ -57,6 +59,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     /**
      * 获取播放列表，且开始播放指定歌曲
+     *
      * @param data 数据
      * @throws RemoteException
      */
@@ -79,40 +82,18 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
 
         this.playList = playList;
-
-        try {
-            if (isReset()) {
-                PLAYER.reset();
-                switchMediaState(State.IDLE);
-            }
-            if (currState == State.IDLE) {
-                Uri uri = Uri.parse(selectMusic);
-                PLAYER.setDataSource(context, uri);
-            }
-            switchMediaState(State.INITIALIZED);
-            if (currState != State.ERROR) {
-                PLAYER.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            }
-            if (currState == State.INITIALIZED || currState == State.STOPPED) {
-                switchMediaState(State.PREPARING);
-            }
-        } catch (Exception e) {
-            Log.e("MusicError", e.toString());
-            switchMediaState(State.ERROR);
-        }
+        this.currPlayingMusicPath = selectMusic;
+        play(currPlayingMusicPath);
     }
 
     /**
      * 播放音乐
      *
-     * @param intent 音乐数据
+     * @param path 音乐播放路径
      * @throws RemoteException
      */
-    @Override
-    public void play(Music intent) throws RemoteException {
-        currMusicId = intent.getMusicId();
-        String audioPath = intent.getMusicPath();
-        if (TextUtils.isEmpty(audioPath)) {
+    private void play(String path) throws RemoteException {
+        if (TextUtils.isEmpty(path)) {
             switchMediaState(State.ERROR);
             return;
         }
@@ -122,7 +103,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 switchMediaState(State.IDLE);
             }
             if (currState == State.IDLE) {
-                Uri uri = Uri.parse(audioPath);
+                Uri uri = Uri.parse(path);
                 PLAYER.setDataSource(context, uri);
             }
             switchMediaState(State.INITIALIZED);
@@ -162,7 +143,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 //                    mediaPlayer.seekTo(currentPosition);
 //                }
                 PLAYER.start();
-                saveLastMusicId();
+                saveLastPlayedMusic();
                 switchMediaState(State.IN_PROGRESS);
                 break;
             case State.IN_PROGRESS: // 播放中
@@ -170,6 +151,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             case State.PAUSED: // 暂停
                 PLAYER.pause();
             case State.COMPLETED: // 播放完成
+                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 100);
+//                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);
                 break;
             case State.STOPPED: // 播放终断
                 PLAYER.stop();
@@ -185,15 +168,67 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
     }
 
+    private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case ACTION_PLAY_NEXT:
+                    playNext();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    });
+
+    /**
+     * 播放下一首
+     */
+    private void playNext() {
+        int index = playList.indexOf(currPlayingMusicPath);
+        if (index >= playList.size()) {
+            index = 0;
+        } else {
+            index += 1;
+        }
+        currPlayingMusicPath = playList.get(index);
+        try {
+            play(currPlayingMusicPath);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 播放上一首
+     */
+    private void playBack() {
+        int index = playList.indexOf(currPlayingMusicPath);
+        if (index < 0) {
+            index = playList.size() - 1;
+        } else {
+            index -= 1;
+        }
+        currPlayingMusicPath = playList.get(index);
+        try {
+            play(currPlayingMusicPath);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
      */
     private void onMainProcessCallback() throws RemoteException {
-        if (currMusicId < 0) {
-            currMusicId = getLastMusicId();
+        if (TextUtils.isEmpty(currPlayingMusicPath)) {
+            currPlayingMusicPath = getLastPlayedMusic();
         }
-        Log.d(TAG, "音乐的id : " + currMusicId);
-        receiver.onReceive(currMusicId, currState);
+        Log.d(TAG, "音乐的路径 : " + currPlayingMusicPath);
+        receiver.onReceive(currPlayingMusicPath, currState);
     }
 
     /**
@@ -248,9 +283,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     /**
      * 保存上一次播放的音乐id
      */
-    private void saveLastMusicId() {
+    private void saveLastPlayedMusic() {
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("musicId", currMusicId);
+        editor.putString("musicPath", currPlayingMusicPath);
         editor.apply();
     }
 
@@ -259,8 +294,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      *
      * @return
      */
-    private int getLastMusicId() {
-        return sp.getInt("musicId", -1);
+    private String getLastPlayedMusic() {
+        return sp.getString("musicPath", "");
     }
 
     /**

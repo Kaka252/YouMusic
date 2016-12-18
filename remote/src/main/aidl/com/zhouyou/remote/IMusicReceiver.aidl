@@ -3,5 +3,5 @@ package com.zhouyou.remote;
 
 interface IMusicReceiver {
 
-    void onReceive(int currMusicId, int currState);
+    void onReceive(String currMusicPath, int currState);
 }

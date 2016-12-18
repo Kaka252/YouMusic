@@ -12,6 +12,7 @@ import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.remote.Music;
+import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 
 import java.util.ArrayList;
@@ -58,10 +59,10 @@ public class ClientCoreSDK {
     public Audio getPlayingMusic() {
         List<Audio> audioList = getPlayList();
         if (ListUtils.isEmpty(audioList)) return null;
-        int musicId = MusicServiceSDK.get().getMusicId();
+        String musicPath = MusicServiceSDK.get().getMusicPath();
         for (Audio mAudio : audioList) {
-            if (mAudio == null) continue;
-            if (mAudio.id == musicId) {
+            if (mAudio == null || TextUtils.isEmpty(mAudio.path)) continue;
+            if (TextUtils.equals(musicPath, mAudio.path)) {
                 currAudio = mAudio;
             }
         }
@@ -138,7 +139,7 @@ public class ClientCoreSDK {
     /**
      * 生成播放列表，并开始播放指定音乐
      *
-     * @param data 播放列表
+     * @param data          播放列表
      * @param selectedMusic 播放歌曲
      */
     public void playMusic(List<Audio> data, String selectedMusic) {
@@ -157,5 +158,42 @@ public class ClientCoreSDK {
         b.putString("selectedMusic", selectedMusic);
         intent.putExtras(b);
         MusicServiceSDK.get().playMusicList(intent);
+    }
+
+    /**
+     * 是否是当前播放的音乐
+     *
+     * @param path
+     * @return
+     */
+    public boolean isPlayingCurrentMusic(String path) {
+        return !TextUtils.isEmpty(path) && TextUtils.equals(path, getCurrentPlayingMusicPath());
+    }
+
+    /**
+     * 获取当前正在播放的音乐路径
+     *
+     * @return
+     */
+    public String getCurrentPlayingMusicPath() {
+        return MusicServiceSDK.get().getMusicPath();
+    }
+
+    /**
+     * 获取当前正在播放的音乐状态
+     *
+     * @return
+     */
+    public int getCurrentPlayingMusicState() {
+        return MusicServiceSDK.get().getState();
+    }
+
+    /**
+     * 音乐是否正处于播放中
+     *
+     * @return
+     */
+    public boolean isMusicPlaying() {
+        return getCurrentPlayingMusicState() == State.IN_PROGRESS;
     }
 }

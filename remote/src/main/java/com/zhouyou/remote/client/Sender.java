@@ -30,21 +30,6 @@ public class Sender {
     }
 
     /**
-     * 播放
-     *
-     * @param audioId         播放的id
-     * @param audioPath       播放的地址
-     * @param currentPosition 播放的位置
-     */
-    void play(int audioId, String audioPath, int currentPosition) {
-        Music intent = new Music();
-        intent.setMusicId(audioId);
-        intent.setMusicPath(audioPath);
-        intent.setCurrentPosition(currentPosition);
-        proxy.play(intent);
-    }
-
-    /**
      * 暂停
      */
     void pause() {
