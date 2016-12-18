@@ -150,6 +150,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 break;
             case State.PAUSED: // 暂停
                 PLAYER.pause();
+                break;
             case State.COMPLETED: // 播放完成
                 handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 100);
 //                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);

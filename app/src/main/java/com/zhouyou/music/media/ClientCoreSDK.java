@@ -3,7 +3,6 @@ package com.zhouyou.music.media;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.zhouyou.library.utils.ListUtils;
@@ -11,7 +10,6 @@ import com.zhouyou.library.utils.T;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
-import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 
@@ -71,6 +69,16 @@ public class ClientCoreSDK {
 
     public Audio getCurrAudio() {
         return currAudio;
+    }
+
+    public Audio getCacheAudio() {
+        Audio audio;
+        if (getCurrentPlayingMusicState() == State.IDLE || getCurrentPlayingMusicState() == State.PREPARED) {
+            audio = getPlayingMusic();
+        } else {
+            audio = getCurrAudio();
+        }
+        return audio;
     }
 
     /**
@@ -137,30 +145,6 @@ public class ClientCoreSDK {
     }
 
     /**
-     * 生成播放列表，并开始播放指定音乐
-     *
-     * @param data          播放列表
-     * @param selectedMusic 播放歌曲
-     */
-    public void playMusic(List<Audio> data, String selectedMusic) {
-        if (ListUtils.isEmpty(data)) {
-            T.ss("没有可用的音乐播放列表");
-            return;
-        }
-        ArrayList<String> playList = new ArrayList<>();
-        for (Audio audio : data) {
-            if (audio == null || TextUtils.isEmpty(audio.path)) continue;
-            playList.add(audio.path);
-        }
-        Intent intent = new Intent();
-        Bundle b = new Bundle();
-        b.putStringArrayList("playList", playList);
-        b.putString("selectedMusic", selectedMusic);
-        intent.putExtras(b);
-        MusicServiceSDK.get().playMusicList(intent);
-    }
-
-    /**
      * 是否是当前播放的音乐
      *
      * @param path
@@ -195,5 +179,59 @@ public class ClientCoreSDK {
      */
     public boolean isMusicPlaying() {
         return getCurrentPlayingMusicState() == State.IN_PROGRESS;
+    }
+
+    /**
+     * 生成播放列表，并开始播放指定音乐
+     *
+     * @param data          播放列表
+     * @param selectedMusic 播放歌曲
+     */
+    public void playMusic(List<Audio> data, String selectedMusic) {
+        if (ListUtils.isEmpty(data)) {
+            T.ss("没有可用的音乐播放列表");
+            return;
+        }
+        ArrayList<String> playList = new ArrayList<>();
+        for (Audio audio : data) {
+            if (audio == null || TextUtils.isEmpty(audio.path)) continue;
+            playList.add(audio.path);
+        }
+        Intent intent = new Intent();
+        Bundle b = new Bundle();
+        b.putStringArrayList("playList", playList);
+        b.putString("selectedMusic", selectedMusic);
+        intent.putExtras(b);
+        MusicServiceSDK.get().playMusicList(intent);
+    }
+
+    /**
+     * 暂停播放
+     */
+    public void pause() {
+        MusicServiceSDK.get().pause();
+    }
+
+    /**
+     * 继续播放
+     */
+    public void resume() {
+        MusicServiceSDK.get().resume();
+    }
+
+    /**
+     * 完成播放
+     *
+     * @param isPlayBack 是否播放上一首
+     */
+    public void complete(boolean isPlayBack) {
+        MusicServiceSDK.get().complete();
+    }
+
+    /**
+     * 完成播放 - 下一首播放
+     */
+    public void complete() {
+        complete(false);
     }
 }

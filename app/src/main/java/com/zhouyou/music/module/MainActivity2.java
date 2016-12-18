@@ -10,6 +10,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
 import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.module.views.AudioPlayPanel2;
@@ -25,7 +26,8 @@ import java.util.List;
  * 日期：2016/12/15.
  */
 public class MainActivity2 extends BaseActivity implements AdapterView.OnItemClickListener,
-        IMusicStateSubscriber {
+        IMusicStateSubscriber,
+        OnMusicPlayingActionListener {
 
     private AudioPlayPanel2 playPanel;
     private ClientCoreSDK sdk;
@@ -44,6 +46,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     private void initViews() {
         ListView listView = (ListView) findViewById(R.id.list_view);
         playPanel = (AudioPlayPanel2) findViewById(R.id.play_panel);
+        playPanel.setOnMusicPlayingActionListener(this);
         listView.setOnItemClickListener(this);
         List<Audio> data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
@@ -73,17 +76,35 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     @Override
     public void onUpdateChange() {
-        int currState = MusicServiceSDK.get().getState();
-        Audio audio;
-        if (currState == State.IDLE || currState == State.PREPARED) {
-            audio = ClientCoreSDK.get().getPlayingMusic();
-        } else if (currState == State.COMPLETED || currState == State.ERROR) {
-            audio = ClientCoreSDK.get().getNext();
-//            MusicServiceSDK.get().play(audio.id, audio.path, 0);
-        } else {
-            audio = ClientCoreSDK.get().getCurrAudio();
-        }
+        int currState = sdk.getCurrentPlayingMusicState();
+        Audio audio = sdk.getCacheAudio();
         playPanel.updateAudio(audio, currState);
+    }
+
+
+    @Override
+    public void onMusicPlay() {
+        Audio audio = sdk.getCacheAudio();
+        if (audio == null) {
+            T.ss("请选择歌曲进行播放");
+        } else {
+            sdk.playMusic(sdk.getPlayList(), audio.path);
+        }
+    }
+
+    @Override
+    public void onMusicPause() {
+        sdk.pause();
+    }
+
+    @Override
+    public void onMusicResume() {
+        sdk.resume();
+    }
+
+    @Override
+    public void onMusicComplete() {
+        sdk.complete();
     }
 
     @Override

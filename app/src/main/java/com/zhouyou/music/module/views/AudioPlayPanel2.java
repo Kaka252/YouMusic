@@ -21,6 +21,7 @@ import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.AudioDetailActivity2;
 import com.zhouyou.music.module.utils.MediaUtils;
@@ -62,6 +63,12 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
     private Audio audio;
     /*当前播放的状态*/
     private int currState;
+
+    private OnMusicPlayingActionListener listener;
+
+    public void setOnMusicPlayingActionListener(OnMusicPlayingActionListener listener) {
+        this.listener = listener;
+    }
 
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.view_audio_play_panel, this);
@@ -153,10 +160,17 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
                 viewDetail();
                 break;
             case R.id.iv_play_now:
-                doPlayAction();
+                if (listener == null) return;
+                if (currState == State.PAUSED) {
+                    listener.onMusicResume();
+                } else if (currState == State.IN_PROGRESS) {
+                    listener.onMusicPause();
+                } else {
+                    listener.onMusicPlay();
+                }
                 break;
             case R.id.iv_play_next:
-                MusicServiceSDK.get().complete();
+                if (listener != null) listener.onMusicComplete();
                 break;
             default:
                 break;
@@ -167,19 +181,5 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
         Intent intent = new Intent(context, AudioDetailActivity2.class);
         ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
-    }
-
-    private void doPlayAction() {
-        if (currState == State.PAUSED) {
-            MusicServiceSDK.get().resume();
-        } else if (currState == State.IN_PROGRESS) {
-            MusicServiceSDK.get().pause();
-        } else {
-            if (audio == null) {
-                T.ss("请选择歌曲进行播放");
-            } else {
-//                MusicServiceSDK.get().play(audio.id, audio.path, 0);
-            }
-        }
     }
 }
