@@ -1,13 +1,18 @@
 package com.zhouyou.remote.client;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 
 import com.zhouyou.remote.IMusicReceiver;
+import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.MusicManager;
+import com.zhouyou.remote.constants.MusicConstants;
+
+import java.util.ArrayList;
 
 /**
  * 作者：ZhouYou
@@ -16,6 +21,7 @@ import com.zhouyou.remote.client.observer.MusicManager;
  */
 public class Receiver extends IMusicReceiver.Stub {
 
+    private ArrayList<String> playList;
     /*当前播放状态*/
     private int currState;
     /*当前播放音乐的路径*/
@@ -30,18 +36,26 @@ public class Receiver extends IMusicReceiver.Stub {
     }
 
     @Override
-    public void onReceive(String currMusicPath, int currState) throws RemoteException {
-        this.currMusicPath = currMusicPath;
-        this.currState = currState;
-        dispatch(currState);
+    public void onReceive(Intent data) throws RemoteException {
+        currMusicPath = data.getStringExtra(MusicConstants.MUSIC_SELECTED);
+        currState = data.getIntExtra(MusicConstants.MUSIC_STATE, 0);
+        playList = data.getStringArrayListExtra(MusicConstants.MUSIC_PLAY_LIST);
+        dispatch();
+    }
+
+    /**
+     * 播放列表是否被初始化
+     *
+     * @return true - 初始化了
+     */
+    public boolean hasInitializedPlayList() {
+        return playList != null && playList.size() > 0;
     }
 
     /**
      * 消息分发
-     *
-     * @param currState
      */
-    private void dispatch(int currState) {
+    private void dispatch() {
         switch (currState) {
             case State.IDLE: // 闲置
                 handler.sendEmptyMessage(ACTION_INIT);

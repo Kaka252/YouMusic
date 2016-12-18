@@ -12,6 +12,7 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
+import com.zhouyou.remote.constants.MusicConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,6 +183,15 @@ public class ClientCoreSDK {
     }
 
     /**
+     * 播放列表是否已经被初始化
+     *
+     * @return
+     */
+    public boolean hasPlayListInitiated() {
+        return MusicServiceSDK.get().hasInitializedPlayList();
+    }
+
+    /**
      * 生成播放列表，并开始播放指定音乐
      *
      * @param data          播放列表
@@ -199,8 +209,8 @@ public class ClientCoreSDK {
         }
         Intent intent = new Intent();
         Bundle b = new Bundle();
-        b.putStringArrayList("playList", playList);
-        b.putString("selectedMusic", selectedMusic);
+        b.putStringArrayList(MusicConstants.MUSIC_PLAY_LIST, playList);
+        b.putString(MusicConstants.MUSIC_SELECTED, selectedMusic);
         intent.putExtras(b);
         MusicServiceSDK.get().playMusicList(intent);
     }

@@ -103,4 +103,13 @@ public class MusicServiceSDK {
     public String getMusicPath() {
         return receiver.getCurrMusicPath();
     }
+
+    /**
+     * 是否初始化播放列表
+     *
+     * @return
+     */
+    public boolean hasInitializedPlayList() {
+        return receiver.hasInitializedPlayList();
+    }
 }

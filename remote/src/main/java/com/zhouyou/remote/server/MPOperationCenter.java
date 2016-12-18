@@ -18,6 +18,7 @@ import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
+import com.zhouyou.remote.constants.MusicConstants;
 
 import java.util.ArrayList;
 
@@ -70,8 +71,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             return;
         }
         Bundle b = data.getExtras();
-        ArrayList<String> playList = b.getStringArrayList("playList");
-        String selectMusic = b.getString("selectedMusic");
+        ArrayList<String> playList = b.getStringArrayList(MusicConstants.MUSIC_PLAY_LIST);
+        String selectMusic = b.getString(MusicConstants.MUSIC_SELECTED);
         if (playList == null || playList.size() <= 0) {
             switchMediaState(State.ERROR);
             return;
@@ -229,7 +230,11 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             currPlayingMusicPath = getLastPlayedMusic();
         }
         Log.d(TAG, "音乐的路径 : " + currPlayingMusicPath);
-        receiver.onReceive(currPlayingMusicPath, currState);
+        Intent intent = new Intent();
+        intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, playList);
+        intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
+        intent.putExtra(MusicConstants.MUSIC_STATE, currState);
+        receiver.onReceive(intent);
     }
 
     /**

@@ -104,7 +104,11 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     @Override
     public void onMusicComplete() {
-        sdk.complete();
+        if (sdk.hasPlayListInitiated()) {
+            sdk.complete();
+        } else {
+            onMusicPlay();
+        }
     }
 
     @Override
