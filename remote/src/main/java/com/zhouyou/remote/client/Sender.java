@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
+import com.zhouyou.remote.constants.MusicConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,20 +34,23 @@ public class Sender {
      * 暂停
      */
     void pause() {
-        proxy.switchMediaState(State.PAUSED);
+        Intent intent = MusicStateMessageFactory.createMusicStateMessage(State.PAUSED);
+        proxy.doMediaPlayerAction(intent);
     }
 
     /**
      * 继续播放
      */
     void resume() {
-        proxy.switchMediaState(State.PREPARED);
+        Intent intent = MusicStateMessageFactory.createMusicStateMessage(State.PREPARED);
+        proxy.doMediaPlayerAction(intent);
     }
 
     /**
      * 完成播放
      */
     void complete(boolean isPlayBack) {
-        proxy.switchMediaState(State.COMPLETED);
+        Intent intent = MusicStateMessageFactory.createMusicControlMessage(State.COMPLETED, isPlayBack);
+        proxy.doMediaPlayerAction(intent);
     }
 }

@@ -1,6 +1,5 @@
 package com.zhouyou.remote;
 
-import com.zhouyou.remote.Music;
 import com.zhouyou.remote.IMusicReceiver;
 
 interface IMusicControlInterface {
@@ -10,7 +9,7 @@ interface IMusicControlInterface {
     // 播放
     void playMusicList(in Intent data);
     // 切换MediaPlayer的播放状态
-    void switchMediaState(int state);
+    void doMediaPlayerAction(in Intent action);
     // 注册播放状态的返回
     void registerReceiver(IMusicReceiver receiver);
 }

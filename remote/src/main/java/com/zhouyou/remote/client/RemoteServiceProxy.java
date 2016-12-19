@@ -105,12 +105,12 @@ public class RemoteServiceProxy {
     /**
      * 切换播放的状态
      *
-     * @param state
+     * @param action
      */
-    synchronized void switchMediaState(int state) {
+    synchronized void doMediaPlayerAction(Intent action) {
         if (isConnected()) {
             try {
-                mIMusicControlInterface.switchMediaState(state);
+                mIMusicControlInterface.doMediaPlayerAction(action);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

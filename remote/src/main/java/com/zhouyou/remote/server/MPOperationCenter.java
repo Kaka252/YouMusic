@@ -18,6 +18,7 @@ import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
+import com.zhouyou.remote.client.MusicStateMessageFactory;
 import com.zhouyou.remote.constants.MusicConstants;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         PLAYER.setOnErrorListener(this);
         PLAYER.setOnPreparedListener(this);
         PLAYER.setOnCompletionListener(this);
-        switchMediaState(State.IDLE);
+        doMediaPlayerAction(makeStateChange(State.IDLE));
     }
 
     /**
@@ -67,24 +68,28 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     @Override
     public void playMusicList(Intent data) throws RemoteException {
         if (data == null || data.getExtras() == null) {
-            switchMediaState(State.ERROR);
+            doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
         }
         Bundle b = data.getExtras();
         ArrayList<String> playList = b.getStringArrayList(MusicConstants.MUSIC_PLAY_LIST);
         String selectMusic = b.getString(MusicConstants.MUSIC_SELECTED);
         if (playList == null || playList.size() <= 0) {
-            switchMediaState(State.ERROR);
+            doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
         }
         if (TextUtils.isEmpty(selectMusic)) {
-            switchMediaState(State.ERROR);
+            doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
         }
 
         this.playList = playList;
         this.currPlayingMusicPath = selectMusic;
         play(currPlayingMusicPath);
+    }
+
+    private Intent makeStateChange(int state) {
+        return MusicStateMessageFactory.createMusicStateMessage(state);
     }
 
     /**
@@ -95,43 +100,44 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      */
     private void play(String path) throws RemoteException {
         if (TextUtils.isEmpty(path)) {
-            switchMediaState(State.ERROR);
+            doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
         }
         try {
             if (isReset()) {
                 PLAYER.reset();
-                switchMediaState(State.IDLE);
+                doMediaPlayerAction(makeStateChange(State.IDLE));
             }
             if (currState == State.IDLE) {
                 Uri uri = Uri.parse(path);
                 PLAYER.setDataSource(context, uri);
             }
-            switchMediaState(State.INITIALIZED);
+            doMediaPlayerAction(makeStateChange(State.INITIALIZED));
             if (currState != State.ERROR) {
                 PLAYER.setAudioStreamType(AudioManager.STREAM_MUSIC);
             }
             if (currState == State.INITIALIZED || currState == State.STOPPED) {
-                switchMediaState(State.PREPARING);
+                doMediaPlayerAction(makeStateChange(State.PREPARING));
             }
         } catch (Exception e) {
             Log.e("MusicError", e.toString());
-            switchMediaState(State.ERROR);
+            doMediaPlayerAction(makeStateChange(State.ERROR));
         }
     }
 
     /**
      * 切换播放状态
      *
-     * @param state 播放状态
+     * @param action 播放状态
      * @throws RemoteException
      */
     @Override
-    public void switchMediaState(int state) throws RemoteException {
-        currState = state;
+    public void doMediaPlayerAction(Intent action) throws RemoteException {
+        currState = action.getIntExtra(MusicConstants.MUSIC_STATE, 0);
+        boolean isPlayBack = action.getBooleanExtra(MusicConstants.MUSIC_PLAY_BACK, false);
         onMainProcessCallback();
-        printLog(state); // 打印日志
-        switch (state) {
+        printLog(currState); // 打印日志
+        switch (currState) {
             case State.IDLE: // 闲置
                 break;
             case State.INITIALIZED: // 初始化
@@ -145,7 +151,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 //                }
                 PLAYER.start();
                 saveLastPlayedMusic();
-                switchMediaState(State.IN_PROGRESS);
+                doMediaPlayerAction(makeStateChange(State.IN_PROGRESS));
                 break;
             case State.IN_PROGRESS: // 播放中
                 break;
@@ -153,8 +159,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 PLAYER.pause();
                 break;
             case State.COMPLETED: // 播放完成
-                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 100);
-//                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);
+                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);
                 break;
             case State.STOPPED: // 播放终断
                 PLAYER.stop();
@@ -171,6 +176,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     }
 
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
+    private static final int ACTION_PLAY_BACK = 2; // 播放上一首
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -178,6 +184,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             switch (msg.what) {
                 case ACTION_PLAY_NEXT:
                     playNext();
+                    break;
+                case ACTION_PLAY_BACK:
+                    playBack();
                     break;
                 default:
                     break;
@@ -261,7 +270,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     @Override
     public void onCompletion(MediaPlayer mp) {
         try {
-            switchMediaState(State.COMPLETED);
+            doMediaPlayerAction(makeStateChange(State.COMPLETED));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -270,7 +279,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         try {
-            switchMediaState(State.ERROR);
+            doMediaPlayerAction(makeStateChange(State.ERROR));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -280,7 +289,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     @Override
     public void onPrepared(MediaPlayer mp) {
         try {
-            switchMediaState(State.PREPARED);
+            doMediaPlayerAction(makeStateChange(State.PREPARED));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
