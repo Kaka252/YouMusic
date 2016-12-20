@@ -72,16 +72,6 @@ public class ClientCoreSDK {
         return currAudio;
     }
 
-    public Audio getCacheAudio() {
-        Audio audio;
-        if (getCurrentPlayingMusicState() == State.IDLE || getCurrentPlayingMusicState() == State.PREPARED) {
-            audio = getPlayingMusic();
-        } else {
-            audio = getCurrAudio();
-        }
-        return audio;
-    }
-
     /**
      * 获取播放列表
      *

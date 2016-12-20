@@ -76,11 +76,14 @@ public class AudioPlayFragment2 extends BaseFragment implements IMusicStateSubsc
 
     @Override
     public void onUpdateChange() {
-        Audio audio = sdk.getCacheAudio();
+        Audio audio;
         int currState = sdk.getCurrentPlayingMusicState();
         if (currState == State.PREPARED || currState == State.IDLE) {
+            audio = sdk.getPlayingMusic();
             MediaUtils.clearCacheBitmap();
             ivAlbum.initSpanningDegree();
+        } else {
+            audio = sdk.getCurrAudio();
         }
         // 加载专辑图片
         Bitmap bm = MediaUtils.getCachedBitmap();
