@@ -41,6 +41,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     private int currState = 0;
     /*当前的播放音乐的url*/
     private String currPlayingMusicPath;
+    /*当前播放音乐的进度*/
+    private int currentPosition;
     /*当前的播放列表*/
     private ArrayList<String> playList = new ArrayList<>();
     /*偏好*/
@@ -236,7 +238,18 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
     }
 
+    /**
+     * 获取当前音乐播放进度
+     *
+     * @return
+     */
+    private int getPlayingPosition() {
+        return PLAYER.getCurrentPosition();
+    }
 
+    private int getPlayingDuration() {
+        return PLAYER.getDuration();
+    }
 
     /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
@@ -249,7 +262,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         Intent intent = new Intent();
         intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, playList);
         intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
-        intent.putExtra(MusicConstants.MUSIC_STATE, currState);
+        intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
+        intent.putExtra(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
         receiver.onReceive(intent);
     }
 

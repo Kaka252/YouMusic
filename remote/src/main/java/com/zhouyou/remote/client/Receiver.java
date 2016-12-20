@@ -26,6 +26,10 @@ public class Receiver extends IMusicReceiver.Stub {
     private int currState;
     /*当前播放音乐的路径*/
     private String currMusicPath;
+    /*当前音乐的进度*/
+    private int currPlayingPosition;
+    /*当前音乐的时长*/
+    private int currPlayingDuration;
 
     public int getCurrState() {
         return currState;
@@ -40,6 +44,8 @@ public class Receiver extends IMusicReceiver.Stub {
         currMusicPath = data.getStringExtra(MusicConstants.MUSIC_SELECTED);
         currState = data.getIntExtra(MusicConstants.MUSIC_STATE, 0);
         playList = data.getStringArrayListExtra(MusicConstants.MUSIC_PLAY_LIST);
+        currPlayingPosition = data.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, 0);
+        currPlayingDuration = data.getIntExtra(MusicConstants.MUSIC_PLAYING_DURATION, 0);
         dispatch();
     }
 
@@ -48,7 +54,7 @@ public class Receiver extends IMusicReceiver.Stub {
      *
      * @return true - 初始化了
      */
-    public boolean hasInitializedPlayList() {
+    boolean hasInitializedPlayList() {
         return playList != null && playList.size() > 0;
     }
 
@@ -84,7 +90,6 @@ public class Receiver extends IMusicReceiver.Stub {
             case State.ERROR: // 错误
 //                Toast.ss("音频文件出错");
                 handler.sendEmptyMessage(ACTION_INIT);
-                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
                 break;
@@ -101,8 +106,6 @@ public class Receiver extends IMusicReceiver.Stub {
     });
 
     private static final int ACTION_INIT = 0;
-    private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
-    private static final int ACTION_PLAY_BACK = 2; // 播放上一首
     private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
     private static final int ACTION_PROGRESS_SUSPEND = 4; // 暂停
     private static final int ACTION_NOTIFICATION = 5; // 发送通知栏消息
@@ -113,12 +116,6 @@ public class Receiver extends IMusicReceiver.Stub {
             switch (msg.what) {
                 case ACTION_INIT:
 //                    currentPosition = 0;
-                    break;
-                case ACTION_PLAY_NEXT:
-//                    playNext();
-                    break;
-                case ACTION_PLAY_BACK:
-//                    playBack();
                     break;
                 case ACTION_PROGRESS_UPDATE:
 //                    if (!isProgressControlledByUser) {
