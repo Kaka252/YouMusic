@@ -74,6 +74,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         Bundle b = data.getExtras();
         ArrayList<String> playList = b.getStringArrayList(MusicConstants.MUSIC_PLAY_LIST);
         String selectMusic = b.getString(MusicConstants.MUSIC_SELECTED);
+        int playAction = b.getInt(MusicConstants.MUSIC_PLAY_ACTION);
         if (playList == null || playList.size() <= 0) {
             doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
@@ -82,10 +83,19 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
             doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
         }
-
-        this.playList = playList;
         this.currPlayingMusicPath = selectMusic;
-        play(currPlayingMusicPath);
+        this.playList = playList;
+        switch (playAction) {
+            case 1:
+                playNext();
+                break;
+            case 2:
+                playBack();
+                break;
+            default:
+                play();
+                break;
+        }
     }
 
     private Intent makeStateChange(int state) {
@@ -95,21 +105,16 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     /**
      * 播放音乐
      *
-     * @param path 音乐播放路径
      * @throws RemoteException
      */
-    private void play(String path) throws RemoteException {
-        if (TextUtils.isEmpty(path)) {
-            doMediaPlayerAction(makeStateChange(State.ERROR));
-            return;
-        }
+    private void play() throws RemoteException {
         try {
             if (isReset()) {
                 PLAYER.reset();
                 doMediaPlayerAction(makeStateChange(State.IDLE));
             }
             if (currState == State.IDLE) {
-                Uri uri = Uri.parse(path);
+                Uri uri = Uri.parse(currPlayingMusicPath);
                 PLAYER.setDataSource(context, uri);
             }
             doMediaPlayerAction(makeStateChange(State.INITIALIZED));
@@ -207,7 +212,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
         currPlayingMusicPath = playList.get(index);
         try {
-            play(currPlayingMusicPath);
+            play();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -225,11 +230,13 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
         currPlayingMusicPath = playList.get(index);
         try {
-            play(currPlayingMusicPath);
+            play();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
+
+
 
     /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作

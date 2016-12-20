@@ -58,7 +58,7 @@ public class ClientCoreSDK {
     public Audio getPlayingMusic() {
         List<Audio> audioList = getPlayList();
         if (ListUtils.isEmpty(audioList)) return null;
-        String musicPath = MusicServiceSDK.get().getMusicPath();
+        String musicPath = getCurrentPlayingMusicPath();
         for (Audio mAudio : audioList) {
             if (mAudio == null || TextUtils.isEmpty(mAudio.path)) continue;
             if (TextUtils.equals(musicPath, mAudio.path)) {
@@ -196,8 +196,9 @@ public class ClientCoreSDK {
      *
      * @param data          播放列表
      * @param selectedMusic 播放歌曲
+     * @param playAction    0 - 播放当前 | 1 - 播放下一首 | 2 - 播放上一首
      */
-    public void playMusic(List<Audio> data, String selectedMusic) {
+    public void playMusic(List<Audio> data, String selectedMusic, int playAction) {
         if (ListUtils.isEmpty(data)) {
             T.ss("没有可用的音乐播放列表");
             return;
@@ -211,6 +212,7 @@ public class ClientCoreSDK {
         Bundle b = new Bundle();
         b.putStringArrayList(MusicConstants.MUSIC_PLAY_LIST, playList);
         b.putString(MusicConstants.MUSIC_SELECTED, selectedMusic);
+        b.putInt(MusicConstants.MUSIC_PLAY_ACTION, playAction);
         intent.putExtras(b);
         MusicServiceSDK.get().playMusicList(intent);
     }
@@ -236,12 +238,5 @@ public class ClientCoreSDK {
      */
     public void complete(boolean isPlayBack) {
         MusicServiceSDK.get().complete(isPlayBack);
-    }
-
-    /**
-     * 完成播放 - 下一首播放
-     */
-    public void complete() {
-        complete(false);
     }
 }

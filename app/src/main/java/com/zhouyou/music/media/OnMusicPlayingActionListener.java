@@ -6,12 +6,10 @@ package com.zhouyou.music.media;
 
 public interface OnMusicPlayingActionListener {
 
-    void onMusicPlay();
+    void onMusicPlay(int playAction);
 
     void onMusicPause();
 
     void onMusicResume();
-
-    void onMusicComplete(boolean isPlayBack);
 
 }
