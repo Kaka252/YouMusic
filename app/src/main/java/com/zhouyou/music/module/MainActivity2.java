@@ -77,14 +77,19 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     @Override
     public void onUpdateChange() {
         int currState = sdk.getCurrentPlayingMusicState();
-        Audio audio = sdk.getCacheAudio();
+        Audio audio;
+        if (currState == State.PREPARED || currState == State.IDLE) {
+            audio = sdk.getPlayingMusic();
+        } else {
+            audio = sdk.getCurrAudio();
+        }
         playPanel.updateAudio(audio, currState);
     }
 
 
     @Override
     public void onMusicPlay(int playAction) {
-        Audio audio = sdk.getCacheAudio();
+        Audio audio = sdk.getCurrAudio();
         if (audio == null) {
             T.ss("请选择歌曲进行播放");
             return;

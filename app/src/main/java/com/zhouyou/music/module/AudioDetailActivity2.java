@@ -69,11 +69,14 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
     @Override
     public void onUpdateChange() {
         int currState = sdk.getCurrentPlayingMusicState();
-        Audio audio = sdk.getCacheAudio();
+        Audio audio;
         if (currState == State.PREPARED || currState == State.IDLE) {
-            MediaUtils.clearCacheBitmap();
             audio = sdk.getPlayingMusic();
+            MediaUtils.clearCacheBitmap();
+        } else {
+            audio = sdk.getCurrAudio();
         }
+
         // 加载专辑图片
         Bitmap bm = MediaUtils.getCachedBitmap();
         if (bm == null) {

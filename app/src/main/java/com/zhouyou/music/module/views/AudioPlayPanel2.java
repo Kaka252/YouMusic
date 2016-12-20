@@ -59,8 +59,6 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
     /*播放进度*/
     private View viewProgress;
 
-    /*当前播放的音乐*/
-    private Audio audio;
     /*当前播放的状态*/
     private int currState;
 
@@ -116,7 +114,6 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
     public void updateAudio(Audio audio, int state) {
         updateAudioPlayingStatus(state);
         if (audio == null) return;
-        this.audio = audio;
         StringBuilder sb = new StringBuilder();
         if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
         if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
