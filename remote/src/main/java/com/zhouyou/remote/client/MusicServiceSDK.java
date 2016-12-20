@@ -104,6 +104,14 @@ public class MusicServiceSDK {
         return receiver.getCurrMusicPath();
     }
 
+    public int getMusicCurrentPosition() {
+        return receiver.getCurrPlayingPosition();
+    }
+
+    public int getMusicDuration() {
+        return receiver.getCurrPlayingDuration();
+    }
+
     /**
      * 是否初始化播放列表
      *

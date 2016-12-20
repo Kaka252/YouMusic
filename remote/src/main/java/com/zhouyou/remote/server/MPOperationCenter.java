@@ -43,6 +43,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     private String currPlayingMusicPath;
     /*当前播放音乐的进度*/
     private int currentPosition;
+    /*当前播放音乐的时长*/
+    private int duration;
     /*当前的播放列表*/
     private ArrayList<String> playList = new ArrayList<>();
     /*偏好*/
@@ -161,6 +163,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 doMediaPlayerAction(makeStateChange(State.IN_PROGRESS));
                 break;
             case State.IN_PROGRESS: // 播放中
+                handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                 break;
             case State.PAUSED: // 暂停
                 PLAYER.pause();
@@ -184,6 +187,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
 
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
     private static final int ACTION_PLAY_BACK = 2; // 播放上一首
+    private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
+    private static final int ACTION_PROGRESS_SUSPEND = 4; // 暂停
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -194,6 +199,17 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                     break;
                 case ACTION_PLAY_BACK:
                     playBack();
+                    break;
+                case ACTION_PROGRESS_UPDATE:
+                    try {
+                        onMainProcessCallback();
+                        handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case ACTION_PROGRESS_SUSPEND:
+                    handler.removeMessages(ACTION_PROGRESS_UPDATE);
                     break;
                 default:
                     break;
@@ -244,11 +260,17 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
      * @return
      */
     private int getPlayingPosition() {
-        return PLAYER.getCurrentPosition();
+        if (PLAYER.isPlaying()) {
+            currentPosition = PLAYER.getCurrentPosition();
+        }
+        return currentPosition;
     }
 
     private int getPlayingDuration() {
-        return PLAYER.getDuration();
+        if (PLAYER.isPlaying()) {
+            duration = PLAYER.getDuration();
+        }
+        return duration;
     }
 
     /**
@@ -260,6 +282,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
         Log.d(TAG, "音乐的路径 : " + currPlayingMusicPath);
         Intent intent = new Intent();
+        intent.putExtra(MusicConstants.MUSIC_STATE, currState);
         intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, playList);
         intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
         intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());

@@ -1,6 +1,7 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,6 +17,7 @@ import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.module.views.AudioPlayPanel2;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
+import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
 
@@ -27,6 +29,7 @@ import java.util.List;
  */
 public class MainActivity2 extends BaseActivity implements AdapterView.OnItemClickListener,
         IMusicStateSubscriber,
+        IMusicProgressSubscriber,
         OnMusicPlayingActionListener {
 
     private AudioPlayPanel2 playPanel;
@@ -39,6 +42,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         if (!isApplyingPermissions()) {
             sdk = ClientCoreSDK.get();
             MusicManager.get().createAudioStatePublisher().register(this);
+            MusicManager.get().createProgressPublisher().register(this);
             initViews();
         }
     }
@@ -57,6 +61,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     protected void onResume() {
         super.onResume();
         onUpdateChange();
+        onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
     }
 
     @Override
@@ -88,6 +93,12 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
 
     @Override
+    public void onProgressChange(int currentPosition, int duration) {
+        Log.e("MainActivity", "currentPosition - " + currentPosition);
+        playPanel.updateProgress(currentPosition, duration);
+    }
+
+    @Override
     public void onMusicPlay(int playAction) {
         Audio audio = sdk.getCurrAudio();
         if (audio == null) {
@@ -116,5 +127,6 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     protected void onDestroy() {
         super.onDestroy();
         MusicManager.get().createAudioStatePublisher().unregister(this);
+        MusicManager.get().createProgressPublisher().unregister(this);
     }
 }

@@ -13,6 +13,7 @@ import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.constants.MusicConstants;
+import com.zhouyou.remote.server.MusicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +162,22 @@ public class ClientCoreSDK {
      */
     public int getCurrentPlayingMusicState() {
         return MusicServiceSDK.get().getState();
+    }
+
+    public int getCurrentPlayingMusicDuration() {
+        int duration = 0;
+        if (isMusicPlaying()) {
+            duration = MusicServiceSDK.get().getMusicDuration();
+        } else {
+            if (currAudio != null) {
+                duration = currAudio.duration;
+            }
+        }
+        return duration;
+    }
+
+    public int getCurrentPlayingMusicPosition() {
+        return MusicServiceSDK.get().getMusicCurrentPosition();
     }
 
     /**
