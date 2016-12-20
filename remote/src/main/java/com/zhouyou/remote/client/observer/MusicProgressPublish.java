@@ -1,33 +1,32 @@
-package com.zhouyou.music.media.state;
+package com.zhouyou.remote.client.observer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 作者：ZhouYou
- * 日期：2016/11/25.
+ * Created by zhouyou on 16/12/21.
  */
-@Deprecated
-public class AudioProgressPublisher implements IAudioProgressPublisher {
+
+public class MusicProgressPublish implements IMusicProgressPublisher {
 
     private final Object lock = new Object();
 
     // 存放观察者
-    private List<IAudioProgressSubscriber> subscribers;
+    private List<IMusicProgressSubscriber> subscribers;
 
-    public AudioProgressPublisher() {
+    public MusicProgressPublish() {
         subscribers = new ArrayList<>();
     }
 
     @Override
-    public void register(IAudioProgressSubscriber subscriber) {
+    public void register(IMusicProgressSubscriber subscriber) {
         synchronized (lock) {
             subscribers.add(subscriber);
         }
     }
 
     @Override
-    public void unregister(IAudioProgressSubscriber subscriber) {
+    public void unregister(IMusicProgressSubscriber subscriber) {
         synchronized (lock) {
             subscribers.remove(subscriber);
         }
@@ -36,7 +35,7 @@ public class AudioProgressPublisher implements IAudioProgressPublisher {
     @Override
     public void notifySubscribers(int currentPosition, int duration) {
         synchronized (lock) {
-            for (IAudioProgressSubscriber subscriber : subscribers) {
+            for (IMusicProgressSubscriber subscriber : subscribers) {
                 subscriber.onProgressChange(currentPosition, duration);
             }
         }

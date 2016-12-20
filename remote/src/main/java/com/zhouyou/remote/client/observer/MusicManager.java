@@ -23,4 +23,10 @@ public class MusicManager {
     public IMusicStatePublisher createAudioStatePublisher() {
         return statePublisher;
     }
+
+    private IMusicProgressPublisher progressPublisher = new MusicProgressPublish();
+
+    public IMusicProgressPublisher createProgressPublisher() {
+        return progressPublisher;
+    }
 }

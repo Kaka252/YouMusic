@@ -78,7 +78,6 @@ public class Receiver extends IMusicReceiver.Stub {
                 handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 handler.sendEmptyMessage(ACTION_NOTIFICATION);
             case State.COMPLETED: // 播放完成
-//                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);
                 handler.sendEmptyMessage(ACTION_INIT);
                 break;
             case State.STOPPED: // 播放终断
@@ -101,6 +100,7 @@ public class Receiver extends IMusicReceiver.Stub {
         @Override
         public boolean handleMessage(Message msg) {
             MusicManager.get().createAudioStatePublisher().notifySubscribers();
+            MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
             return true;
         }
     });

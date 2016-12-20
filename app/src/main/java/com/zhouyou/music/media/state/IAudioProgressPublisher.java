@@ -5,6 +5,7 @@ package com.zhouyou.music.media.state;
  * 日期：2016/11/25.
  * 音频播放进度的发布者
  */
+@Deprecated
 public interface IAudioProgressPublisher {
 
     void register(IAudioProgressSubscriber subscriber);

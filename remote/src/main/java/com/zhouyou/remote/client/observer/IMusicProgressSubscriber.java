@@ -1,11 +1,11 @@
-package com.zhouyou.music.media.state;
+package com.zhouyou.remote.client.observer;
 
 /**
- * 作者：ZhouYou
- * 日期：2016/11/25.
+ * Created by zhouyou on 16/12/21.
  */
-@Deprecated
-public interface IAudioProgressSubscriber {
+
+public interface IMusicProgressSubscriber {
+
 
     /**
      * 通知进度改变
