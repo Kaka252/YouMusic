@@ -265,6 +265,8 @@ public class ClientCoreSDK {
     public void seekTo(int progress) {
         float percent = progress * 1.0f / 100;
         int seekPosition = (int) (percent * getCurrentPlayingMusicDuration());
-        MusicServiceSDK.get().seekTo(seekPosition);
+        if (hasPlayListInitiated()) {
+            MusicServiceSDK.get().seekTo(seekPosition);
+        }
     }
 }

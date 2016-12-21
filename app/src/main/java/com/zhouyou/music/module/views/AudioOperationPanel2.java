@@ -48,11 +48,7 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     private TextView tvStartTime;
     private TextView tvEndTime;
     private SeekBar seekBar;
-
     private ImageView ivPlayNow;
-
-    private Audio audio;
-
     private OnMusicPlayingActionListener listener;
 
     public void setOnMusicPlayingActionListener(OnMusicPlayingActionListener listener) {
@@ -75,20 +71,18 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//            MediaCoreSDK.get().setProgressControlledByUser(fromUser);
+//            int duration = ClientCoreSDK.get().getCurrentPlayingMusicDuration();
+//            int seekPosition = (int) ((progress * 1.0f / 100) * duration);
+//            updateProgress(seekPosition, duration);
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-//            MediaCoreSDK.get().setProgressControlledByUser(true);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             ClientCoreSDK.get().seekTo(seekBar.getProgress());
-//            MediaCoreSDK.get().setProgressControlledByUser(false);
-//            MediaCoreSDK.get().updateProgress(seekBar.getProgress());
-//            updateProgress(MediaCoreSDK.get().getCurrentAudioProgress(), MediaCoreSDK.get().getCurrentAudioDuration());
         }
     };
 
@@ -119,11 +113,9 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     /**
      * 更新操作板信息
      *
-     * @param audio
      * @param state
      */
-    public void updatePanel(Audio audio, int state) {
-        this.audio = audio;
+    public void updatePanel(int state) {
         updateAudioPlayingStatus(state);
     }
 

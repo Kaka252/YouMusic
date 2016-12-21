@@ -92,7 +92,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
             bm = BlurKit.getInstance().blur(bm, 23);
         }
         ivBg.setImageBitmap(bm);
-        operationPanel.updatePanel(audio, currState);
+        operationPanel.updatePanel(currState);
     }
 
     @Override

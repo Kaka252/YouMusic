@@ -111,10 +111,20 @@ public class MusicServiceSDK {
         return receiver.getCurrMusicPath();
     }
 
+    /**
+     * 获取音频播放器当前播放的音乐的播放进度
+     *
+     * @return
+     */
     public int getMusicCurrentPosition() {
         return receiver.getCurrPlayingPosition();
     }
 
+    /**
+     * 获取音频播放器当前播放的音乐的播放时长
+     *
+     * @return
+     */
     public int getMusicDuration() {
         return receiver.getCurrPlayingDuration();
     }
