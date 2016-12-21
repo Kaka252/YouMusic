@@ -94,7 +94,6 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     @Override
     public void onProgressChange(int currentPosition, int duration) {
-        Log.e("MainActivity", "currentPosition - " + currentPosition);
         playPanel.updateProgress(currentPosition, duration);
     }
 

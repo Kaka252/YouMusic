@@ -55,7 +55,6 @@ public class Receiver extends IMusicReceiver.Stub {
         playList = data.getStringArrayListExtra(MusicConstants.MUSIC_PLAY_LIST);
         currPlayingPosition = data.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, 0);
         currPlayingDuration = data.getIntExtra(MusicConstants.MUSIC_PLAYING_DURATION, 0);
-        Log.e("Receiver", "currentPosition - " + currPlayingPosition);
         dispatch();
     }
 
@@ -68,86 +67,38 @@ public class Receiver extends IMusicReceiver.Stub {
         return playList != null && playList.size() > 0;
     }
 
+    private boolean isPlaying() {
+        return currState == State.IN_PROGRESS;
+    }
+
     /**
      * 消息分发
      */
     private void dispatch() {
-//        switch (currState) {
-//            case State.IDLE: // 闲置
-//                mMainHandler.sendEmptyMessage(ACTION_INIT);
-//                break;
-//            case State.INITIALIZED: // 初始化
-//                break;
-//            case State.PREPARING: // 正在准备
-//                break;
-//            case State.PREPARED: // 准备就绪
-//                break;
-//            case State.IN_PROGRESS: // 播放中
-//                mMainHandler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
-//                break;
-//            case State.PAUSED: // 暂停
-//                mMainHandler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
-////                handler.sendEmptyMessage(ACTION_NOTIFICATION);
-//            case State.COMPLETED: // 播放完成
-//                mMainHandler.sendEmptyMessage(ACTION_INIT);
-//                break;
-//            case State.STOPPED: // 播放终断
-//                mMainHandler.sendEmptyMessage(ACTION_INIT);
-//                break;
-//            case State.END: // 结束
-//                mMainHandler.sendEmptyMessage(ACTION_INIT);
-//                break;
-//            case State.ERROR: // 错误
-////                Toast.ss("音频文件出错");
-//                mMainHandler.sendEmptyMessage(ACTION_INIT);
-//                break;
-//            default:
-//                break;
-//        }
-        mMainHandler.sendEmptyMessage(0);
+        if (isPlaying()) {
+            mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);
+        } else {
+            mMainHandler.sendEmptyMessage(UPDATE_STATE);
+        }
     }
+
+    private static final int UPDATE_STATE = 0;
+    private static final int UPDATE_PROGRESS = 1;
 
     private Handler mMainHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            MusicManager.get().createAudioStatePublisher().notifySubscribers();
-            MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
+            switch (msg.what) {
+                case UPDATE_STATE:
+                    MusicManager.get().createAudioStatePublisher().notifySubscribers();
+                    break;
+                case UPDATE_PROGRESS:
+                    MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
+                    break;
+                default:
+                    break;
+            }
             return true;
         }
     });
-
-    private static final int ACTION_INIT = 0;
-    private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
-    private static final int ACTION_PROGRESS_SUSPEND = 4; // 暂停
-    private static final int ACTION_NOTIFICATION = 5; // 发送通知栏消息
-
-//    private Handler mMainHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
-//        @Override
-//        public boolean handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case ACTION_INIT:
-////                    currentPosition = 0;
-//                    break;
-//                case ACTION_PROGRESS_UPDATE:
-////                    if (!isProgressControlledByUser) {
-////                    MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
-//                    mMainHandler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
-////                    } else {
-////                        handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
-////                    }
-//                    break;
-//                case ACTION_PROGRESS_SUSPEND:
-//                    mMainHandler.removeMessages(ACTION_PROGRESS_UPDATE);
-//                    break;
-//                case ACTION_NOTIFICATION:
-////                    NotificationReceiver.get().sendNotification();
-//                    break;
-//                default:
-//                    break;
-//            }
-//            MusicManager.get().createAudioStatePublisher().notifySubscribers();
-//            MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
-//            return true;
-//        }
-//    });
 }

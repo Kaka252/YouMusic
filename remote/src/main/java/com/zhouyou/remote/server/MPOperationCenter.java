@@ -144,7 +144,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     public void doMediaPlayerAction(Intent action) throws RemoteException {
         currState = action.getIntExtra(MusicConstants.MUSIC_STATE, 0);
         boolean isPlayBack = action.getBooleanExtra(MusicConstants.MUSIC_PLAY_BACK, false);
-        onMainProcessCallback();
+        onMainProcessStateChangeNotify();
         printLog(currState); // 打印日志
         switch (currState) {
             case State.IDLE: // 闲置
@@ -202,7 +202,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                     break;
                 case ACTION_PROGRESS_UPDATE:
                     try {
-                        onMainProcessCallback();
+                        onMainProcessProgressChangeNotify();
                         handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -276,7 +276,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
      */
-    private void onMainProcessCallback() throws RemoteException {
+    private void onMainProcessStateChangeNotify() throws RemoteException {
         if (TextUtils.isEmpty(currPlayingMusicPath)) {
             currPlayingMusicPath = getLastPlayedMusic();
         }
@@ -285,6 +285,12 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         intent.putExtra(MusicConstants.MUSIC_STATE, currState);
         intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, playList);
         intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
+        receiver.onReceive(intent);
+    }
+
+    private void onMainProcessProgressChangeNotify() throws RemoteException {
+        Intent intent = new Intent();
+        intent.putExtra(MusicConstants.MUSIC_STATE, currState);
         intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
         intent.putExtra(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
         receiver.onReceive(intent);
