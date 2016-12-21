@@ -164,6 +164,11 @@ public class ClientCoreSDK {
         return MusicServiceSDK.get().getState();
     }
 
+    /**
+     * 获取当前正在播放的音乐时长
+     *
+     * @return
+     */
     public int getCurrentPlayingMusicDuration() {
         int duration = 0;
         if (isMusicPlaying()) {
@@ -176,6 +181,11 @@ public class ClientCoreSDK {
         return duration;
     }
 
+    /**
+     * 获取当前正在播放的音乐进度
+     *
+     * @return
+     */
     public int getCurrentPlayingMusicPosition() {
         return MusicServiceSDK.get().getMusicCurrentPosition();
     }
@@ -245,5 +255,16 @@ public class ClientCoreSDK {
      */
     public void complete(boolean isPlayBack) {
         MusicServiceSDK.get().complete(isPlayBack);
+    }
+
+    /**
+     * 手动更新播放进度
+     *
+     * @param progress
+     */
+    public void seekTo(int progress) {
+        float percent = progress * 1.0f / 100;
+        int seekPosition = (int) (percent * getCurrentPlayingMusicDuration());
+        MusicServiceSDK.get().seekTo(seekPosition);
     }
 }

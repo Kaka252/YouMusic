@@ -22,4 +22,11 @@ public class MusicStateMessageFactory {
         intent.putExtra(MusicConstants.MUSIC_PLAY_BACK, isPlayBack);
         return intent;
     }
+
+    public static Intent createMusicCurrentPositionMessage(int state, int seekPosition) {
+        Intent intent = new Intent();
+        intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, seekPosition);
+        intent.putExtra(MusicConstants.MUSIC_STATE, state);
+        return intent;
+    }
 }

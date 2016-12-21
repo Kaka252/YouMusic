@@ -75,19 +75,20 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            MediaCoreSDK.get().setProgressControlledByUser(fromUser);
+//            MediaCoreSDK.get().setProgressControlledByUser(fromUser);
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            MediaCoreSDK.get().setProgressControlledByUser(true);
+//            MediaCoreSDK.get().setProgressControlledByUser(true);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            MediaCoreSDK.get().setProgressControlledByUser(false);
-            MediaCoreSDK.get().updateProgress(seekBar.getProgress());
-            updateProgress(MediaCoreSDK.get().getCurrentAudioProgress(), MediaCoreSDK.get().getCurrentAudioDuration());
+            ClientCoreSDK.get().seekTo(seekBar.getProgress());
+//            MediaCoreSDK.get().setProgressControlledByUser(false);
+//            MediaCoreSDK.get().updateProgress(seekBar.getProgress());
+//            updateProgress(MediaCoreSDK.get().getCurrentAudioProgress(), MediaCoreSDK.get().getCurrentAudioDuration());
         }
     };
 

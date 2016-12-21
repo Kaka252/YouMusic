@@ -144,6 +144,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     public void doMediaPlayerAction(Intent action) throws RemoteException {
         currState = action.getIntExtra(MusicConstants.MUSIC_STATE, 0);
         boolean isPlayBack = action.getBooleanExtra(MusicConstants.MUSIC_PLAY_BACK, false);
+        int seekPosition = action.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, -1);
         onMainProcessStateChangeNotify();
         printLog(currState); // 打印日志
         switch (currState) {
@@ -153,13 +154,13 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 break;
             case State.PREPARING: // 正在准备
                 PLAYER.prepareAsync();
+                saveLastPlayedMusic();
                 break;
             case State.PREPARED: // 准备就绪
-//                if (currentPosition > 0 && currentPosition <= getCurrentAudioDuration()) {
-//                    mediaPlayer.seekTo(currentPosition);
-//                }
+                if (seekPosition > 0 && seekPosition <= getPlayingDuration()) {
+                    PLAYER.seekTo(seekPosition);
+                }
                 PLAYER.start();
-                saveLastPlayedMusic();
                 doMediaPlayerAction(makeStateChange(State.IN_PROGRESS));
                 break;
             case State.IN_PROGRESS: // 播放中
