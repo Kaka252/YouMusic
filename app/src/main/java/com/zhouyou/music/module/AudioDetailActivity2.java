@@ -18,8 +18,10 @@ import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment2;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel2;
+import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
+import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
 
@@ -30,7 +32,9 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSubscriber, OnMusicPlayingActionListener {
+public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSubscriber,
+        IMusicProgressSubscriber,
+        OnMusicPlayingActionListener {
 
     private ClientCoreSDK sdk;
     private ImageView ivBg;
@@ -41,6 +45,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
         super.onCreate(savedInstanceState);
         sdk = ClientCoreSDK.get();
         MusicManager.get().createAudioStatePublisher().register(this);
+        MusicManager.get().createProgressPublisher().register(this);
         setContentView(R.layout.activity_audio_detail2);
         initViews();
     }
@@ -61,6 +66,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
     protected void onResume() {
         super.onResume();
         onUpdateChange();
+        onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
     }
 
     /**
@@ -89,16 +95,10 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
         operationPanel.updatePanel(audio, currState);
     }
 
-//    /**
-//     * 播放进度改变
-//     *
-//     * @param currentPosition 播放进度
-//     * @param duration        音频时长
-//     */
-//    @Override
-//    public void onProgressChange(int currentPosition, int duration) {
-//        operationPanel.updateProgress(currentPosition, duration);
-//    }
+    @Override
+    public void onProgressChange(int currentPosition, int duration) {
+        operationPanel.updateProgress(currentPosition, duration);
+    }
 
     @Override
     public void onMusicPlay(int playAction) {
@@ -128,5 +128,6 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
     protected void onDestroy() {
         super.onDestroy();
         MusicManager.get().createAudioStatePublisher().unregister(this);
+        MusicManager.get().createProgressPublisher().unregister(this);
     }
 }
