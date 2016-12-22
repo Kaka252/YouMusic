@@ -159,7 +159,7 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
             case R.id.iv_play_now:
                 if (listener == null) return;
                 if (currState == State.PAUSED) {
-                    listener.onMusicResume();
+                    listener.onMusicResume(-1);
                 } else if (currState == State.IN_PROGRESS) {
                     listener.onMusicPause();
                 } else {

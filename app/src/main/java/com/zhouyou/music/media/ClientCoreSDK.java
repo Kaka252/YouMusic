@@ -244,8 +244,8 @@ public class ClientCoreSDK {
     /**
      * 继续播放
      */
-    public void resume() {
-        MusicServiceSDK.get().resume();
+    public void resume(int seekPosition) {
+        MusicServiceSDK.get().resume(seekPosition);
     }
 
     /**
@@ -262,11 +262,11 @@ public class ClientCoreSDK {
      *
      * @param progress
      */
-    public void seekTo(int progress) {
-        float percent = progress * 1.0f / 100;
-        int seekPosition = (int) (percent * getCurrentPlayingMusicDuration());
-        if (hasPlayListInitiated()) {
-            MusicServiceSDK.get().seekTo(seekPosition);
-        }
-    }
+//    public void seekTo(int progress) {
+//        float percent = progress * 1.0f / 100;
+//        int seekPosition = (int) (percent * getCurrentPlayingMusicDuration());
+//        if (hasPlayListInitiated()) {
+//            MusicServiceSDK.get().seekTo(seekPosition);
+//        }
+//    }
 }

@@ -41,8 +41,8 @@ public class Sender {
     /**
      * 继续播放
      */
-    void resume() {
-        Intent intent = MusicStateMessageFactory.createMusicStateMessage(State.PREPARED);
+    void resume(int seekPosition) {
+        Intent intent = MusicStateMessageFactory.createMusicStateMessage(State.PREPARED, seekPosition);
         proxy.doMediaPlayerAction(intent);
     }
 
@@ -57,8 +57,8 @@ public class Sender {
     /**
      * 手动更新播放进度
      */
-    void seekTo(int seekPosition) {
-        Intent intent = MusicStateMessageFactory.createMusicCurrentPositionMessage(State.PREPARED, seekPosition);
-        proxy.doMediaPlayerAction(intent);
-    }
+//    void seekTo(int seekPosition) {
+//        Intent intent = MusicStateMessageFactory.createMusicStateMessage(State.PREPARED, seekPosition);
+//        proxy.doMediaPlayerAction(intent);
+//    }
 }

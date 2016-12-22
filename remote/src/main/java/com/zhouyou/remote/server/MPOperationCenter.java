@@ -13,6 +13,7 @@ import android.os.RemoteException;
 import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
@@ -145,6 +146,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         currState = action.getIntExtra(MusicConstants.MUSIC_STATE, 0);
         boolean isPlayBack = action.getBooleanExtra(MusicConstants.MUSIC_PLAY_BACK, false);
         int seekPosition = action.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, -1);
+
         onMainProcessStateChangeNotify();
         printLog(currState); // 打印日志
         switch (currState) {
@@ -180,6 +182,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 break;
             case State.ERROR: // 错误
                 PLAYER.reset();
+                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
                 break;

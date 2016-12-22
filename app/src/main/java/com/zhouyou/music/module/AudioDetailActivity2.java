@@ -120,8 +120,8 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
     }
 
     @Override
-    public void onMusicResume() {
-        sdk.resume();
+    public void onMusicResume(int seekPosition) {
+        sdk.resume(seekPosition);
     }
 
     @Override

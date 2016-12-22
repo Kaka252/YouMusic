@@ -10,6 +10,6 @@ public interface OnMusicPlayingActionListener {
 
     void onMusicPause();
 
-    void onMusicResume();
+    void onMusicResume(int seekPosition);
 
 }

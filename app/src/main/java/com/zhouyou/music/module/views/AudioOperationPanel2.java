@@ -51,6 +51,9 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     private ImageView ivPlayNow;
     private OnMusicPlayingActionListener listener;
 
+    private int seekPosition;
+    private int duration;
+
     public void setOnMusicPlayingActionListener(OnMusicPlayingActionListener listener) {
         this.listener = listener;
     }
@@ -71,9 +74,6 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//            int duration = ClientCoreSDK.get().getCurrentPlayingMusicDuration();
-//            int seekPosition = (int) ((progress * 1.0f / 100) * duration);
-//            updateProgress(seekPosition, duration);
         }
 
         @Override
@@ -82,7 +82,13 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            ClientCoreSDK.get().seekTo(seekBar.getProgress());
+            float percent = seekBar.getProgress() * 1.0f / 100;
+            seekPosition = (int) (percent * duration);
+            if (ClientCoreSDK.get().isMusicPlaying()) {
+                ClientCoreSDK.get().resume(seekPosition);
+            } else {
+                updateProgress(seekPosition, duration);
+            }
         }
     };
 
@@ -126,6 +132,8 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
      * @param duration        时长
      */
     public void updateProgress(int currentPosition, int duration) {
+        this.seekPosition = currentPosition;
+        this.duration = duration;
         if (duration <= 0) {
             tvStartTime.setText(StringUtils.formatTime(0));
             tvEndTime.setText(StringUtils.formatTime(0));
@@ -164,7 +172,7 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
             case R.id.iv_play_now:
                 int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
                 if (state == State.PAUSED) {
-                    listener.onMusicResume();
+                    listener.onMusicResume(seekPosition);
                 } else if (state == State.IN_PROGRESS) {
                     listener.onMusicPause();
                 } else {

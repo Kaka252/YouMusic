@@ -75,8 +75,8 @@ public class MusicServiceSDK {
     /**
      * 继续播放
      */
-    public void resume() {
-        sender.resume();
+    public void resume(int seekPosition) {
+        sender.resume(seekPosition);
     }
 
     /**
@@ -89,9 +89,9 @@ public class MusicServiceSDK {
     /**
      * 手动更新播放进度
      */
-    public void seekTo(int seekPosition) {
-        sender.seekTo(seekPosition);
-    }
+//    public void seekTo(int seekPosition) {
+//        sender.seekTo(seekPosition);
+//    }
 
     /**
      * 获取音频播放器的播放状态

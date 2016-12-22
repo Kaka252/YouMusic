@@ -118,8 +118,8 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onMusicResume() {
-        sdk.resume();
+    public void onMusicResume(int seekPosition) {
+        sdk.resume(seekPosition);
     }
 
     @Override

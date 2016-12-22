@@ -23,7 +23,7 @@ public class MusicStateMessageFactory {
         return intent;
     }
 
-    public static Intent createMusicCurrentPositionMessage(int state, int seekPosition) {
+    public static Intent createMusicStateMessage(int state, int seekPosition) {
         Intent intent = new Intent();
         intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, seekPosition);
         intent.putExtra(MusicConstants.MUSIC_STATE, state);
