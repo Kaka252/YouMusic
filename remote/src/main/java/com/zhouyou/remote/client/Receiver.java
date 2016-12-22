@@ -22,7 +22,8 @@ import java.util.ArrayList;
  */
 public class Receiver extends IMusicReceiver.Stub {
 
-    private ArrayList<String> playList;
+    /*播放列表是否被初始化*/
+    private boolean hasPlayListInitialized;
     /*当前播放状态*/
     private int currState;
     /*当前播放音乐的路径*/
@@ -52,7 +53,7 @@ public class Receiver extends IMusicReceiver.Stub {
     public void onReceive(Intent data) throws RemoteException {
         currMusicPath = data.getStringExtra(MusicConstants.MUSIC_SELECTED);
         currState = data.getIntExtra(MusicConstants.MUSIC_STATE, 0);
-        playList = data.getStringArrayListExtra(MusicConstants.MUSIC_PLAY_LIST);
+        hasPlayListInitialized = data.getBooleanExtra(MusicConstants.MUSIC_PLAY_LIST, false);
         currPlayingPosition = data.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, 0);
         currPlayingDuration = data.getIntExtra(MusicConstants.MUSIC_PLAYING_DURATION, 0);
         dispatch();
@@ -64,7 +65,7 @@ public class Receiver extends IMusicReceiver.Stub {
      * @return true - 初始化了
      */
     boolean hasInitializedPlayList() {
-        return playList != null && playList.size() > 0;
+        return hasPlayListInitialized;
     }
 
     private boolean isPlaying() {

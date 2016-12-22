@@ -203,7 +203,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                     break;
                 case ACTION_PROGRESS_UPDATE:
                     try {
-                        onMainProcessProgressChangeNotify();
+                        onMainProcessStateChangeNotify();
                         handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -275,6 +275,15 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     }
 
     /**
+     * 判断播放列表是否被初始化
+     *
+     * @return
+     */
+    private boolean hasPlayListInitialized() {
+        return playList != null && playList.size() > 0;
+    }
+
+    /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
      */
     private void onMainProcessStateChangeNotify() throws RemoteException {
@@ -284,14 +293,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         Log.d(TAG, "音乐的路径 : " + currPlayingMusicPath);
         Intent intent = new Intent();
         intent.putExtra(MusicConstants.MUSIC_STATE, currState);
-        intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, playList);
+        intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, hasPlayListInitialized());
         intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
-        receiver.onReceive(intent);
-    }
-
-    private void onMainProcessProgressChangeNotify() throws RemoteException {
-        Intent intent = new Intent();
-        intent.putExtra(MusicConstants.MUSIC_STATE, currState);
         intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
         intent.putExtra(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
         receiver.onReceive(intent);
