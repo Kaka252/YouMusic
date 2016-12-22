@@ -53,12 +53,4 @@ public class Sender {
         Intent intent = MusicStateMessageFactory.createMusicControlMessage(State.COMPLETED, isPlayBack);
         proxy.doMediaPlayerAction(intent);
     }
-
-    /**
-     * 手动更新播放进度
-     */
-//    void seekTo(int seekPosition) {
-//        Intent intent = MusicStateMessageFactory.createMusicStateMessage(State.PREPARED, seekPosition);
-//        proxy.doMediaPlayerAction(intent);
-//    }
 }

@@ -87,13 +87,6 @@ public class MusicServiceSDK {
     }
 
     /**
-     * 手动更新播放进度
-     */
-//    public void seekTo(int seekPosition) {
-//        sender.seekTo(seekPosition);
-//    }
-
-    /**
      * 获取音频播放器的播放状态
      *
      * @return

@@ -69,12 +69,12 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         Audio audio = (Audio) parent.getItemAtPosition(position);
         if (audio == null) return;
         if (sdk.getCurrAudio() == null) {
-            sdk.playMusic(sdk.getPlayList(), audio.path, 0);
+            sdk.playMusic(sdk.getPlayList(), audio.path);
         } else {
             if (sdk.isPlayingCurrentMusic(audio.path) && sdk.isMusicPlaying()) {
                 playPanel.viewDetail();
             } else {
-                sdk.playMusic(sdk.getPlayList(), audio.path, 0);
+                sdk.playMusic(sdk.getPlayList(), audio.path);
             }
         }
     }
@@ -108,7 +108,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         if (sdk.hasPlayListInitiated()) {
             sdk.complete(playAction == 2);
         } else {
-            sdk.playMusic(sdk.getPlayList(), audio.path, playAction);
+            sdk.playMusic(sdk.getPlayList(), audio.path, playAction, seekPosition);
         }
     }
 

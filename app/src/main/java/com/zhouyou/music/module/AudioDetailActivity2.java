@@ -110,7 +110,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
         if (sdk.hasPlayListInitiated()) {
             sdk.complete(playAction == 2);
         } else {
-            sdk.playMusic(sdk.getPlayList(), audio.path, playAction);
+            sdk.playMusic(sdk.getPlayList(), audio.path, playAction, seekPosition);
         }
     }
 

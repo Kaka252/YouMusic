@@ -43,7 +43,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     /*当前的播放音乐的url*/
     private String currPlayingMusicPath;
     /*当前播放音乐的进度*/
-    private int currentPosition;
+    private int currentPosition = 0;
     /*当前播放音乐的时长*/
     private int duration;
     /*当前的播放列表*/
@@ -80,6 +80,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         ArrayList<String> playList = b.getStringArrayList(MusicConstants.MUSIC_PLAY_LIST);
         String selectMusic = b.getString(MusicConstants.MUSIC_SELECTED);
         int playAction = b.getInt(MusicConstants.MUSIC_PLAY_ACTION);
+        int seekPosition = b.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
         if (playList == null || playList.size() <= 0) {
             doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
@@ -90,6 +91,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
         this.currPlayingMusicPath = selectMusic;
         this.playList = playList;
+        if (seekPosition > 0) {
+            currentPosition = seekPosition;
+        }
         switch (playAction) {
             case 1:
                 playNext();
@@ -104,7 +108,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     }
 
     private Intent makeStateChange(int state) {
-        return MusicStateMessageFactory.createMusicStateMessage(state);
+        return MusicStateMessageFactory.createMusicStateMessage(state, currentPosition);
     }
 
     /**
@@ -159,7 +163,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 saveLastPlayedMusic();
                 break;
             case State.PREPARED: // 准备就绪
-                if (seekPosition > 0 && seekPosition <= getPlayingDuration()) {
+                if (seekPosition > 0) {
                     PLAYER.seekTo(seekPosition);
                 }
                 PLAYER.start();
@@ -172,7 +176,8 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 PLAYER.pause();
                 break;
             case State.COMPLETED: // 播放完成
-                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 100);
+                handler.sendEmptyMessage(ACTION_INIT_PLAY);
+                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 16);
                 break;
             case State.STOPPED: // 播放终断
                 PLAYER.stop();
@@ -189,6 +194,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
     }
 
+    private static final int ACTION_INIT_PLAY = 0;
     private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
     private static final int ACTION_PLAY_BACK = 2; // 播放上一首
     private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
@@ -198,6 +204,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
+                case ACTION_INIT_PLAY:
+                    currentPosition = 0;
+                    break;
                 case ACTION_PLAY_NEXT:
                     playNext();
                     break;

@@ -214,8 +214,9 @@ public class ClientCoreSDK {
      * @param data          播放列表
      * @param selectedMusic 播放歌曲
      * @param playAction    0 - 播放当前 | 1 - 播放下一首 | 2 - 播放上一首
+     * @param seekPosition  被指定的进度
      */
-    public void playMusic(List<Audio> data, String selectedMusic, int playAction) {
+    public void playMusic(List<Audio> data, String selectedMusic, int playAction, int seekPosition) {
         if (ListUtils.isEmpty(data)) {
             T.ss("没有可用的音乐播放列表");
             return;
@@ -230,8 +231,30 @@ public class ClientCoreSDK {
         b.putStringArrayList(MusicConstants.MUSIC_PLAY_LIST, playList);
         b.putString(MusicConstants.MUSIC_SELECTED, selectedMusic);
         b.putInt(MusicConstants.MUSIC_PLAY_ACTION, playAction);
+        b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, seekPosition);
         intent.putExtras(b);
         MusicServiceSDK.get().playMusicList(intent);
+    }
+
+    /**
+     * 生成播放列表，并开始播放指定音乐
+     *
+     * @param data          播放列表
+     * @param selectedMusic 播放歌曲
+     * @param playAction    0 - 播放当前 | 1 - 播放下一首 | 2 - 播放上一首
+     */
+    public void playMusic(List<Audio> data, String selectedMusic, int playAction) {
+        playMusic(data, selectedMusic, playAction, -1);
+    }
+
+    /**
+     * 生成播放列表，并开始播放指定音乐
+     *
+     * @param data          播放列表
+     * @param selectedMusic 播放歌曲
+     */
+    public void playMusic(List<Audio> data, String selectedMusic) {
+        playMusic(data, selectedMusic, 0, -1);
     }
 
     /**
@@ -256,17 +279,4 @@ public class ClientCoreSDK {
     public void complete(boolean isPlayBack) {
         MusicServiceSDK.get().complete(isPlayBack);
     }
-
-    /**
-     * 手动更新播放进度
-     *
-     * @param progress
-     */
-//    public void seekTo(int progress) {
-//        float percent = progress * 1.0f / 100;
-//        int seekPosition = (int) (percent * getCurrentPlayingMusicDuration());
-//        if (hasPlayListInitiated()) {
-//            MusicServiceSDK.get().seekTo(seekPosition);
-//        }
-//    }
 }
