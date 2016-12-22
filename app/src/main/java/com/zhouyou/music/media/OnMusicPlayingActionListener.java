@@ -6,7 +6,7 @@ package com.zhouyou.music.media;
 
 public interface OnMusicPlayingActionListener {
 
-    void onMusicPlay(int playAction);
+    void onMusicPlay(int playAction, int seekPosition);
 
     void onMusicPause();
 

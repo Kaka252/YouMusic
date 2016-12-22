@@ -98,7 +98,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onMusicPlay(int playAction) {
+    public void onMusicPlay(int playAction, int seekPosition) {
         Audio audio = sdk.getCurrAudio();
         if (audio == null) {
             T.ss("请选择歌曲进行播放");

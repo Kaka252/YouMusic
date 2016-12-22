@@ -163,11 +163,11 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
                 } else if (currState == State.IN_PROGRESS) {
                     listener.onMusicPause();
                 } else {
-                    listener.onMusicPlay(0);
+                    listener.onMusicPlay(0, -1);
                 }
                 break;
             case R.id.iv_play_next:
-                if (listener != null) listener.onMusicPlay(1);
+                if (listener != null) listener.onMusicPlay(1, -1);
                 break;
             default:
                 break;

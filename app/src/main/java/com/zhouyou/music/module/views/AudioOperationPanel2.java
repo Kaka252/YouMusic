@@ -164,10 +164,10 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
         if (listener == null) return;
         switch (v.getId()) {
             case R.id.iv_play_back:
-                listener.onMusicPlay(2);
+                listener.onMusicPlay(2, -1);
                 break;
             case R.id.iv_play_next:
-                listener.onMusicPlay(1);
+                listener.onMusicPlay(1, -1);
                 break;
             case R.id.iv_play_now:
                 int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
@@ -176,7 +176,7 @@ public class AudioOperationPanel2 extends LinearLayout implements View.OnClickLi
                 } else if (state == State.IN_PROGRESS) {
                     listener.onMusicPause();
                 } else {
-                    listener.onMusicPlay(0);
+                    listener.onMusicPlay(0, seekPosition);
                 }
                 break;
             default:

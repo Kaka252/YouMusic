@@ -101,7 +101,7 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
     }
 
     @Override
-    public void onMusicPlay(int playAction) {
+    public void onMusicPlay(int playAction, int seekPosition) {
         Audio audio = sdk.getCurrAudio();
         if (audio == null) {
             T.ss("请选择歌曲进行播放");
