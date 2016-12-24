@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.zhouyou.library.utils.PoolUtils;
 import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
@@ -114,16 +117,35 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
         if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
         if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
         tvAudioInfo.setText(sb.toString());
-        if (state == State.PREPARED || state == State.IDLE) {
-            MediaUtils.clearCacheBitmap();
+        if (state == State.PREPARING || state == State.IDLE) {
+            loadAlbumImage(audio);
         }
-        // 加载专辑图片
-        Bitmap bm = MediaUtils.getCachedBitmap();
-        if (bm == null) {
-            bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, true);
-        }
-        ivAlbum.setBitmap(bm);
     }
+
+    /**
+     * 读取专辑图片
+     *
+     * @param audio
+     */
+    private synchronized void loadAlbumImage(final Audio audio) {
+        PoolUtils.POOL.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (audio == null) return;
+                Bitmap bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, true);
+                handler.obtainMessage(0, bm).sendToTarget();
+            }
+        });
+    }
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Bitmap bm = (Bitmap) msg.obj;
+            ivAlbum.setBitmap(bm);
+            return true;
+        }
+    });
 
     /**
      * 更新歌曲进度

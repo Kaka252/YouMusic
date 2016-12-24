@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public void onUpdateChange() {
         int currState = sdk.getCurrentPlayingMusicState();
         Audio audio;
-        if (currState == State.PREPARED || currState == State.IDLE) {
+        if (currState == State.PREPARING || currState == State.IDLE) {
             audio = sdk.getPlayingMusic();
         } else {
             audio = sdk.getCurrAudio();

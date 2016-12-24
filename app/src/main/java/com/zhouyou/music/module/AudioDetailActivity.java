@@ -1,12 +1,16 @@
 package com.zhouyou.music.module;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
 import com.wonderkiln.blurkit.BlurKit;
+import com.zhouyou.library.utils.PoolUtils;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
@@ -65,6 +69,24 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
         super.onResume();
         onUpdateChange();
         onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
+        loadAlbumImage(sdk.getCurrAudio());
+    }
+
+    /**
+     * 读取专辑图片
+     */
+    private synchronized void loadAlbumImage(final Audio audio) {
+        PoolUtils.POOL.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (audio == null) return;
+                Bitmap bm = MediaUtils.getAlbumCoverImage(AudioDetailActivity.this, audio.id, audio.albumId, true);
+                if (bm != null) {
+                    bm = BlurKit.getInstance().blur(bm, 23);
+                }
+                handler.obtainMessage(0, bm).sendToTarget();
+            }
+        });
     }
 
     /**
@@ -74,24 +96,21 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
     public void onUpdateChange() {
         int currState = sdk.getCurrentPlayingMusicState();
         Audio audio;
-        if (currState == State.PREPARED || currState == State.IDLE) {
+        if (currState == State.PREPARING || currState == State.IDLE) {
             audio = sdk.getPlayingMusic();
-            MediaUtils.clearCacheBitmap();
-        } else {
-            audio = sdk.getCurrAudio();
+            loadAlbumImage(audio);
         }
-
-        // 加载专辑图片
-        Bitmap bm = MediaUtils.getCachedBitmap();
-        if (bm == null) {
-            bm = MediaUtils.getAlbumCoverImage(this, audio.id, audio.albumId);
-        }
-        if (bm != null) {
-            bm = BlurKit.getInstance().blur(bm, 23);
-        }
-        ivBg.setImageBitmap(bm);
         operationPanel.updatePanel(currState);
     }
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Bitmap bm = (Bitmap) msg.obj;
+            ivBg.setImageBitmap(bm);
+            return true;
+        }
+    });
 
     @Override
     public void onProgressChange(int currentPosition, int duration) {

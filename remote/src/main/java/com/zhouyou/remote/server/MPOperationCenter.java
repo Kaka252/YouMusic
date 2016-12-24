@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * 作者：ZhouYou
  * 日期：2016/12/13.
  */
-public class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlayer.OnErrorListener,
+class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
 
@@ -51,7 +51,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     /*偏好*/
     private SharedPreferences sp;
 
-    public MPOperationCenter(Context context) {
+    MPOperationCenter(Context context) {
         this.context = context;
         sp = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
     }
