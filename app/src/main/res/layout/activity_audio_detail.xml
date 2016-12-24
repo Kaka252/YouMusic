@@ -27,7 +27,7 @@
             android:layout_height="0dip"
             android:layout_weight="1" />
 
-        <com.zhouyou.music.module.views.AudioOperationPanel2
+        <com.zhouyou.music.module.views.AudioOperationPanel
             android:id="@+id/operation_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

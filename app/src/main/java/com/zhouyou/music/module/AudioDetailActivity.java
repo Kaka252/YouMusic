@@ -15,12 +15,10 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
-import com.zhouyou.music.module.fragment.AudioPlayFragment2;
+import com.zhouyou.music.module.fragment.AudioPlayFragment;
 import com.zhouyou.music.module.utils.MediaUtils;
-import com.zhouyou.music.module.views.AudioOperationPanel2;
-import com.zhouyou.remote.Music;
+import com.zhouyou.music.module.views.AudioOperationPanel;
 import com.zhouyou.remote.State;
-import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
@@ -32,13 +30,13 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSubscriber,
+public class AudioDetailActivity extends BaseActivity implements IMusicStateSubscriber,
         IMusicProgressSubscriber,
         OnMusicPlayingActionListener {
 
     private ClientCoreSDK sdk;
     private ImageView ivBg;
-    private AudioOperationPanel2 operationPanel;
+    private AudioOperationPanel operationPanel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,17 +44,17 @@ public class AudioDetailActivity2 extends BaseActivity implements IMusicStateSub
         sdk = ClientCoreSDK.get();
         MusicManager.get().createAudioStatePublisher().register(this);
         MusicManager.get().createProgressPublisher().register(this);
-        setContentView(R.layout.activity_audio_detail2);
+        setContentView(R.layout.activity_audio_detail);
         initViews();
     }
 
     private void initViews() {
         ViewPager vp = (ViewPager) findViewById(R.id.vp);
         ivBg = (ImageView) findViewById(R.id.iv_bg);
-        operationPanel = (AudioOperationPanel2) findViewById(R.id.operation_panel);
+        operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
         operationPanel.setOnMusicPlayingActionListener(this);
         List<BaseFragment> fragments = new ArrayList<>();
-        fragments.add(AudioPlayFragment2.getInstance(null));
+        fragments.add(AudioPlayFragment.getInstance(null));
         AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
         vp.setAdapter(adapter);
         vp.setCurrentItem(0);

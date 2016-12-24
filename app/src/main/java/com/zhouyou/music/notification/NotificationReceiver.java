@@ -19,7 +19,7 @@ import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
-import com.zhouyou.music.module.AudioDetailActivity2;
+import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.remote.State;
 
@@ -98,7 +98,7 @@ public class NotificationReceiver {
      */
     private void setupAction() {
         // 返回主页面
-        Intent intentMain = new Intent(context, AudioDetailActivity2.class);
+        Intent intentMain = new Intent(context, AudioDetailActivity.class);
         intentMain.putExtra(Constants.DATA_BOOLEAN, true);
         PendingIntent actionMain = PendingIntent.getActivity(context, REQUEST_MAIN_ACTIVITY, intentMain, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.ll_notification, actionMain);

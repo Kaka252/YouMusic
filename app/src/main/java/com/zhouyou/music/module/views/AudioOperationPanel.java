@@ -20,20 +20,20 @@ import com.zhouyou.remote.State;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class AudioOperationPanel2 extends LinearLayout implements View.OnClickListener {
+public class AudioOperationPanel extends LinearLayout implements View.OnClickListener {
 
     private Context context;
     private LayoutInflater inflater;
 
-    public AudioOperationPanel2(Context context) {
+    public AudioOperationPanel(Context context) {
         this(context, null);
     }
 
-    public AudioOperationPanel2(Context context, AttributeSet attrs) {
+    public AudioOperationPanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AudioOperationPanel2(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AudioOperationPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         inflater = LayoutInflater.from(context);

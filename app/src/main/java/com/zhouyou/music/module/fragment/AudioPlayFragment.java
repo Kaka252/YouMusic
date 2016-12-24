@@ -13,11 +13,9 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
-import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AlbumImageView;
 import com.zhouyou.remote.State;
-import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
 
@@ -25,10 +23,10 @@ import com.zhouyou.remote.client.observer.MusicManager;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class AudioPlayFragment2 extends BaseFragment implements IMusicStateSubscriber {
+public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscriber {
 
-    public static AudioPlayFragment2 getInstance(Bundle data) {
-        AudioPlayFragment2 f = new AudioPlayFragment2();
+    public static AudioPlayFragment getInstance(Bundle data) {
+        AudioPlayFragment f = new AudioPlayFragment();
         f.setArguments(data);
         return f;
     }

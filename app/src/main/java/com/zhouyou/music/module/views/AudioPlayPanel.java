@@ -20,7 +20,7 @@ import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
-import com.zhouyou.music.module.AudioDetailActivity2;
+import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.remote.State;
 
@@ -28,19 +28,19 @@ import com.zhouyou.remote.State;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListener {
+public class AudioPlayPanel extends LinearLayout implements View.OnClickListener {
 
     private Context context;
 
-    public AudioPlayPanel2(Context context) {
+    public AudioPlayPanel(Context context) {
         this(context, null);
     }
 
-    public AudioPlayPanel2(Context context, AttributeSet attrs) {
+    public AudioPlayPanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AudioPlayPanel2(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AudioPlayPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init();
@@ -172,7 +172,7 @@ public class AudioPlayPanel2 extends LinearLayout implements View.OnClickListene
 
     public void viewDetail() {
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
-        Intent intent = new Intent(context, AudioDetailActivity2.class);
+        Intent intent = new Intent(context, AudioDetailActivity.class);
         ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
     }
 }

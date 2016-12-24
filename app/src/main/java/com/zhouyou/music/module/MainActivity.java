@@ -12,7 +12,7 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
-import com.zhouyou.music.module.views.AudioPlayPanel2;
+import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
@@ -24,18 +24,18 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class MainActivity2 extends BaseActivity implements AdapterView.OnItemClickListener,
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener,
         IMusicStateSubscriber,
         IMusicProgressSubscriber,
         OnMusicPlayingActionListener {
 
-    private AudioPlayPanel2 playPanel;
+    private AudioPlayPanel playPanel;
     private ClientCoreSDK sdk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
         if (!isApplyingPermissions()) {
             sdk = ClientCoreSDK.get();
             MusicManager.get().createAudioStatePublisher().register(this);
@@ -46,7 +46,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
     private void initViews() {
         ListView listView = (ListView) findViewById(R.id.list_view);
-        playPanel = (AudioPlayPanel2) findViewById(R.id.play_panel);
+        playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         playPanel.setOnMusicPlayingActionListener(this);
         listView.setOnItemClickListener(this);
         List<Audio> data = sdk.getPlayList();
