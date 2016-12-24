@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
@@ -44,6 +45,8 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
     private TextView tvEndTime;
     private SeekBar seekBar;
     private ImageView ivPlayNow;
+    private ImageView ivLikeSwitch;
+    private ImageView ivPlayModeSwitch;
     private OnMusicPlayingActionListener listener;
 
     private int seekPosition;
@@ -64,6 +67,12 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
         view.findViewById(R.id.iv_play_next).setOnClickListener(this);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
         ivPlayNow.setOnClickListener(this);
+
+        ivLikeSwitch = (ImageView) view.findViewById(R.id.iv_like_switch);
+        ivLikeSwitch.setOnClickListener(this);
+        ivPlayModeSwitch = (ImageView) view.findViewById(R.id.iv_play_mode_switch);
+        ivPlayModeSwitch.setOnClickListener(this);
+
     }
 
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -173,6 +182,11 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
                 } else {
                     listener.onMusicPlay(0, seekPosition);
                 }
+                break;
+            case R.id.iv_like_switch:
+                T.ss("功能未实现");
+                break;
+            case R.id.iv_play_mode_switch:
                 break;
             default:
                 break;
