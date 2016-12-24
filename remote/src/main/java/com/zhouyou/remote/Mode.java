@@ -1,10 +1,10 @@
-package com.zhouyou.music.media.mode;
+package com.zhouyou.remote;
 
 /**
- * 作者：ZhouYou
- * 日期：2016/11/23.
+ * Created by zhouyou on 16/12/24.
  */
-public interface AudioPlayMode {
+
+public interface Mode {
 
     /**
      * 顺序播放（默认）

@@ -17,16 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zhouyou.library.utils.Scale;
-import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
-import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.AudioDetailActivity2;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.remote.State;
-import com.zhouyou.remote.client.MusicServiceSDK;
 
 /**
  * 作者：ZhouYou

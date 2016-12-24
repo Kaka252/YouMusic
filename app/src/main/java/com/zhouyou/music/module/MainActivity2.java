@@ -1,7 +1,6 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,10 +12,8 @@ import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
-import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.module.views.AudioPlayPanel2;
 import com.zhouyou.remote.State;
-import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;

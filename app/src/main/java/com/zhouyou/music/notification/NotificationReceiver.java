@@ -18,10 +18,10 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
-import com.zhouyou.music.media.MediaCoreSDK;
-import com.zhouyou.music.media.state.AudioPlayState;
-import com.zhouyou.music.module.AudioDetailActivity;
+import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.module.AudioDetailActivity2;
 import com.zhouyou.music.module.utils.MediaUtils;
+import com.zhouyou.remote.State;
 
 /**
  * 作者：ZhouYou
@@ -70,7 +70,7 @@ public class NotificationReceiver {
     }
 
     private boolean setupRemoteViews() {
-        Audio audio = MediaCoreSDK.get().getCurrAudio();
+        Audio audio = ClientCoreSDK.get().getCurrAudio();
         if (audio == null) return false;
         remoteViews = new RemoteViews(App.get().getPackageName(), R.layout.view_notification_bar);
         remoteViews.setTextViewText(R.id.tv_audio_title, audio.title);
@@ -84,8 +84,8 @@ public class NotificationReceiver {
             bm = MediaUtils.getAlbumCoverThumbnail(bm, size, size, true);
         }
         remoteViews.setImageViewBitmap(R.id.iv_album, bm);
-        int state = MediaCoreSDK.get().getCurrState();
-        if (state == AudioPlayState.IN_PROGRESS) {
+        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
+        if (state == State.IN_PROGRESS) {
             remoteViews.setImageViewResource(R.id.iv_play_now, R.mipmap.ic_pause);
         } else {
             remoteViews.setImageViewResource(R.id.iv_play_now, R.mipmap.ic_play);
@@ -98,20 +98,20 @@ public class NotificationReceiver {
      */
     private void setupAction() {
         // 返回主页面
-        Intent intentMain = new Intent(context, AudioDetailActivity.class);
+        Intent intentMain = new Intent(context, AudioDetailActivity2.class);
         intentMain.putExtra(Constants.DATA_BOOLEAN, true);
         PendingIntent actionMain = PendingIntent.getActivity(context, REQUEST_MAIN_ACTIVITY, intentMain, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.ll_notification, actionMain);
 
         // 暂停/播放
-        int state = MediaCoreSDK.get().getCurrState();
-        if (state == AudioPlayState.IN_PROGRESS) {
+        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
+        if (state == State.IN_PROGRESS) {
             Intent intentPause = new Intent();
             intentPause.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
             intentPause.putExtra(Constants.DATA_INT, REQUEST_PAUSE);
             PendingIntent actionPause = PendingIntent.getBroadcast(context, REQUEST_PAUSE, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPause);
-        } else if (state == AudioPlayState.PAUSED) {
+        } else if (state == State.PAUSED) {
             Intent intentPlay = new Intent();
             intentPlay.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
             intentPlay.putExtra(Constants.DATA_INT, REQUEST_PLAY);
@@ -140,14 +140,14 @@ public class NotificationReceiver {
             if (TextUtils.equals(data.getAction(), Constants.RECEIVER_AUDIO_NOTIFICATION)) {
                 int action = data.getIntExtra(Constants.DATA_INT, 0);
                 if (action == REQUEST_PAUSE) {
-                    MediaCoreSDK.get().changeState(AudioPlayState.PAUSED);
+                    ClientCoreSDK.get().pause();
                 } else if (action == REQUEST_PLAY) {
-                    MediaCoreSDK.get().changeState(AudioPlayState.PREPARED);
+                    ClientCoreSDK.get().resume(-1);
                 } else if (action == REQUEST_NEXT) {
-                    MediaCoreSDK.get().changeState(AudioPlayState.COMPLETED);
+                    ClientCoreSDK.get().complete(false);
                 } else if (action == REQUEST_SHUT_DOWN) {
-                    MediaCoreSDK.get().changeState(AudioPlayState.STOPPED);
-                    cancel();
+
+//                    cancel();
                 }
             }
         }

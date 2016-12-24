@@ -10,16 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
-import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
-import com.zhouyou.music.media.MediaCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
-import com.zhouyou.music.media.state.AudioPlayState;
 import com.zhouyou.music.module.utils.StringUtils;
 import com.zhouyou.remote.State;
-import com.zhouyou.remote.client.MusicServiceSDK;
 
 /**
  * 作者：ZhouYou

@@ -7,7 +7,6 @@ import com.yolanda.nohttp.Logger;
 import com.yolanda.nohttp.NoHttp;
 import com.zhouyou.library.utils.Lib;
 import com.zhouyou.library.utils.PrefUtils;
-import com.zhouyou.music.service.AudioMediaService;
 import com.zhouyou.remote.client.MusicServiceSDK;
 
 /**
