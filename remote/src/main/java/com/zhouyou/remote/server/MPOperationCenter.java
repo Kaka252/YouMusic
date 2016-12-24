@@ -91,9 +91,6 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
         }
         this.currPlayingMusicPath = selectMusic;
         this.playList = playList;
-        if (seekPosition > 0) {
-            currentPosition = seekPosition;
-        }
         switch (playAction) {
             case 1:
                 playNext();
@@ -102,21 +99,40 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 playBack();
                 break;
             default:
-                play();
+                if (seekPosition > 0) {
+                    currentPosition = seekPosition;
+                    play(false);
+                } else {
+                    play();
+                }
                 break;
         }
     }
 
+    private Intent makeStateChange(int state, int seekPosition) {
+        return MusicStateMessageFactory.createMusicStateMessage(state, seekPosition);
+    }
+
     private Intent makeStateChange(int state) {
-        return MusicStateMessageFactory.createMusicStateMessage(state, currentPosition);
+        return makeStateChange(state, -1);
+    }
+
+    /**
+     * 播放音乐，默认清除
+     *
+     * @throws RemoteException
+     */
+    private void play() throws RemoteException {
+        play(true);
     }
 
     /**
      * 播放音乐
      *
+     * @param isClearProgress 跳转到播放进度
      * @throws RemoteException
      */
-    private void play() throws RemoteException {
+    private void play(boolean isClearProgress) throws RemoteException {
         try {
             if (isReset()) {
                 PLAYER.reset();
@@ -131,6 +147,9 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
                 PLAYER.setAudioStreamType(AudioManager.STREAM_MUSIC);
             }
             if (currState == State.INITIALIZED || currState == State.STOPPED) {
+                if (isClearProgress) {
+                    handler.sendEmptyMessage(ACTION_INIT_PLAY);
+                }
                 doMediaPlayerAction(makeStateChange(State.PREPARING));
             }
         } catch (Exception e) {
@@ -355,7 +374,7 @@ public class MPOperationCenter extends IMusicControlInterface.Stub implements Me
     @Override
     public void onPrepared(MediaPlayer mp) {
         try {
-            doMediaPlayerAction(makeStateChange(State.PREPARED));
+            doMediaPlayerAction(makeStateChange(State.PREPARED, currentPosition));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
