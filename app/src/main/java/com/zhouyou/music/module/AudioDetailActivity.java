@@ -69,38 +69,23 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
         super.onResume();
         onUpdateChange();
         onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
-        loadAlbumImage(sdk.getCurrAudio());
+        loadAlbumImage();
     }
 
     /**
      * 读取专辑图片
      */
-    private synchronized void loadAlbumImage(final Audio audio) {
+    private synchronized void loadAlbumImage() {
         PoolUtils.POOL.submit(new Runnable() {
             @Override
             public void run() {
+                Audio audio = sdk.getPlayingMusic();
                 if (audio == null) return;
                 Bitmap bm = MediaUtils.getAlbumCoverImage(AudioDetailActivity.this, audio.id, audio.albumId, true);
-                if (bm != null) {
-                    bm = BlurKit.getInstance().blur(bm, 23);
-                }
+                if (bm != null) bm = BlurKit.getInstance().blur(bm, 23);
                 handler.obtainMessage(0, bm).sendToTarget();
             }
         });
-    }
-
-    /**
-     * 通知状态改变
-     */
-    @Override
-    public void onUpdateChange() {
-        int currState = sdk.getCurrentPlayingMusicState();
-        Audio audio;
-        if (currState == State.PREPARING || currState == State.IDLE) {
-            audio = sdk.getPlayingMusic();
-            loadAlbumImage(audio);
-        }
-        operationPanel.updatePanel(currState);
     }
 
     private Handler handler = new Handler(new Handler.Callback() {
@@ -111,6 +96,18 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
             return true;
         }
     });
+
+    /**
+     * 通知状态改变
+     */
+    @Override
+    public void onUpdateChange() {
+        int currState = sdk.getCurrentPlayingMusicState();
+        operationPanel.updatePanel(currState);
+        if (currState == State.PREPARING || currState == State.IDLE) {
+            loadAlbumImage();
+        }
+    }
 
     @Override
     public void onProgressChange(int currentPosition, int duration) {
