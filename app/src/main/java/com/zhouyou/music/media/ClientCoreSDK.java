@@ -24,20 +24,8 @@ import java.util.List;
  * 客户端的数据管理类
  */
 public class ClientCoreSDK {
-
-    private Context context;
     /*当前播放的音乐*/
     private Audio currAudio;
-
-    private boolean isPlayBack;
-
-    public void setPlayBack(boolean isPlayBack) {
-        this.isPlayBack = isPlayBack;
-    }
-
-    public boolean isPlayBack() {
-        return isPlayBack;
-    }
 
     private static class ClientHolder {
         private static final ClientCoreSDK SDK = new ClientCoreSDK();
@@ -48,7 +36,7 @@ public class ClientCoreSDK {
     }
 
     private ClientCoreSDK() {
-        context = App.get().getApplicationContext();
+
     }
 
     /**
@@ -84,56 +72,6 @@ public class ClientCoreSDK {
             audioList = AudioLocalDataManager.get().getAudioList();
         }
         return audioList;
-    }
-
-    /**
-     * 播放下一首
-     */
-    public Audio getNext() {
-        List<Audio> list = getPlayList();
-        if (ListUtils.isEmpty(list)) return null;
-        Audio mAudio;
-        if (currAudio == null) {
-            mAudio = ListUtils.getElement(list, 0);
-        } else {
-            int index = 0;
-            for (Audio audio : list) {
-                if (audio == null) continue;
-                if (audio.id == currAudio.id) {
-                    index = list.indexOf(audio) + 1;
-                    if (index >= list.size()) {
-                        index = 0;
-                    }
-                }
-            }
-            mAudio = ListUtils.getElement(list, index);
-        }
-        return mAudio;
-    }
-
-    /**
-     * 播放上一首
-     */
-    public Audio getLast() {
-        List<Audio> list = getPlayList();
-        if (ListUtils.isEmpty(list)) return null;
-        Audio mAudio;
-        if (currAudio == null) {
-            mAudio = ListUtils.getElement(list, 0);
-        } else {
-            int index = 0;
-            for (Audio audio : list) {
-                if (audio == null) continue;
-                if (audio.id == currAudio.id) {
-                    index = list.indexOf(audio) - 1;
-                    if (index < 0) {
-                        index = list.size() - 1;
-                    }
-                }
-            }
-            mAudio = ListUtils.getElement(list, index);
-        }
-        return mAudio;
     }
 
     /**

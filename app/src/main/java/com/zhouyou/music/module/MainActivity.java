@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onResume() {
         super.onResume();
-        onUpdateChange();
+        playPanel.loadAudioInfo();
         onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
     }
 
@@ -78,14 +78,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onUpdateChange() {
-        int currState = sdk.getCurrentPlayingMusicState();
-        Audio audio;
-        if (currState == State.PREPARING || currState == State.IDLE) {
-            audio = sdk.getPlayingMusic();
-        } else {
-            audio = sdk.getCurrAudio();
-        }
-        playPanel.updateAudio(audio, currState);
+        playPanel.updateAudio();
     }
 
 

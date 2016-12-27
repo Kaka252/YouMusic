@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +23,7 @@ import com.zhouyou.library.utils.PoolUtils;
 import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
@@ -107,33 +109,36 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
 
     /**
      * 更新音频信息
-     *
-     * @param audio
      */
-    public void updateAudio(Audio audio, int state) {
+    public void updateAudio() {
+        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
         updateAudioPlayingStatus(state);
-        if (audio == null) return;
-        StringBuilder sb = new StringBuilder();
-        if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
-        if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
-        tvAudioInfo.setText(sb.toString());
         if (state == State.PREPARING || state == State.IDLE) {
-            loadAlbumImage(audio);
+            loadAudioInfo();
         }
     }
 
     /**
      * 读取专辑图片
-     *
-     * @param audio
      */
-    private synchronized void loadAlbumImage(final Audio audio) {
+    public synchronized void loadAudioInfo() {
         PoolUtils.POOL.submit(new Runnable() {
             @Override
             public void run() {
+                Audio audio = ClientCoreSDK.get().getPlayingMusic();
                 if (audio == null) return;
                 Bitmap bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, true);
-                handler.obtainMessage(0, bm).sendToTarget();
+
+                StringBuilder sb = new StringBuilder();
+                if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
+                if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
+
+                Message msg = Message.obtain();
+                Bundle b = new Bundle();
+                b.putParcelable("album", bm);
+                b.putString("audioInfo", sb.toString());
+                msg.setData(b);
+                handler.sendMessage(msg);
             }
         });
     }
@@ -141,8 +146,11 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            Bitmap bm = (Bitmap) msg.obj;
+            Bundle b = msg.getData();
+            Bitmap bm = b.getParcelable("album");
             ivAlbum.setBitmap(bm);
+            String audioInfo = b.getString("audioInfo");
+            tvAudioInfo.setText(audioInfo);
             return true;
         }
     });
