@@ -32,6 +32,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private AudioPlayPanel playPanel;
     private ClientCoreSDK sdk;
 
+    private List<Audio> data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +51,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         playPanel.setOnMusicPlayingActionListener(this);
         listView.setOnItemClickListener(this);
-        List<Audio> data = sdk.getPlayList();
+        data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
     }
@@ -66,7 +68,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         Audio audio = (Audio) parent.getItemAtPosition(position);
         if (audio == null) return;
         if (sdk.getCurrAudio() == null) {
-            sdk.playMusic(sdk.getPlayList(), audio.path);
+            sdk.playMusic(data, audio.path);
         } else {
             if (sdk.isPlayingCurrentMusic(audio.path) && sdk.isMusicPlaying()) {
                 playPanel.viewDetail();
