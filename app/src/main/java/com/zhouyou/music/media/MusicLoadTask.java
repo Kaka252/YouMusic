@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.wonderkiln.blurkit.BlurKit;
 import com.zhouyou.library.utils.PoolUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
@@ -31,13 +32,16 @@ public class MusicLoadTask {
     /**
      * 读取音乐信息
      */
-    public void loadMusic(final boolean isThumbnail) {
+    public void loadMusic(final boolean isThumbnail, final boolean isBlur) {
         PoolUtils.POOL.submit(new Runnable() {
             @Override
             public void run() {
                 Audio audio = ClientCoreSDK.get().getPlayingMusic();
                 if (audio == null) return;
                 Bitmap bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, isThumbnail);
+                if (isBlur && bm != null) {
+                    bm = BlurKit.getInstance().blur(bm, 23);
+                }
                 Message msg = Message.obtain();
                 Bundle b = new Bundle();
                 if (bm != null) {
@@ -48,6 +52,10 @@ public class MusicLoadTask {
                 handler.sendMessage(msg);
             }
         });
+    }
+
+    public void loadMusic(boolean isThumbnail) {
+        loadMusic(isThumbnail, false);
     }
 
     public void loadMusic() {

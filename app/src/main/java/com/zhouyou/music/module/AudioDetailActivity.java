@@ -80,11 +80,10 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
         task.setOnMusicLoadingListener(new MusicLoadTask.OnMusicLoadingListener() {
             @Override
             public void setupMusic(Audio audio, Bitmap bm) {
-                bm = BlurKit.getInstance().blur(bm, 23);
                 ivBg.setImageBitmap(bm);
             }
         });
-        task.loadMusic(true);
+        task.loadMusic(true, true);
     }
 
     /**
