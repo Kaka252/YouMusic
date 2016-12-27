@@ -122,11 +122,9 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
 
     /**
      * 更新操作板信息
-     *
-     * @param state
      */
-    public void updatePanel(int state) {
-        updateAudioPlayingStatus(state);
+    public void updatePanel(int currState) {
+        updateAudioPlayingStatus(currState);
     }
 
     /**

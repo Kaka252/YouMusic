@@ -24,6 +24,7 @@ import com.zhouyou.library.utils.Scale;
 import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.MusicLoadTask;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.AudioDetailActivity;
 import com.zhouyou.music.module.utils.MediaUtils;
@@ -122,38 +123,19 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
      * 读取专辑图片
      */
     public synchronized void loadAudioInfo() {
-        PoolUtils.POOL.submit(new Runnable() {
+        MusicLoadTask task = new MusicLoadTask();
+        task.setOnMusicLoadingListener(new MusicLoadTask.OnMusicLoadingListener() {
             @Override
-            public void run() {
-                Audio audio = ClientCoreSDK.get().getPlayingMusic();
-                if (audio == null) return;
-                Bitmap bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, true);
-
+            public void setupMusic(Audio audio, Bitmap bm) {
+                ivAlbum.setBitmap(bm);
                 StringBuilder sb = new StringBuilder();
                 if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
                 if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
-
-                Message msg = Message.obtain();
-                Bundle b = new Bundle();
-                b.putParcelable("album", bm);
-                b.putString("audioInfo", sb.toString());
-                msg.setData(b);
-                handler.sendMessage(msg);
+                tvAudioInfo.setText(sb.toString());
             }
         });
+        task.loadMusic(true);
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            Bundle b = msg.getData();
-            Bitmap bm = b.getParcelable("album");
-            ivAlbum.setBitmap(bm);
-            String audioInfo = b.getString("audioInfo");
-            tvAudioInfo.setText(audioInfo);
-            return true;
-        }
-    });
 
     /**
      * 更新歌曲进度

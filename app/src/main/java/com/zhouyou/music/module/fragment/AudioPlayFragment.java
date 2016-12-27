@@ -2,6 +2,8 @@ package com.zhouyou.music.module.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
@@ -9,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zhouyou.library.utils.PoolUtils;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.MusicLoadTask;
 import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AlbumImageView;
 import com.zhouyou.remote.State;
@@ -63,7 +67,7 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
     @Override
     public void onResume() {
         super.onResume();
-        onUpdateChange();
+        loadAudioInfo();
     }
 
     @Override
@@ -74,27 +78,28 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
 
     @Override
     public void onUpdateChange() {
-        Audio audio;
         int currState = sdk.getCurrentPlayingMusicState();
         if (currState == State.PREPARED || currState == State.IDLE) {
-            audio = sdk.getPlayingMusic();
-            MediaUtils.clearCacheBitmap();
             ivAlbum.initSpanningDegree();
-        } else {
-            audio = sdk.getCurrAudio();
         }
-        // 加载专辑图片
-        Bitmap bm = MediaUtils.getCachedBitmap();
-        if (bm == null) {
-            bm = MediaUtils.getAlbumCoverImage(activity, audio.id, audio.albumId);
-        }
-        ivAlbum.setBitmap(bm);
-        ivAlbum.setSpanning(currState == State.IN_PROGRESS);
+        loadAudioInfo();
+    }
 
-        if (audio != null) {
-            tvAudioTitle.setText(audio.title);
-            tvAudioArtist.setText(audio.artist);
-        }
+    /**
+     * 加载歌曲信息
+     */
+    private void loadAudioInfo() {
+        MusicLoadTask task = new MusicLoadTask();
+        task.setOnMusicLoadingListener(new MusicLoadTask.OnMusicLoadingListener() {
+            @Override
+            public void setupMusic(Audio audio, Bitmap bm) {
+                ivAlbum.setBitmap(bm);
+                ivAlbum.setSpanning(sdk.isMusicPlaying());
+                tvAudioTitle.setText(audio.title);
+                tvAudioArtist.setText(audio.artist);
+            }
+        });
+        task.loadMusic();
     }
 
     @Override

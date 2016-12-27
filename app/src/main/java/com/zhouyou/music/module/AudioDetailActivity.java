@@ -17,6 +17,7 @@ import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.base.BaseFragment;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.MusicLoadTask;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment;
@@ -67,7 +68,6 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
     @Override
     protected void onResume() {
         super.onResume();
-        onUpdateChange();
         onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
         loadAlbumImage();
     }
@@ -76,26 +76,16 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
      * 读取专辑图片
      */
     private synchronized void loadAlbumImage() {
-        PoolUtils.POOL.submit(new Runnable() {
+        MusicLoadTask task = new MusicLoadTask();
+        task.setOnMusicLoadingListener(new MusicLoadTask.OnMusicLoadingListener() {
             @Override
-            public void run() {
-                Audio audio = sdk.getPlayingMusic();
-                if (audio == null) return;
-                Bitmap bm = MediaUtils.getAlbumCoverImage(AudioDetailActivity.this, audio.id, audio.albumId, true);
-                if (bm != null) bm = BlurKit.getInstance().blur(bm, 23);
-                handler.obtainMessage(0, bm).sendToTarget();
+            public void setupMusic(Audio audio, Bitmap bm) {
+                bm = BlurKit.getInstance().blur(bm, 23);
+                ivBg.setImageBitmap(bm);
             }
         });
+        task.loadMusic(true);
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            Bitmap bm = (Bitmap) msg.obj;
-            ivBg.setImageBitmap(bm);
-            return true;
-        }
-    });
 
     /**
      * 通知状态改变
