@@ -87,6 +87,15 @@ public class MusicServiceSDK {
     }
 
     /**
+     * 设置播放模式
+     *
+     * @param mode
+     */
+    public void setMode(int mode) {
+        sender.setMode(mode);
+    }
+
+    /**
      * 获取音频播放器的播放状态
      *
      * @return
@@ -120,6 +129,15 @@ public class MusicServiceSDK {
      */
     public int getMusicDuration() {
         return receiver.getCurrPlayingDuration();
+    }
+
+    /**
+     * 获取播放模式
+     *
+     * @return
+     */
+    public int getMode() {
+        return receiver.getMode();
     }
 
     /**

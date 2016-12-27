@@ -15,6 +15,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.utils.StringUtils;
+import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
 
 /**
@@ -73,6 +74,20 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
         ivPlayModeSwitch = (ImageView) view.findViewById(R.id.iv_play_mode_switch);
         ivPlayModeSwitch.setOnClickListener(this);
 
+        int mode = ClientCoreSDK.get().getPlayMode();
+        switch (mode) {
+            case Mode.MODE_CYCLE_ALL_PLAY:
+                ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_cycle);
+                break;
+            case Mode.MODE_RANDOM_PLAY:
+                ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_random);
+                break;
+            case Mode.MODE_SINGLE_PLAY:
+                ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_single);
+                break;
+            default:
+                break;
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener onSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -185,6 +200,27 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
                 T.ss("功能未实现");
                 break;
             case R.id.iv_play_mode_switch:
+                switchMode();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void switchMode() {
+        int mode = ClientCoreSDK.get().getPlayMode();
+        switch (mode) {
+            case Mode.MODE_CYCLE_ALL_PLAY:
+                ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_random);
+                ClientCoreSDK.get().setPlayMode(Mode.MODE_RANDOM_PLAY);
+                break;
+            case Mode.MODE_RANDOM_PLAY:
+                ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_single);
+                ClientCoreSDK.get().setPlayMode(Mode.MODE_SINGLE_PLAY);
+                break;
+            case Mode.MODE_SINGLE_PLAY:
+                ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_cycle);
+                ClientCoreSDK.get().setPlayMode(Mode.MODE_CYCLE_ALL_PLAY);
                 break;
             default:
                 break;

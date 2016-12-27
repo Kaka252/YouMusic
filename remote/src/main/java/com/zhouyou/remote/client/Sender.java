@@ -53,4 +53,11 @@ public class Sender {
         Intent intent = MusicStateMessageFactory.createMusicControlMessage(State.COMPLETED, isPlayBack);
         proxy.doMediaPlayerAction(intent);
     }
+
+    /**
+     * 设置播放模式
+     */
+    void setMode(int mode) {
+        proxy.setMode(mode);
+    }
 }

@@ -40,6 +40,8 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     private IMusicReceiver receiver;
     /*当前的播放状态*/
     private int currState = 0;
+    /*当前播放模式*/
+    private int mode;
     /*当前的播放音乐的url*/
     private String currPlayingMusicPath;
     /*当前播放音乐的进度*/
@@ -159,6 +161,17 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     }
 
     /**
+     * 设置模式
+     *
+     * @param mode
+     */
+    @Override
+    public void setMode(int mode) throws RemoteException {
+        this.mode = mode;
+        onMainProcessStateChangeNotify();
+    }
+
+    /**
      * 切换播放状态
      *
      * @param action 播放状态
@@ -193,6 +206,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 break;
             case State.PAUSED: // 暂停
                 PLAYER.pause();
+                handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 break;
             case State.COMPLETED: // 播放完成
                 handler.sendEmptyMessage(ACTION_INIT_PLAY);
@@ -241,7 +255,12 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                     }
                     break;
                 case ACTION_PROGRESS_SUSPEND:
-                    handler.removeMessages(ACTION_PROGRESS_UPDATE);
+                    try {
+                        onMainProcessStateChangeNotify();
+                        handler.removeMessages(ACTION_PROGRESS_UPDATE);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     break;
@@ -328,6 +347,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
         intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
         intent.putExtra(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
+        intent.putExtra(MusicConstants.MUSIC_MODE, mode);
         receiver.onReceive(intent);
     }
 
@@ -397,6 +417,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     private String getLastPlayedMusic() {
         return sp.getString("musicPath", "");
     }
+
 
     /**
      * 打印日志

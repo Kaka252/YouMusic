@@ -1,19 +1,16 @@
 package com.zhouyou.music.media;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.T;
-import com.zhouyou.music.base.App;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.constants.MusicConstants;
-import com.zhouyou.remote.server.MusicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +41,7 @@ public class ClientCoreSDK {
      *
      * @return
      */
-    public Audio getPlayingMusic() {
+    Audio getPlayingMusic() {
         List<Audio> audioList = getPlayList();
         if (ListUtils.isEmpty(audioList)) return null;
         String musicPath = getCurrentPlayingMusicPath();
@@ -89,7 +86,7 @@ public class ClientCoreSDK {
      *
      * @return
      */
-    public String getCurrentPlayingMusicPath() {
+    private String getCurrentPlayingMusicPath() {
         return MusicServiceSDK.get().getMusicPath();
     }
 
@@ -117,6 +114,15 @@ public class ClientCoreSDK {
             }
         }
         return duration;
+    }
+
+    /**
+     * 获取音乐播放模式
+     *
+     * @return
+     */
+    public int getPlayMode() {
+        return MusicServiceSDK.get().getMode();
     }
 
     /**
@@ -193,6 +199,10 @@ public class ClientCoreSDK {
      */
     public void playMusic(List<Audio> data, String selectedMusic) {
         playMusic(data, selectedMusic, 0, -1);
+    }
+
+    public void setPlayMode(int mode) {
+        MusicServiceSDK.get().setMode(mode);
     }
 
     /**

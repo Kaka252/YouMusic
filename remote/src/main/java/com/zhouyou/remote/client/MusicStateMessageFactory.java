@@ -29,4 +29,10 @@ public class MusicStateMessageFactory {
         intent.putExtra(MusicConstants.MUSIC_STATE, state);
         return intent;
     }
+
+    public static Intent createMusicModeMessage(int mode) {
+        Intent intent = new Intent();
+        intent.putExtra(MusicConstants.MUSIC_MODE, mode);
+        return intent;
+    }
 }

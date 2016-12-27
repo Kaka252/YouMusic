@@ -116,4 +116,19 @@ public class RemoteServiceProxy {
             }
         }
     }
+
+    /**
+     * 设置播放模式
+     *
+     * @param mode
+     */
+    void setMode(int mode) {
+        if (isConnected()) {
+            try {
+                mIMusicControlInterface.setMode(mode);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
