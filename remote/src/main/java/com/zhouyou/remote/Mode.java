@@ -5,21 +5,16 @@ package com.zhouyou.remote;
  */
 
 public interface Mode {
-
-    /**
-     * 顺序播放（默认）
-     */
-    int MODE_SEQUENCE_PLAY = 0;
     /**
      * 全部循环播放
      */
-    int MODE_CYCLE_ALL_PLAY = 1;
+    int MODE_CYCLE_ALL_PLAY = 0;
     /**
      * 单曲循环
      */
-    int MODE_SINGLE_PLAY = 2;
+    int MODE_SINGLE_PLAY = 1;
     /**
      * 随机播放
      */
-    int MODE_RANDOM_PLAY = 3;
+    int MODE_RANDOM_PLAY = 2;
 }

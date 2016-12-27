@@ -27,7 +27,6 @@ public class MediaUtils {
 
     private static final Uri ALBUM_URI = Uri.parse("content://media/external/audio/albumart");
     private static final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
-    private static Bitmap mCachedBit = null;
 
     public static Bitmap getAlbumCoverImage(Context context, long audioId, long albumId) {
         return getAlbumCoverImage(context, audioId, albumId, false);
@@ -133,9 +132,6 @@ public class MediaUtils {
         } catch (FileNotFoundException e) {
             return getDefaultCoverImage(context);
         }
-        if (bm != null) {
-            mCachedBit = bm;
-        }
         return bm;
     }
 
@@ -164,13 +160,5 @@ public class MediaUtils {
                 matrix, true);
         if (needRecycle) bitMap.recycle();
         return newBitMap;
-    }
-
-    public static Bitmap getCachedBitmap() {
-        return mCachedBit;
-    }
-
-    public static void clearCacheBitmap() {
-        mCachedBit = null;
     }
 }
