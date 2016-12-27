@@ -5,11 +5,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import com.zhouyou.music.base.BaseEntity;
+
 /**
  * 作者：ZhouYou
  * 日期：2016/11/18.
  */
-public class Audio implements Parcelable {
+public class Audio extends BaseEntity {
 
     public String title;
     public String titleKey;
