@@ -78,9 +78,8 @@ public class Receiver extends IMusicReceiver.Stub {
     private void dispatch() {
         if (isPlaying()) {
             mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);
-        } else {
-            mMainHandler.sendEmptyMessage(UPDATE_STATE);
         }
+        mMainHandler.sendEmptyMessage(UPDATE_STATE);
     }
 
     private static final int UPDATE_STATE = 0;
