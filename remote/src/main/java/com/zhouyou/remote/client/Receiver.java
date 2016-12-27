@@ -8,6 +8,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.zhouyou.remote.IMusicReceiver;
+import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.MusicManager;
@@ -32,21 +33,27 @@ public class Receiver extends IMusicReceiver.Stub {
     private int currPlayingPosition;
     /*当前音乐的时长*/
     private int currPlayingDuration;
+    /*播放模式*/
+    private int mode;
 
-    public int getCurrState() {
+    int getCurrState() {
         return currState;
     }
 
-    public String getCurrMusicPath() {
+    String getCurrMusicPath() {
         return currMusicPath;
     }
 
-    public int getCurrPlayingPosition() {
+    int getCurrPlayingPosition() {
         return currPlayingPosition;
     }
 
-    public int getCurrPlayingDuration() {
+    int getCurrPlayingDuration() {
         return currPlayingDuration;
+    }
+
+    public int getMode() {
+        return mode;
     }
 
     @Override
@@ -56,6 +63,7 @@ public class Receiver extends IMusicReceiver.Stub {
         hasPlayListInitialized = data.getBooleanExtra(MusicConstants.MUSIC_PLAY_LIST, false);
         currPlayingPosition = data.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, 0);
         currPlayingDuration = data.getIntExtra(MusicConstants.MUSIC_PLAYING_DURATION, 0);
+        mode = data.getIntExtra(MusicConstants.MUSIC_MODE, Mode.MODE_CYCLE_ALL_PLAY);
         dispatch();
     }
 
