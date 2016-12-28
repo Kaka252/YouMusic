@@ -169,7 +169,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     @Override
     public void setMode(int mode) throws RemoteException {
         this.mode = mode;
-//        PLAYER.setLooping(mode == Mode.MODE_SINGLE_PLAY);
         onMainProcessStateChangeNotify();
     }
 
@@ -211,7 +210,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 break;
             case State.COMPLETED: // 播放完成
-                handler.sendEmptyMessage(ACTION_INIT_PLAY);
                 handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 16);
                 break;
             case State.STOPPED: // 播放终断
@@ -277,7 +275,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     private void playNext() {
         int index = 0;
         int size = playList.size();
-        // 循环播放
+        // 0. 循环播放
         if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
             index = playList.indexOf(currPlayingMusicPath);
             if (index >= size - 1) {
@@ -286,13 +284,26 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 index += 1;
             }
         }
-        // 随机播放
+        // 1. 单曲循环
+        else if (mode == Mode.MODE_SINGLE_PLAY) {
+            index = playList.indexOf(currPlayingMusicPath);
+            if (getPlayingPosition() != getPlayingDuration()) {
+                index = playList.indexOf(currPlayingMusicPath);
+                if (index >= size - 1) {
+                    index = 0;
+                } else {
+                    index += 1;
+                }
+            }
+        }
+        // 2. 随机播放
         else if (mode == Mode.MODE_RANDOM_PLAY) {
             Random random = new Random();
             index = random.nextInt(size) - 1;
         }
         currPlayingMusicPath = playList.get(index);
         try {
+            handler.sendEmptyMessage(ACTION_INIT_PLAY);
             play();
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -305,7 +316,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     private void playBack() {
         int index = 0;
         int size = playList.size();
-        // 1. 循环播放
+        // 0. 循环播放
         if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
             index = playList.indexOf(currPlayingMusicPath);
             if (index <= 0) {
@@ -322,6 +333,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
 
         currPlayingMusicPath = playList.get(index);
         try {
+            handler.sendEmptyMessage(ACTION_INIT_PLAY);
             play();
         } catch (RemoteException e) {
             e.printStackTrace();

@@ -213,14 +213,17 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
             case Mode.MODE_CYCLE_ALL_PLAY:
                 ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_random);
                 ClientCoreSDK.get().setPlayMode(Mode.MODE_RANDOM_PLAY);
+                T.ss("随机播放");
                 break;
             case Mode.MODE_RANDOM_PLAY:
                 ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_single);
                 ClientCoreSDK.get().setPlayMode(Mode.MODE_SINGLE_PLAY);
+                T.ss("单曲循环");
                 break;
             case Mode.MODE_SINGLE_PLAY:
                 ivPlayModeSwitch.setImageResource(R.mipmap.ic_play_mode_cycle);
                 ClientCoreSDK.get().setPlayMode(Mode.MODE_CYCLE_ALL_PLAY);
+                T.ss("循环播放");
                 break;
             default:
                 break;
