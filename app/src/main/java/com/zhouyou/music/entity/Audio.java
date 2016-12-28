@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import com.j256.ormlite.table.DatabaseTable;
 import com.zhouyou.music.base.BaseEntity;
 
 /**
