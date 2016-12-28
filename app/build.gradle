@@ -40,4 +40,5 @@ dependencies {
     compile project(path: ':remote')
     compile files('libs/ormlite-android-5.0.jar')
     compile files('libs/ormlite-core-5.0.jar')
+    compile 'com.facebook.stetho:stetho:1.1.0'
 }
