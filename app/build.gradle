@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -38,4 +38,6 @@ dependencies {
     compile 'com.wonderkiln:blurkit:1.0.0'
     compile project(path: ':network')
     compile project(path: ':remote')
+    compile files('libs/ormlite-core-5.0-sources.jar')
+    compile files('libs/ormlite-android-5.0-sources.jar')
 }

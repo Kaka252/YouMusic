@@ -15,11 +15,13 @@ import android.util.Log;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
+import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicStateMessageFactory;
 import com.zhouyou.remote.constants.MusicConstants;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * 作者：ZhouYou
@@ -167,6 +169,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     @Override
     public void setMode(int mode) throws RemoteException {
         this.mode = mode;
+//        PLAYER.setLooping(mode == Mode.MODE_SINGLE_PLAY);
         onMainProcessStateChangeNotify();
     }
 
@@ -272,11 +275,21 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
      * 播放下一首
      */
     private void playNext() {
-        int index = playList.indexOf(currPlayingMusicPath);
-        if (index >= playList.size() - 1) {
-            index = 0;
-        } else {
-            index += 1;
+        int index = 0;
+        int size = playList.size();
+        // 循环播放
+        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+            index = playList.indexOf(currPlayingMusicPath);
+            if (index >= size - 1) {
+                index = 0;
+            } else {
+                index += 1;
+            }
+        }
+        // 随机播放
+        else if (mode == Mode.MODE_RANDOM_PLAY) {
+            Random random = new Random();
+            index = random.nextInt(size) - 1;
         }
         currPlayingMusicPath = playList.get(index);
         try {
@@ -290,12 +303,23 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
      * 播放上一首
      */
     private void playBack() {
-        int index = playList.indexOf(currPlayingMusicPath);
-        if (index <= 0) {
-            index = playList.size() - 1;
-        } else {
-            index -= 1;
+        int index = 0;
+        int size = playList.size();
+        // 1. 循环播放
+        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+            index = playList.indexOf(currPlayingMusicPath);
+            if (index <= 0) {
+                index = playList.size() - 1;
+            } else {
+                index -= 1;
+            }
         }
+        // 2. 随机播放
+        else if (mode == Mode.MODE_RANDOM_PLAY) {
+            Random random = new Random();
+            index = random.nextInt(size) - 1;
+        }
+
         currPlayingMusicPath = playList.get(index);
         try {
             play();
