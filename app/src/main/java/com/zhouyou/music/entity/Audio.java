@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.zhouyou.music.base.BaseEntity;
 
@@ -12,33 +13,56 @@ import com.zhouyou.music.base.BaseEntity;
  * 作者：ZhouYou
  * 日期：2016/11/18.
  */
+@DatabaseTable(tableName = "Audio")
 public class Audio extends BaseEntity {
 
-    public String title;
-    public String titleKey;
-    public String artist;
-    public String artistKey;
-    public String composer;
-    public String album;
-    public String albumKey;
-    public String displayName;
-    public String mimeType;
-    public String path;
-
+    @DatabaseField(generatedId = true)
     public int id;
+    @DatabaseField
     public int artistId;
+    @DatabaseField
     public int albumId;
+    @DatabaseField
+    public String title;
+    @DatabaseField
+    public String titleKey;
+    @DatabaseField
+    public String artist;
+    @DatabaseField
+    public String artistKey;
+    @DatabaseField
+    public String composer;
+    @DatabaseField
+    public String album;
+    @DatabaseField
+    public String albumKey;
+    @DatabaseField
+    public String displayName;
+    @DatabaseField
+    public String mimeType;
+    @DatabaseField
+    public String path;
+    @DatabaseField
     public int year;
+    @DatabaseField
     public int track;
-
+    @DatabaseField
     public int duration = 0;
+    @DatabaseField
     public int size = 0;
-
+    @DatabaseField
     public boolean isRingtone = false;
+    @DatabaseField
     public boolean isPodcast = false;
+    @DatabaseField
     public boolean isAlarm = false;
+    @DatabaseField
     public boolean isMusic = false;
+    @DatabaseField
     public boolean isNotification = false;
+
+    public Audio() {
+    }
 
     public Audio(Bundle bundle) {
         id = bundle.getInt(MediaStore.Audio.Media._ID);
@@ -73,6 +97,9 @@ public class Audio extends BaseEntity {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.artistId);
+        dest.writeInt(this.albumId);
         dest.writeString(this.title);
         dest.writeString(this.titleKey);
         dest.writeString(this.artist);
@@ -83,9 +110,6 @@ public class Audio extends BaseEntity {
         dest.writeString(this.displayName);
         dest.writeString(this.mimeType);
         dest.writeString(this.path);
-        dest.writeInt(this.id);
-        dest.writeInt(this.artistId);
-        dest.writeInt(this.albumId);
         dest.writeInt(this.year);
         dest.writeInt(this.track);
         dest.writeInt(this.duration);
@@ -98,6 +122,9 @@ public class Audio extends BaseEntity {
     }
 
     protected Audio(Parcel in) {
+        this.id = in.readInt();
+        this.artistId = in.readInt();
+        this.albumId = in.readInt();
         this.title = in.readString();
         this.titleKey = in.readString();
         this.artist = in.readString();
@@ -108,9 +135,6 @@ public class Audio extends BaseEntity {
         this.displayName = in.readString();
         this.mimeType = in.readString();
         this.path = in.readString();
-        this.id = in.readInt();
-        this.artistId = in.readInt();
-        this.albumId = in.readInt();
         this.year = in.readInt();
         this.track = in.readInt();
         this.duration = in.readInt();

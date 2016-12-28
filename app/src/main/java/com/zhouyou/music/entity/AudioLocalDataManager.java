@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.table.TableUtils;
 import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
  * 日期：2016/11/22.
  */
 public class AudioLocalDataManager {
+    private static final String TAG = "AudioLocalDataManager";
 
     private static class DataManagerHolder {
         private static final AudioLocalDataManager MANAGER = new AudioLocalDataManager();
@@ -75,23 +79,6 @@ public class AudioLocalDataManager {
     }
 
     /**
-     * 获取上次播放的音频
-     *
-     * @return
-     */
-    public synchronized Audio getLastPlayedAudio() {
-        int audioId = PrefUtils.getInt(Constants.DATA_INT);
-        Audio audio = null;
-        for (Audio mAudio : audioList) {
-            if (mAudio == null) continue;
-            if (mAudio.id == audioId) {
-                audio = mAudio;
-            }
-        }
-        return audio;
-    }
-
-    /**
      * 获取音频列表
      *
      * @return
@@ -128,7 +115,18 @@ public class AudioLocalDataManager {
             Audio audio = new Audio(bundle);
             audioList.add(audio);
         }
+        save(audioList);
         cursor.close();
         return audioList;
+    }
+
+    private void save(List<Audio> data) {
+        try {
+            Dao<Audio, Integer> dao = App.get().getHelper().getMusicDao();
+            Log.d(TAG, "save() called with: data = [" + data + "]");
+            dao.create(data);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

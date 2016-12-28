@@ -1,23 +1,26 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.j256.ormlite.dao.Dao;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
+import com.zhouyou.music.base.App;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
 import com.zhouyou.music.module.views.AudioPlayPanel;
-import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -54,6 +57,14 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
+
+        try {
+            Dao<Audio, Integer> dao = App.get().getHelper().getMusicDao();
+            List<Audio> musicList = dao.queryForAll();
+            Log.d("MusicList", "音乐数量 - " + musicList.size());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
