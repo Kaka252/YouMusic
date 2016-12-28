@@ -10,14 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
-import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
-import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicStateMessageFactory;
 import com.zhouyou.remote.constants.MusicConstants;
@@ -30,7 +27,8 @@ import java.util.ArrayList;
  */
 class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener {
+        MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnSeekCompleteListener {
 
     private static final String TAG = MPOperationCenter.class.getSimpleName();
 
@@ -63,6 +61,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         PLAYER.setOnErrorListener(this);
         PLAYER.setOnPreparedListener(this);
         PLAYER.setOnCompletionListener(this);
+        PLAYER.setOnSeekCompleteListener(this);
         doMediaPlayerAction(makeStateChange(State.IDLE));
     }
 
@@ -379,6 +378,11 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mp) {
+        Log.d(TAG, "onSeekComplete");
     }
 
     @Override
