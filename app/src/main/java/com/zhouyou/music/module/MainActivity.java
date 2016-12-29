@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onUpdateChange() {
         playPanel.updateAudio();
-        sdk.sendMusicNotification();
     }
 
 

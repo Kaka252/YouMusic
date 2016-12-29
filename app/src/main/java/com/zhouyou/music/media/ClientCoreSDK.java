@@ -3,6 +3,7 @@ package com.zhouyou.music.media;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.T;
@@ -22,6 +23,8 @@ import java.util.List;
  * 客户端的数据管理类
  */
 public class ClientCoreSDK {
+
+    private static final String TAG = "ClientCoreSDK";
 
     private static class ClientHolder {
         private static final ClientCoreSDK SDK = new ClientCoreSDK();

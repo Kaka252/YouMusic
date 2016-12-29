@@ -5,16 +5,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Mode;
-import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.MusicManager;
 import com.zhouyou.remote.constants.MusicConstants;
-
-import java.util.ArrayList;
 
 /**
  * 作者：ZhouYou

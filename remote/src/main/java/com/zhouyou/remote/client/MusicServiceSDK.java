@@ -2,12 +2,6 @@ package com.zhouyou.remote.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-
-import com.zhouyou.remote.Music;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 作者：ZhouYou

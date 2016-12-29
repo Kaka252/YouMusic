@@ -1,14 +1,8 @@
 package com.zhouyou.remote.client;
 
 import android.content.Intent;
-import android.os.Bundle;
 
-import com.zhouyou.remote.Music;
 import com.zhouyou.remote.State;
-import com.zhouyou.remote.constants.MusicConstants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 作者：ZhouYou
@@ -19,7 +13,7 @@ public class Sender {
 
     private RemoteServiceProxy proxy;
 
-    public Sender(RemoteServiceProxy proxy) {
+    Sender(RemoteServiceProxy proxy) {
         this.proxy = proxy;
     }
 
