@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Audio audio = (Audio) parent.getItemAtPosition(position);
         if (audio == null) return;
-        if (sdk.getCurrAudio() == null) {
+        if (sdk.getPlayingMusic() == null) {
             sdk.playMusic(data, audio.path);
         } else {
             if (sdk.isPlayingCurrentMusic(audio.path) && sdk.isMusicPlaying()) {
@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onMusicPlay(int playAction, int seekPosition) {
-        Audio audio = sdk.getCurrAudio();
+        Audio audio = sdk.getPlayingMusic();
         if (audio == null) {
             T.ss("请选择歌曲进行播放");
             return;

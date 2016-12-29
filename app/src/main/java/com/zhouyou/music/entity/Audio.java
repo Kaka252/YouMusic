@@ -16,7 +16,7 @@ import com.zhouyou.music.base.BaseEntity;
 @DatabaseTable(tableName = "Audio")
 public class Audio extends BaseEntity {
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(id = true)
     public int id;
     @DatabaseField
     public int artistId;

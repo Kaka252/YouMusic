@@ -9,7 +9,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.table.TableUtils;
+import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.base.App;
 import com.zhouyou.music.config.Constants;
@@ -35,17 +38,23 @@ public class AudioLocalDataManager {
 
     private ContentResolver resolver;
     private List<Audio> audioList;
+    private Dao<Audio, Integer> dao;
 
     private AudioLocalDataManager() {
         Context context = App.get().getApplicationContext();
         try {
             context.grantUriPermission(App.get().getPackageName(), MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
         } catch (Exception e) {
             Log.e("Permission", e.toString());
         }
         resolver = context.getContentResolver();
         audioList = getAudioList();
+        try {
+            dao = App.get().getHelper().getMusicDao();
+            saveAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static final String[] AUDIO_KEYS = new String[]{
@@ -74,16 +83,12 @@ public class AudioLocalDataManager {
             MediaStore.Audio.Media.DATA
     };
 
-    public List<Audio> getAudioCacheList() {
-        return audioList;
-    }
-
     /**
      * 获取音频列表
      *
      * @return
      */
-    public synchronized List<Audio> getAudioList() {
+    private synchronized List<Audio> getAudioList() {
         Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
         if (cursor == null) return null;
         List<Audio> audioList = new ArrayList<>();
@@ -115,18 +120,53 @@ public class AudioLocalDataManager {
             Audio audio = new Audio(bundle);
             audioList.add(audio);
         }
-        save(audioList);
         cursor.close();
         return audioList;
     }
 
-    private void save(List<Audio> data) {
+    /**
+     * 保存全部
+     */
+    private void saveAll() {
+        if (ListUtils.isNull(audioList)) return;
         try {
-            Dao<Audio, Integer> dao = App.get().getHelper().getMusicDao();
-            Log.d(TAG, "save() called with: data = [" + data + "]");
-            dao.create(data);
+            for (Audio audio : audioList) {
+                dao.createIfNotExists(audio);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 查询全部
+     *
+     * @return
+     */
+    public List<Audio> queryAll() {
+        List<Audio> data = null;
+        try {
+            data = dao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    /**
+     * 根据路径查询音乐
+     *
+     * @param path
+     * @return
+     */
+    public Audio queryByPath(String path) {
+        Audio audio = null;
+        QueryBuilder qb = dao.queryBuilder();
+        try {
+            audio = (Audio) qb.where().eq("path", path).queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return audio;
     }
 }

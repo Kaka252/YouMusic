@@ -70,7 +70,7 @@ public class NotificationReceiver {
     }
 
     private boolean setupRemoteViews() {
-        Audio audio = ClientCoreSDK.get().getCurrAudio();
+        Audio audio = ClientCoreSDK.get().getPlayingMusic();
         if (audio == null) return false;
         remoteViews = new RemoteViews(App.get().getPackageName(), R.layout.view_notification_bar);
         remoteViews.setTextViewText(R.id.tv_audio_title, audio.title);

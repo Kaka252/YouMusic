@@ -21,8 +21,6 @@ import java.util.List;
  * 客户端的数据管理类
  */
 public class ClientCoreSDK {
-    /*当前播放的音乐*/
-    private Audio currAudio;
 
     private static class ClientHolder {
         private static final ClientCoreSDK SDK = new ClientCoreSDK();
@@ -41,21 +39,9 @@ public class ClientCoreSDK {
      *
      * @return
      */
-    Audio getPlayingMusic() {
-        List<Audio> audioList = getPlayList();
-        if (ListUtils.isEmpty(audioList)) return null;
+    public Audio getPlayingMusic() {
         String musicPath = getCurrentPlayingMusicPath();
-        for (Audio mAudio : audioList) {
-            if (mAudio == null || TextUtils.isEmpty(mAudio.path)) continue;
-            if (TextUtils.equals(musicPath, mAudio.path)) {
-                currAudio = mAudio;
-            }
-        }
-        return currAudio;
-    }
-
-    public Audio getCurrAudio() {
-        return currAudio;
+        return AudioLocalDataManager.get().queryByPath(musicPath);
     }
 
     /**
@@ -64,11 +50,7 @@ public class ClientCoreSDK {
      * @return
      */
     public List<Audio> getPlayList() {
-        List<Audio> audioList = AudioLocalDataManager.get().getAudioCacheList();
-        if (ListUtils.isEmpty(audioList)) {
-            audioList = AudioLocalDataManager.get().getAudioList();
-        }
-        return audioList;
+        return AudioLocalDataManager.get().queryAll();
     }
 
     /**
@@ -109,8 +91,9 @@ public class ClientCoreSDK {
         if (isMusicPlaying()) {
             duration = MusicServiceSDK.get().getMusicDuration();
         } else {
-            if (currAudio != null) {
-                duration = currAudio.duration;
+            Audio audio = getPlayingMusic();
+            if (audio != null) {
+                duration = audio.duration;
             }
         }
         return duration;
