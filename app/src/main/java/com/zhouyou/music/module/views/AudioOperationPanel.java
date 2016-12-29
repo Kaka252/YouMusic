@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
+import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.utils.StringUtils;
@@ -52,6 +54,7 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
 
     private int seekPosition;
     private int duration;
+    private Audio audio;
 
     public void setOnMusicPlayingActionListener(OnMusicPlayingActionListener listener) {
         this.listener = listener;
@@ -73,6 +76,12 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
         ivLikeSwitch.setOnClickListener(this);
         ivPlayModeSwitch = (ImageView) view.findViewById(R.id.iv_play_mode_switch);
         ivPlayModeSwitch.setOnClickListener(this);
+
+        audio = ClientCoreSDK.get().getPlayingMusic();
+        if (audio != null) {
+            boolean isFavor = audio.isFavor;
+            ivLikeSwitch.setImageResource(isFavor ? R.mipmap.ic_like : R.mipmap.ic_dislike);
+        }
 
         int mode = ClientCoreSDK.get().getPlayMode();
         switch (mode) {
@@ -197,7 +206,7 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
                 }
                 break;
             case R.id.iv_like_switch:
-                T.ss("功能未实现");
+                switchFavor();
                 break;
             case R.id.iv_play_mode_switch:
                 switchMode();
@@ -205,6 +214,23 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    public void switchFavor() {
+        if (audio == null) {
+            T.ss("还没有选择歌曲哟~");
+            return;
+        }
+        if (audio.isFavor) {
+            T.ss("已从收藏列表中移除");
+            ivLikeSwitch.setImageResource(R.mipmap.ic_dislike);
+            audio.isFavor = false;
+        } else {
+            T.ss("已添加到收藏列表");
+            ivLikeSwitch.setImageResource(R.mipmap.ic_like);
+            audio.isFavor = true;
+        }
+        AudioLocalDataManager.get().update(audio);
     }
 
     public void switchMode() {

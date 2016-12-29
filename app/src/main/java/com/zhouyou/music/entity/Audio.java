@@ -60,6 +60,8 @@ public class Audio extends BaseEntity {
     public boolean isMusic = false;
     @DatabaseField
     public boolean isNotification = false;
+    @DatabaseField
+    public boolean isFavor = false;
 
     public Audio() {
     }
@@ -119,6 +121,7 @@ public class Audio extends BaseEntity {
         dest.writeByte(this.isAlarm ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isMusic ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isNotification ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isFavor ? (byte) 1 : (byte) 0);
     }
 
     protected Audio(Parcel in) {
@@ -144,6 +147,7 @@ public class Audio extends BaseEntity {
         this.isAlarm = in.readByte() != 0;
         this.isMusic = in.readByte() != 0;
         this.isNotification = in.readByte() != 0;
+        this.isFavor = in.readByte() != 0;
     }
 
     public static final Creator<Audio> CREATOR = new Creator<Audio>() {

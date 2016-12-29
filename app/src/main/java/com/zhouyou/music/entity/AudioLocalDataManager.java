@@ -169,4 +169,12 @@ public class AudioLocalDataManager {
         }
         return audio;
     }
+
+    public void update(Audio audio) {
+        try {
+            dao.createOrUpdate(audio);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
