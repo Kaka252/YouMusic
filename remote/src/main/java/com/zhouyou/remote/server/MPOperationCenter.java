@@ -203,6 +203,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 doMediaPlayerAction(makeStateChange(State.IN_PROGRESS));
                 break;
             case State.IN_PROGRESS: // 播放中
+                // TODO 发送通知
                 handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                 break;
             case State.PAUSED: // 暂停
