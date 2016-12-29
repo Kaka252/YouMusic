@@ -173,6 +173,7 @@ public class AudioLocalDataManager {
     }
 
     public void update(Audio audio) {
+        if (audio == null) return;
         try {
             dao.createOrUpdate(audio);
         } catch (SQLException e) {
