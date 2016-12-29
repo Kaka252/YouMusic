@@ -8,6 +8,7 @@ import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
+import com.zhouyou.music.notification.NotificationReceiver;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.constants.MusicConstants;
@@ -209,5 +210,14 @@ public class ClientCoreSDK {
      */
     public void complete(boolean isPlayBack) {
         MusicServiceSDK.get().complete(isPlayBack);
+    }
+
+    /**
+     * 发送音乐通知
+     */
+    public void sendMusicNotification() {
+        if (getCurrentPlayingMusicState() == State.PREPARED || getCurrentPlayingMusicState() == State.PAUSED) {
+            NotificationReceiver.get().sendNotification();
+        }
     }
 }
