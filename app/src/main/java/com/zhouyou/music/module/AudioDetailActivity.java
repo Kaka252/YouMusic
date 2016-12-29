@@ -1,16 +1,11 @@
 package com.zhouyou.music.module;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
-import com.wonderkiln.blurkit.BlurKit;
-import com.zhouyou.library.utils.PoolUtils;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
@@ -21,7 +16,6 @@ import com.zhouyou.music.media.MusicLoadTask;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment;
-import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
