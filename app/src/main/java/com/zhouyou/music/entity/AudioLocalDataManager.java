@@ -144,7 +144,7 @@ public class AudioLocalDataManager {
      *
      * @return
      */
-    public List<Audio> queryAll() {
+    public synchronized List<Audio> queryAll() {
         List<Audio> data = null;
         try {
             data = dao.queryForAll();
@@ -157,10 +157,10 @@ public class AudioLocalDataManager {
     /**
      * 根据路径查询音乐
      *
-     * @param path
+     * @param path 播放路径
      * @return
      */
-    public Audio queryByPath(String path) {
+    public synchronized Audio queryByPath(String path) {
         if (TextUtils.isEmpty(path)) return null;
         Audio audio = null;
         QueryBuilder qb = dao.queryBuilder();
@@ -172,7 +172,7 @@ public class AudioLocalDataManager {
         return audio;
     }
 
-    public void update(Audio audio) {
+    public synchronized void update(Audio audio) {
         if (audio == null) return;
         try {
             dao.createOrUpdate(audio);
