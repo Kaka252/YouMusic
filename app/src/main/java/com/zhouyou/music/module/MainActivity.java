@@ -57,14 +57,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         data = sdk.getPlayList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
-
-        try {
-            Dao<Audio, Integer> dao = App.get().getHelper().getMusicDao();
-            List<Audio> musicList = dao.queryForAll();
-            Log.d("MusicList", "音乐数量 - " + musicList.size());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
