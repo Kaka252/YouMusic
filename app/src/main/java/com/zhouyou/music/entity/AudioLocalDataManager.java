@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
@@ -160,6 +161,7 @@ public class AudioLocalDataManager {
      * @return
      */
     public Audio queryByPath(String path) {
+        if (TextUtils.isEmpty(path)) return null;
         Audio audio = null;
         QueryBuilder qb = dao.queryBuilder();
         try {

@@ -77,11 +77,7 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
         ivPlayModeSwitch = (ImageView) view.findViewById(R.id.iv_play_mode_switch);
         ivPlayModeSwitch.setOnClickListener(this);
 
-        audio = ClientCoreSDK.get().getPlayingMusic();
-        if (audio != null) {
-            boolean isFavor = audio.isFavor;
-            ivLikeSwitch.setImageResource(isFavor ? R.mipmap.ic_like : R.mipmap.ic_dislike);
-        }
+        initFavor();
 
         int mode = ClientCoreSDK.get().getPlayMode();
         switch (mode) {
@@ -96,6 +92,14 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
                 break;
             default:
                 break;
+        }
+    }
+
+    private void initFavor() {
+        audio = ClientCoreSDK.get().getPlayingMusic();
+        if (audio != null) {
+            boolean isFavor = audio.isFavor;
+            ivLikeSwitch.setImageResource(isFavor ? R.mipmap.ic_like : R.mipmap.ic_dislike);
         }
     }
 
@@ -126,9 +130,14 @@ public class AudioOperationPanel extends LinearLayout implements View.OnClickLis
     private void updateAudioPlayingStatus(int state) {
         switch (state) {
             case State.IDLE:
+                initFavor();
+                break;
             case State.INITIALIZED:
-            case State.PREPARED:
             case State.PREPARING:
+                break;
+            case State.PREPARED:
+                initFavor();
+                break;
             case State.PAUSED:
             case State.STOPPED:
             case State.COMPLETED:
