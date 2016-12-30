@@ -56,7 +56,7 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
         super.onViewCreated(view, savedInstanceState);
         ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
         ivAlbum.setCircle(true);
-        ViewCompat.setTransitionName(ivAlbum, "album");
+//        ViewCompat.setTransitionName(ivAlbum, "album");
     }
 
     @Override

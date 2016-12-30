@@ -173,8 +173,10 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     }
 
     public void viewDetail() {
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
         Intent intent = new Intent(context, AudioDetailActivity.class);
-        ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
+        context.startActivity(intent);
+//        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(ivAlbum, "album"));
+//        Intent intent = new Intent(context, AudioDetailActivity.class);
+//        ActivityCompat.startActivity(context, intent, activityOptions.toBundle());
     }
 }
