@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dip"
-                android:paddingLeft="10dip"
+                android:paddingLeft="15dip"
                 android:paddingRight="15dip"
                 android:paddingTop="10dip"
                 android:src="@mipmap/ic_back" />
