@@ -17,6 +17,7 @@ import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
+import com.zhouyou.remote.MusicConfig;
 import com.zhouyou.remote.client.MusicStateMessageFactory;
 import com.zhouyou.remote.constants.MusicConstants;
 
@@ -169,7 +170,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     @Override
     public void setMode(int mode) throws RemoteException {
         this.mode = mode;
-        onMainProcessStateChangeNotify();
+        onMainProcessStateChangeNotify(0);
     }
 
     /**
@@ -184,7 +185,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         boolean isPlayBack = action.getBooleanExtra(MusicConstants.MUSIC_PLAY_BACK, false);
         int seekPosition = action.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, -1);
 
-        onMainProcessStateChangeNotify();
+        onMainProcessStateChangeNotify(0);
         printLog(currState); // 打印日志
         switch (currState) {
             case State.IDLE: // 闲置
@@ -249,7 +250,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                     break;
                 case ACTION_PROGRESS_UPDATE:
                     try {
-                        onMainProcessStateChangeNotify();
+                        onMainProcessStateChangeNotify(1);
                         handler.sendEmptyMessageDelayed(ACTION_PROGRESS_UPDATE, 1000);
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -257,7 +258,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                     break;
                 case ACTION_PROGRESS_SUSPEND:
                     try {
-                        onMainProcessStateChangeNotify();
+                        onMainProcessStateChangeNotify(0);
                         handler.removeMessages(ACTION_PROGRESS_UPDATE);
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -372,19 +373,22 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
      */
-    private void onMainProcessStateChangeNotify() throws RemoteException {
+    private void onMainProcessStateChangeNotify(int dataType) throws RemoteException {
         if (TextUtils.isEmpty(currPlayingMusicPath)) {
             currPlayingMusicPath = getLastPlayedMusic();
         }
         Log.d(TAG, "音乐的路径 : " + currPlayingMusicPath);
-        Intent intent = new Intent();
-        intent.putExtra(MusicConstants.MUSIC_STATE, currState);
-        intent.putExtra(MusicConstants.MUSIC_PLAY_LIST, hasPlayListInitialized());
-        intent.putExtra(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
-        intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
-        intent.putExtra(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
-        intent.putExtra(MusicConstants.MUSIC_MODE, mode);
-        receiver.onReceive(intent);
+        MusicConfig config = new MusicConfig();
+        config.setDataType(dataType);
+        Bundle b = new Bundle();
+        b.putInt(MusicConstants.MUSIC_STATE, currState);
+        b.putBoolean(MusicConstants.MUSIC_PLAY_LIST, hasPlayListInitialized());
+        b.putString(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
+        b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
+        b.putInt(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
+        b.putInt(MusicConstants.MUSIC_MODE, mode);
+        config.setExtra(b);
+        receiver.onReceive(config);
     }
 
     /**

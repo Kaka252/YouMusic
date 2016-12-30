@@ -1,13 +1,13 @@
 package com.zhouyou.remote.client;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 
 import com.zhouyou.remote.IMusicReceiver;
-import com.zhouyou.remote.Mode;
+import com.zhouyou.remote.MusicConfig;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.MusicManager;
 import com.zhouyou.remote.constants.MusicConstants;
@@ -53,14 +53,21 @@ public class Receiver extends IMusicReceiver.Stub {
     }
 
     @Override
-    public void onReceive(Intent data) throws RemoteException {
-        currMusicPath = data.getStringExtra(MusicConstants.MUSIC_SELECTED);
-        currState = data.getIntExtra(MusicConstants.MUSIC_STATE, 0);
-        hasPlayListInitialized = data.getBooleanExtra(MusicConstants.MUSIC_PLAY_LIST, false);
-        currPlayingPosition = data.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, 0);
-        currPlayingDuration = data.getIntExtra(MusicConstants.MUSIC_PLAYING_DURATION, 0);
-        mode = data.getIntExtra(MusicConstants.MUSIC_MODE, Mode.MODE_CYCLE_ALL_PLAY);
-        dispatch();
+    public void onReceive(MusicConfig config) throws RemoteException {
+        if (config == null) return;
+        Bundle data = config.getExtra();
+        currMusicPath = data.getString(MusicConstants.MUSIC_SELECTED);
+        currState = data.getInt(MusicConstants.MUSIC_STATE);
+        hasPlayListInitialized = data.getBoolean(MusicConstants.MUSIC_PLAY_LIST);
+        currPlayingPosition = data.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
+        currPlayingDuration = data.getInt(MusicConstants.MUSIC_PLAYING_DURATION);
+        mode = data.getInt(MusicConstants.MUSIC_MODE);
+        int dataType = config.getDataType();
+        if (dataType == 1 && isPlaying()) {
+            mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);
+        } else {
+            mMainHandler.sendEmptyMessage(UPDATE_STATE);
+        }
     }
 
     /**
@@ -74,16 +81,6 @@ public class Receiver extends IMusicReceiver.Stub {
 
     private boolean isPlaying() {
         return currState == State.IN_PROGRESS;
-    }
-
-    /**
-     * 消息分发
-     */
-    private void dispatch() {
-        if (isPlaying()) {
-            mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);
-        }
-        mMainHandler.sendEmptyMessage(UPDATE_STATE);
     }
 
     private static final int UPDATE_STATE = 0;

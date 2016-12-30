@@ -1,6 +1,7 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -81,9 +82,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onUpdateChange() {
+        Log.e("MainActivity", "onUpdateChange");
         playPanel.updateAudioPlayingStatus();
         int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
-        if (state == State.PREPARING || state == State.IDLE) {
+        if (state == State.PREPARED || state == State.IDLE) {
             playPanel.loadAudioInfo();
         }
     }
