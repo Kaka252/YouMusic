@@ -98,7 +98,7 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
     public void onUpdateChange() {
         int currState = sdk.getCurrentPlayingMusicState();
         operationPanel.updatePanel(currState);
-        if (currState == State.PREPARING || currState == State.IDLE) {
+        if (currState == State.PREPARED || currState == State.IDLE) {
             loadAlbumImage();
         }
     }
