@@ -13,6 +13,7 @@ import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
 import com.zhouyou.music.module.views.AudioPlayPanel;
+import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onResume() {
         super.onResume();
+        playPanel.updateAudioPlayingStatus();
         playPanel.loadAudioInfo();
         onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
     }
@@ -79,7 +81,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onUpdateChange() {
-        playPanel.updateAudio();
+        playPanel.updateAudioPlayingStatus();
+        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
+        if (state == State.PREPARING || state == State.IDLE) {
+            playPanel.loadAudioInfo();
+        }
     }
 
 

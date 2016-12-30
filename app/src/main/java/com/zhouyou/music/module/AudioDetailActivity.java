@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
@@ -31,11 +33,14 @@ import java.util.List;
  */
 public class AudioDetailActivity extends BaseActivity implements IMusicStateSubscriber,
         IMusicProgressSubscriber,
-        OnMusicPlayingActionListener {
+        OnMusicPlayingActionListener,
+        View.OnClickListener {
 
     private ClientCoreSDK sdk;
     private ImageView ivBg;
     private AudioOperationPanel operationPanel;
+    private TextView tvAudioTitle;
+    private TextView tvAudioArtist;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +55,8 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
     private void initViews() {
         ViewPager vp = (ViewPager) findViewById(R.id.vp);
         ivBg = (ImageView) findViewById(R.id.iv_bg);
+        tvAudioTitle = (TextView) findViewById(R.id.tv_audio_title);
+        tvAudioArtist = (TextView) findViewById(R.id.tv_audio_artist);
         operationPanel = (AudioOperationPanel) findViewById(R.id.operation_panel);
         operationPanel.setOnMusicPlayingActionListener(this);
         List<BaseFragment> fragments = new ArrayList<>();
@@ -57,6 +64,7 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
         AudioDetailViewPagerAdapter adapter = new AudioDetailViewPagerAdapter(getSupportFragmentManager(), fragments);
         vp.setAdapter(adapter);
         vp.setCurrentItem(0);
+        findViewById(R.id.iv_back).setOnClickListener(this);
     }
 
     @Override
@@ -75,6 +83,8 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
             @Override
             public void setupMusic(Audio audio, Bitmap bm) {
                 ivBg.setImageBitmap(bm);
+                tvAudioTitle.setText(audio.title);
+                tvAudioArtist.setText(audio.artist);
             }
         });
         task.loadMusic(true, true);
@@ -126,5 +136,16 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
         super.onDestroy();
         MusicManager.get().createAudioStatePublisher().unregister(this);
         MusicManager.get().createProgressPublisher().unregister(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 }

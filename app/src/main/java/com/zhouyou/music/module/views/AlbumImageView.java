@@ -81,7 +81,7 @@ public class AlbumImageView extends ImageView {
         if (isThumbnail) {
             width = Scale.dp2px(context, 40);
         } else {
-            width = Scale.getDisplayWidth(context) - Scale.dp2px(context, 100);
+            width = Scale.getDisplayWidth(context) - Scale.dp2px(context, 120);
         }
         radius = width / 2;
         setMeasuredDimension(width, width);

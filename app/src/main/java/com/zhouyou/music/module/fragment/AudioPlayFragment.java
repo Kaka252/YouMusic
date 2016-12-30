@@ -35,10 +35,7 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
         return f;
     }
 
-    private TextView tvAudioTitle;
-    private TextView tvAudioArtist;
     private AlbumImageView ivAlbum;
-
     private ClientCoreSDK sdk;
 
     @Override
@@ -57,8 +54,6 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
-        tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
         ivAlbum.setCircle(true);
         ViewCompat.setTransitionName(ivAlbum, "album");
@@ -95,8 +90,6 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
             public void setupMusic(Audio audio, Bitmap bm) {
                 ivAlbum.setBitmap(bm);
                 ivAlbum.setSpanning(sdk.isMusicPlaying());
-                tvAudioTitle.setText(audio.title);
-                tvAudioArtist.setText(audio.artist);
             }
         });
         task.loadMusic();

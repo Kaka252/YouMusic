@@ -86,7 +86,8 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
     /**
      * 更新音乐播放的状态
      */
-    private void updateAudioPlayingStatus(int state) {
+    public void updateAudioPlayingStatus() {
+        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
         currState = state;
         switch (state) {
             case State.IDLE:
@@ -105,17 +106,6 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
                 break;
             default:
                 break;
-        }
-    }
-
-    /**
-     * 更新音频信息
-     */
-    public void updateAudio() {
-        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
-        updateAudioPlayingStatus(state);
-        if (state == State.PREPARING || state == State.IDLE) {
-            loadAudioInfo();
         }
     }
 
