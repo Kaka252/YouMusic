@@ -32,13 +32,13 @@ public class MusicLoadTask {
     /**
      * 读取音乐信息
      */
-    public void loadMusic(final boolean isThumbnail, final boolean isBlur) {
+    public void loadMusic(final int  compressLevel, final boolean isBlur) {
         PoolUtils.POOL.submit(new Runnable() {
             @Override
             public void run() {
                 Audio audio = ClientCoreSDK.get().getPlayingMusic();
                 if (audio == null) return;
-                Bitmap bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId, isThumbnail);
+                Bitmap bm = MediaUtils.getThumbnail(context, audio.id, audio.albumId, compressLevel);
                 if (isBlur && bm != null) {
                     bm = BlurKit.getInstance().blur(bm, 23);
                 }
@@ -54,12 +54,12 @@ public class MusicLoadTask {
         });
     }
 
-    public void loadMusic(boolean isThumbnail) {
-        loadMusic(isThumbnail, false);
+    public void loadMusic(int compressLevel) {
+        loadMusic(compressLevel, false);
     }
 
     public void loadMusic() {
-        loadMusic(false);
+        loadMusic(MediaUtils.COMPRESS_LEVEL_ORIGINAL, false);
     }
 
     private Handler handler = new Handler(new Handler.Callback() {

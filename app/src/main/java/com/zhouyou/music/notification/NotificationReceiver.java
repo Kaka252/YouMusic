@@ -79,11 +79,7 @@ public class NotificationReceiver {
         if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist).append(" - ");
         if (!TextUtils.isEmpty(audio.album)) sb.append(audio.album);
         remoteViews.setTextViewText(R.id.tv_audio_info, sb.toString());
-        Bitmap bm = MediaUtils.getAlbumCoverImage(context, audio.id, audio.albumId);
-        if (bm != null) {
-            int size = Scale.dp2px(context, 100);
-            bm = MediaUtils.getAlbumCoverThumbnail(bm, size, size, true);
-        }
+        Bitmap bm = MediaUtils.getThumbnail(context, audio.id, audio.albumId, MediaUtils.COMPRESS_LEVEL_SMALL);
         remoteViews.setImageViewBitmap(R.id.iv_album, bm);
         if (ClientCoreSDK.get().isMusicPlaying()) {
             remoteViews.setImageViewResource(R.id.iv_play_now, R.mipmap.ic_pause);

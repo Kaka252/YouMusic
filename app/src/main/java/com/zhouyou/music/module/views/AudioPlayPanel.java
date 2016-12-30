@@ -124,7 +124,7 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
                 tvAudioInfo.setText(sb.toString());
             }
         });
-        task.loadMusic(true);
+        task.loadMusic(MediaUtils.COMPRESS_LEVEL_SMALL);
     }
 
     /**

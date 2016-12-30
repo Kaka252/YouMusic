@@ -18,6 +18,7 @@ import com.zhouyou.music.media.MusicLoadTask;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioDetailViewPagerAdapter;
 import com.zhouyou.music.module.fragment.AudioPlayFragment;
+import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioOperationPanel;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
@@ -87,7 +88,7 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
                 tvAudioArtist.setText(audio.artist);
             }
         });
-        task.loadMusic(true, true);
+        task.loadMusic(MediaUtils.COMPRESS_LEVEL_SMALL, true);
     }
 
     /**
