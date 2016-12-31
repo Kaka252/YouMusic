@@ -71,8 +71,10 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
     @Override
     protected void onResume() {
         super.onResume();
-        onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
+        int currState = sdk.getCurrentPlayingMusicState();
+        operationPanel.updatePanel(currState);
         loadAlbumImage();
+        onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
     }
 
     /**
