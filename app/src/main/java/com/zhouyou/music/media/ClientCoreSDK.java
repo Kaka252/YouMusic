@@ -2,6 +2,7 @@ package com.zhouyou.music.media;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -10,12 +11,14 @@ import com.zhouyou.library.utils.T;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.notification.NotificationReceiver;
+import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.constants.MusicConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 作者：ZhouYou
@@ -222,5 +225,68 @@ public class ClientCoreSDK {
         if (getCurrentPlayingMusicState() == State.PREPARED || getCurrentPlayingMusicState() == State.PAUSED) {
             NotificationReceiver.get().sendNotification();
         }
+    }
+
+    /**
+     * 播放下一首
+     */
+    private void playNext() {
+//        int index = 0;
+//        int size = playList.size();
+//        int mode = getPlayMode();
+//        String path = getCurrentPlayingMusicPath();
+//        // 0. 循环播放
+//        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+//            index = playList.indexOf(path);
+//            if (index >= size - 1) {
+//                index = 0;
+//            } else {
+//                index += 1;
+//            }
+//        }
+//        // 1. 单曲循环
+//        else if (mode == Mode.MODE_SINGLE_PLAY) {
+//            index = playList.indexOf(path);
+//            if (getCurrentPlayingMusicPosition() != getCurrentPlayingMusicDuration()) {
+//                index = playList.indexOf(path);
+//                if (index >= size - 1) {
+//                    index = 0;
+//                } else {
+//                    index += 1;
+//                }
+//            }
+//        }
+//        // 2. 随机播放
+//        else if (mode == Mode.MODE_RANDOM_PLAY) {
+//            Random random = new Random();
+//            index = random.nextInt(size) - 1;
+//        }
+//        path = playList.get(index);
+    }
+
+    /**
+     * 播放上一首
+     */
+    private void playBack() {
+//        int index = 0;
+//        int size = playList.size();
+//        int mode = getPlayMode();
+//        String path = getCurrentPlayingMusicPath();
+//        // 0. 循环播放
+//        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+//            index = playList.indexOf(path);
+//            if (index <= 0) {
+//                index = playList.size() - 1;
+//            } else {
+//                index -= 1;
+//            }
+//        }
+//        // 2. 随机播放
+//        else if (mode == Mode.MODE_RANDOM_PLAY) {
+//            Random random = new Random();
+//            index = random.nextInt(size) - 1;
+//        }
+//
+//        path = playList.get(index);
     }
 }

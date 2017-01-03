@@ -1,6 +1,7 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -68,15 +69,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Audio audio = (Audio) parent.getItemAtPosition(position);
-        if (audio == null) return;
-        if (sdk.getPlayingMusic() == null) {
+        if (audio == null || TextUtils.isEmpty(audio.path)) return;
+        if (sdk.getPlayingMusic() == null || !sdk.isPlayingCurrentMusic(audio.path)) {
             sdk.playMusic(data, audio.path);
         } else {
-            if (sdk.isPlayingCurrentMusic(audio.path) && sdk.isMusicPlaying()) {
-                playPanel.viewDetail();
-            } else {
-                sdk.playMusic(sdk.getPlayList(), audio.path);
-            }
+            playPanel.viewDetail();
         }
     }
 
