@@ -12,6 +12,7 @@
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:layout_marginTop="10dip"
+        android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_d2" />
 
@@ -22,6 +23,7 @@
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:layout_marginTop="5dip"
+        android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_d4" />
 

@@ -13,37 +13,49 @@
         android:layout_alignParentTop="true"
         android:background="@android:color/holo_blue_dark" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.zhouyou.music.module.views.AlbumImageView
+        android:id="@+id/iv_album"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginRight="10dip"
+        android:layout_toLeftOf="@+id/ll_action"
+        android:layout_toRightOf="@+id/iv_album"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingBottom="5dip"
         android:paddingTop="5dip">
 
-        <com.zhouyou.music.module.views.AlbumImageView
-            android:id="@+id/iv_album"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dip" />
-
         <TextView
-            android:id="@+id/tv_audio_info"
+            android:id="@+id/tv_audio_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/iv_album"
-            android:lineSpacingExtra="5dip"
+            android:singleLine="true"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_d4" />
-    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_audio_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_d4" />
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

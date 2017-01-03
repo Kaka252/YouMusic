@@ -54,8 +54,10 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
 
     /*专辑图片*/
     private AlbumImageView ivAlbum;
-    /*音乐信息*/
-    private TextView tvAudioInfo;
+    /*音乐标题*/
+    private TextView tvAudioTitle;
+    /*音乐人*/
+    private TextView tvAudioArtist;
     /*播放/暂停*/
     private ImageView ivPlayNow;
     /*播放进度*/
@@ -75,7 +77,8 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
         ivAlbum = (AlbumImageView) view.findViewById(R.id.iv_album);
         ivAlbum.setCircle(true);
         ivAlbum.setThumbnail(true);
-        tvAudioInfo = (TextView) view.findViewById(R.id.tv_audio_info);
+        tvAudioTitle = (TextView) view.findViewById(R.id.tv_audio_title);
+        tvAudioArtist = (TextView) view.findViewById(R.id.tv_audio_artist);
         viewProgress = view.findViewById(R.id.view_progress);
         ivPlayNow = (ImageView) view.findViewById(R.id.iv_play_now);
         ivPlayNow.setOnClickListener(this);
@@ -118,10 +121,8 @@ public class AudioPlayPanel extends LinearLayout implements View.OnClickListener
             @Override
             public void setupMusic(Audio audio, Bitmap bm) {
                 ivAlbum.setBitmap(bm);
-                StringBuilder sb = new StringBuilder();
-                if (!TextUtils.isEmpty(audio.title)) sb.append(audio.title).append("\n");
-                if (!TextUtils.isEmpty(audio.artist)) sb.append(audio.artist);
-                tvAudioInfo.setText(sb.toString());
+                tvAudioTitle.setText(audio.title);
+                tvAudioArtist.setText(audio.artist);
             }
         });
         task.loadMusic(MediaUtils.COMPRESS_LEVEL_SMALL);

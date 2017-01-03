@@ -47,6 +47,7 @@
                     android:id="@+id/tv_audio_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_d3" />
 
@@ -54,6 +55,7 @@
                     android:id="@+id/tv_audio_artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:layout_marginTop="5dip"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_d4" />
