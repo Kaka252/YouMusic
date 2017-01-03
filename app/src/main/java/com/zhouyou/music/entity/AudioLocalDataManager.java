@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -38,10 +39,11 @@ public class AudioLocalDataManager {
     }
 
     private ContentResolver resolver;
-    private List<Audio> audioList;
     private Dao<Audio, Integer> dao;
+    private ArrayMap<Integer, Audio> map;
 
     private AudioLocalDataManager() {
+        map = new ArrayMap<>();
         Context context = App.get().getApplicationContext();
         try {
             context.grantUriPermission(App.get().getPackageName(), MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -49,10 +51,8 @@ public class AudioLocalDataManager {
             Log.e("Permission", e.toString());
         }
         resolver = context.getContentResolver();
-        audioList = getAudioList();
         try {
             dao = App.get().getHelper().getMusicDao();
-            saveAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class AudioLocalDataManager {
      *
      * @return
      */
-    private synchronized List<Audio> getAudioList() {
+    public synchronized List<Audio> getLocalAudioList() {
         Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
         if (cursor == null) return null;
         List<Audio> audioList = new ArrayList<>();
@@ -128,10 +128,11 @@ public class AudioLocalDataManager {
     /**
      * 保存全部
      */
-    private void saveAll() {
-        if (ListUtils.isNull(audioList)) return;
+    public void save(List<Audio> playList) {
+        if (ListUtils.isNull(playList)) return;
         try {
-            for (Audio audio : audioList) {
+            for (Audio audio : playList) {
+                if (audio == null) continue;
                 dao.createIfNotExists(audio);
             }
         } catch (SQLException e) {

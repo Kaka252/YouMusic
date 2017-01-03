@@ -11,6 +11,7 @@ import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
@@ -53,7 +54,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         playPanel.setOnMusicPlayingActionListener(this);
         listView.setOnItemClickListener(this);
-        data = sdk.getPlayList();
+        data = AudioLocalDataManager.get().getLocalAudioList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
     }
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (audio == null || TextUtils.isEmpty(audio.path)) return;
         if (sdk.getPlayingMusic() == null || !sdk.isPlayingCurrentMusic(audio.path)) {
             sdk.playMusic(data, audio.path);
+            sdk.savePlayList(data);
         } else {
             playPanel.viewDetail();
         }

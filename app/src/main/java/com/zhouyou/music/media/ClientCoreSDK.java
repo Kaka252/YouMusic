@@ -51,6 +51,10 @@ public class ClientCoreSDK {
         return AudioLocalDataManager.get().queryByPath(musicPath);
     }
 
+    public void savePlayList(List<Audio> data) {
+        AudioLocalDataManager.get().save(data);
+    }
+
     /**
      * 获取播放列表
      *
@@ -230,13 +234,19 @@ public class ClientCoreSDK {
     /**
      * 播放下一首
      */
-    private void playNext() {
+//    public Audio getNextOne() {
 //        int index = 0;
+//        List<Audio> playList = getPlayList();
+//        if (ListUtils.isEmpty(playList)) return null;
 //        int size = playList.size();
 //        int mode = getPlayMode();
+//
 //        String path = getCurrentPlayingMusicPath();
 //        // 0. 循环播放
 //        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+//            for (int i = 0; i < size; i++) {
+//
+//            }
 //            index = playList.indexOf(path);
 //            if (index >= size - 1) {
 //                index = 0;
@@ -262,12 +272,13 @@ public class ClientCoreSDK {
 //            index = random.nextInt(size) - 1;
 //        }
 //        path = playList.get(index);
-    }
+
+//    }
 
     /**
      * 播放上一首
      */
-    private void playBack() {
+//    public Audio getLastOne() {
 //        int index = 0;
 //        int size = playList.size();
 //        int mode = getPlayMode();
@@ -288,5 +299,5 @@ public class ClientCoreSDK {
 //        }
 //
 //        path = playList.get(index);
-    }
+//    }
 }
