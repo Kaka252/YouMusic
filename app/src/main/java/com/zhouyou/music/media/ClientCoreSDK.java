@@ -138,26 +138,13 @@ public class ClientCoreSDK {
     }
 
     /**
-     * 播放列表是否已经被初始化
-     *
-     * @return
-     */
-    public boolean hasPlayListInitiated() {
-        return MusicServiceSDK.get().hasInitializedPlayList();
-    }
-
-    public void playMusic(String selectedMusic) {
-        playMusic(getPlayList(), selectedMusic, 1, -1);
-    }
-    /**
      * 生成播放列表，并开始播放指定音乐
      *
      * @param data          播放列表
      * @param selectedMusic 播放歌曲
-     * @param playAction    0 - 播放当前 | 1 - 播放下一首 | 2 - 播放上一首
      * @param seekPosition  被指定的进度
      */
-    public void playMusic(List<Audio> data, String selectedMusic, int playAction, int seekPosition) {
+    public void playMusic(List<Audio> data, String selectedMusic, int seekPosition) {
         if (ListUtils.isEmpty(data)) {
             T.ss("没有可用的音乐播放列表");
             return;
@@ -171,7 +158,6 @@ public class ClientCoreSDK {
         Bundle b = new Bundle();
         b.putStringArrayList(MusicConstants.MUSIC_PLAY_LIST, playList);
         b.putString(MusicConstants.MUSIC_SELECTED, selectedMusic);
-        b.putInt(MusicConstants.MUSIC_PLAY_ACTION, playAction);
         b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, seekPosition);
         intent.putExtras(b);
         MusicServiceSDK.get().playMusicList(intent);
@@ -182,21 +168,20 @@ public class ClientCoreSDK {
      *
      * @param data          播放列表
      * @param selectedMusic 播放歌曲
-     * @param playAction    0 - 播放当前 | 1 - 播放下一首 | 2 - 播放上一首
      */
-    public void playMusic(List<Audio> data, String selectedMusic, int playAction) {
-        playMusic(data, selectedMusic, playAction, -1);
+    public void playMusic(List<Audio> data, String selectedMusic) {
+        playMusic(data, selectedMusic, -1);
     }
 
     /**
-     * 生成播放列表，并开始播放指定音乐
+     * 播放音乐
      *
-     * @param data          播放列表
-     * @param selectedMusic 播放歌曲
+     * @param selectedMusic 开始播放指定音乐
      */
-    public void playMusic(List<Audio> data, String selectedMusic) {
-        playMusic(data, selectedMusic, 0, -1);
+    public void playMusic(String selectedMusic) {
+        playMusic(getPlayList(), selectedMusic, -1);
     }
+
 
     public void setPlayMode(int mode) {
         MusicServiceSDK.get().setMode(mode);

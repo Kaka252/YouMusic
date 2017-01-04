@@ -83,7 +83,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         Bundle b = data.getExtras();
         ArrayList<String> playList = b.getStringArrayList(MusicConstants.MUSIC_PLAY_LIST);
         String selectMusic = b.getString(MusicConstants.MUSIC_SELECTED);
-        int playAction = b.getInt(MusicConstants.MUSIC_PLAY_ACTION);
         int seekPosition = b.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
         if (playList == null || playList.size() <= 0) {
             doMediaPlayerAction(makeStateChange(State.ERROR));
@@ -101,22 +100,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         } else {
             play();
         }
-//        switch (playAction) {
-//            case 1:
-//                playNext();
-//                break;
-//            case 2:
-//                playBack();
-//                break;
-//            default:
-//                if (seekPosition > 0) {
-//                    currentPosition = seekPosition;
-//                    play(false);
-//                } else {
-//                    play();
-//                }
-//                break;
-//        }
     }
 
     private Intent makeStateChange(int state, int seekPosition) {
@@ -188,7 +171,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     @Override
     public void doMediaPlayerAction(Intent action) throws RemoteException {
         currState = action.getIntExtra(MusicConstants.MUSIC_STATE, 0);
-        boolean isPlayBack = action.getBooleanExtra(MusicConstants.MUSIC_PLAY_BACK, false);
         int seekPosition = action.getIntExtra(MusicConstants.MUSIC_PLAYING_POSITION, -1);
 
         onMainProcessStateChangeNotify(0);
@@ -236,10 +218,8 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     }
 
     private static final int ACTION_INIT_PLAY = 0;
-    private static final int ACTION_PLAY_NEXT = 1; // 播放下一首
-    private static final int ACTION_PLAY_BACK = 2; // 播放上一首
-    private static final int ACTION_PROGRESS_UPDATE = 3; // 更新播放时间
-    private static final int ACTION_PROGRESS_SUSPEND = 4; // 暂停
+    private static final int ACTION_PROGRESS_UPDATE = 1; // 更新播放时间
+    private static final int ACTION_PROGRESS_SUSPEND = 2; // 暂停
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -248,12 +228,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 case ACTION_INIT_PLAY:
                     currentPosition = 0;
                     break;
-//                case ACTION_PLAY_NEXT:
-//                    playNext();
-//                    break;
-//                case ACTION_PLAY_BACK:
-//                    playBack();
-//                    break;
                 case ACTION_PROGRESS_UPDATE:
                     try {
                         onMainProcessStateChangeNotify(1);
@@ -276,77 +250,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
             return true;
         }
     });
-
-    /**
-     * 播放下一首
-     */
-    private void playNext() {
-        int index = 0;
-        int size = playList.size();
-        // 0. 循环播放
-        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
-            index = playList.indexOf(currPlayingMusicPath);
-            if (index >= size - 1) {
-                index = 0;
-            } else {
-                index += 1;
-            }
-        }
-        // 1. 单曲循环
-        else if (mode == Mode.MODE_SINGLE_PLAY) {
-            index = playList.indexOf(currPlayingMusicPath);
-            if (getPlayingPosition() != getPlayingDuration()) {
-                index = playList.indexOf(currPlayingMusicPath);
-                if (index >= size - 1) {
-                    index = 0;
-                } else {
-                    index += 1;
-                }
-            }
-        }
-        // 2. 随机播放
-        else if (mode == Mode.MODE_RANDOM_PLAY) {
-            Random random = new Random();
-            index = random.nextInt(size) - 1;
-        }
-        currPlayingMusicPath = playList.get(index);
-        try {
-            handler.sendEmptyMessage(ACTION_INIT_PLAY);
-            play();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 播放上一首
-     */
-    private void playBack() {
-        int index = 0;
-        int size = playList.size();
-        // 0. 循环播放
-        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
-            index = playList.indexOf(currPlayingMusicPath);
-            if (index <= 0) {
-                index = playList.size() - 1;
-            } else {
-                index -= 1;
-            }
-        }
-        // 2. 随机播放
-        else if (mode == Mode.MODE_RANDOM_PLAY) {
-            Random random = new Random();
-            index = random.nextInt(size) - 1;
-        }
-
-        currPlayingMusicPath = playList.get(index);
-        try {
-            handler.sendEmptyMessage(ACTION_INIT_PLAY);
-            play();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 获取当前音乐播放进度
