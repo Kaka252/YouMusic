@@ -1,10 +1,11 @@
-package com.zhouyou.remote;
+package com.zhouyou.music.media;
 
 /**
- * Created by zhouyou on 16/12/24.
+ * Created by zhouyou on 17/1/4.
  */
 
 public interface Mode {
+
     /**
      * 全部循环播放
      */

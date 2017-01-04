@@ -2,23 +2,18 @@ package com.zhouyou.music.media;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.zhouyou.library.utils.ListUtils;
 import com.zhouyou.library.utils.PrefUtils;
-import com.zhouyou.library.utils.T;
 import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.notification.NotificationReceiver;
-import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.MusicServiceSDK;
 import com.zhouyou.remote.constants.MusicConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

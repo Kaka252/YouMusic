@@ -15,14 +15,10 @@ import android.util.Log;
 
 import com.zhouyou.remote.IMusicControlInterface;
 import com.zhouyou.remote.IMusicReceiver;
-import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.MusicConfig;
 import com.zhouyou.remote.client.MusicStateMessageFactory;
 import com.zhouyou.remote.constants.MusicConstants;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * 作者：ZhouYou

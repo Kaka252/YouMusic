@@ -15,9 +15,9 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.Mode;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.utils.StringUtils;
-import com.zhouyou.remote.Mode;
 import com.zhouyou.remote.State;
 
 /**
