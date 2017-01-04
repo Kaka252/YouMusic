@@ -229,6 +229,7 @@ public class ClientCoreSDK {
         else if (mode == Mode.MODE_RANDOM_PLAY) {
             Random random = new Random();
             index = random.nextInt(size) - 1;
+            if (index < 0) index = 0;
         }
         return playList.get(index);
     }
