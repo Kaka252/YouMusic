@@ -7,14 +7,23 @@
     android:orientation="vertical"
     tools:context="com.zhouyou.music.module.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:background="@android:color/black"
-        android:gravity="center"
         android:orientation="vertical">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_search"/>
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/list_view"

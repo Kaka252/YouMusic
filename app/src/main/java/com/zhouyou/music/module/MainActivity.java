@@ -34,7 +34,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private AudioPlayPanel playPanel;
     private ClientCoreSDK sdk;
-
     private List<Audio> data;
 
     @Override
