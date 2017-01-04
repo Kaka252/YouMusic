@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onResume();
         playPanel.updateAudioPlayingStatus(sdk.getCurrentPlayingMusicState());
         playPanel.loadAudioInfo();
-        onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
     }
 
     @Override
