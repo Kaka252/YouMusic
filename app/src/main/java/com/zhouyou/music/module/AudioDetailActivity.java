@@ -111,16 +111,19 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
 
     @Override
     public void onMusicPlay(int playAction, int seekPosition) {
-        Audio audio = sdk.getPlayingMusic();
+        Audio audio = null;
+        if (playAction == 0) {
+            audio = sdk.getPlayingMusic();
+        } else if (playAction == 1) {
+            audio = sdk.getNextOne();
+        } else if (playAction == 2) {
+            audio = sdk.getLastOne();
+        }
         if (audio == null) {
             T.ss("请选择歌曲进行播放");
             return;
         }
-        if (sdk.hasPlayListInitiated()) {
-            sdk.complete(playAction == 2);
-        } else {
-            sdk.playMusic(sdk.getPlayList(), audio.path, playAction, seekPosition);
-        }
+        sdk.playMusic(sdk.getPlayList(), audio.path);
     }
 
     @Override

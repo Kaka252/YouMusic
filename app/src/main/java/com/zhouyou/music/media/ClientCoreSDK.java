@@ -240,10 +240,18 @@ public class ClientCoreSDK {
         if (ListUtils.isEmpty(playList) || currAudio == null) return null;
         int index = 0;
         int size = playList.size();
-        int mode = getPlayMode();
+
+        for (int i = 0; i < size; i++) {
+            Audio item = playList.get(i);
+            if (item == null) continue;
+            if (item.id == currAudio.id) {
+                index = i;
+                break;
+            }
+        }
         // 0. 循环播放
+        int mode = getPlayMode();
         if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
-            index = playList.indexOf(currAudio);
             if (index >= size - 1) {
                 index = 0;
             } else {
@@ -252,9 +260,7 @@ public class ClientCoreSDK {
         }
         // 1. 单曲循环
         else if (mode == Mode.MODE_SINGLE_PLAY) {
-            index = playList.indexOf(currAudio);
             if (getCurrentPlayingMusicPosition() != getCurrentPlayingMusicDuration()) {
-                index = playList.indexOf(currAudio);
                 if (index >= size - 1) {
                     index = 0;
                 } else {
@@ -278,11 +284,18 @@ public class ClientCoreSDK {
         Audio currAudio = getPlayingMusic();
         if (ListUtils.isEmpty(playList) || currAudio == null) return null;
         int index = 0;
-        int mode = getPlayMode();
         int size = playList.size();
+        for (int i = 0; i < size; i++) {
+            Audio item = playList.get(i);
+            if (item == null) continue;
+            if (item.id == currAudio.id) {
+                index = i;
+                break;
+            }
+        }
         // 0. 循环播放
+        int mode = getPlayMode();
         if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
-            index = playList.indexOf(currAudio);
             if (index <= 0) {
                 index = playList.size() - 1;
             } else {
