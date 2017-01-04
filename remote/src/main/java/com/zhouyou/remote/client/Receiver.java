@@ -27,8 +27,6 @@ public class Receiver extends IMusicReceiver.Stub {
     private int currPlayingPosition;
     /*当前音乐的时长*/
     private int currPlayingDuration;
-    /*播放模式*/
-    private int mode;
 
     int getCurrState() {
         return currState;
@@ -46,10 +44,6 @@ public class Receiver extends IMusicReceiver.Stub {
         return currPlayingDuration;
     }
 
-    public int getMode() {
-        return mode;
-    }
-
     @Override
     public void onReceive(MusicConfig config) throws RemoteException {
         if (config == null) return;
@@ -58,7 +52,6 @@ public class Receiver extends IMusicReceiver.Stub {
         currState = data.getInt(MusicConstants.MUSIC_STATE);
         currPlayingPosition = data.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
         currPlayingDuration = data.getInt(MusicConstants.MUSIC_PLAYING_DURATION);
-        mode = data.getInt(MusicConstants.MUSIC_MODE);
         int dataType = config.getDataType();
         if (dataType == 1 && isPlaying()) {
             mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);

@@ -62,7 +62,7 @@ public class ClientCoreSDK {
      *
      * @return
      */
-    public List<Audio> getPlayList() {
+    private List<Audio> getPlayList() {
         return AudioLocalDataManager.get().queryAll();
     }
 
