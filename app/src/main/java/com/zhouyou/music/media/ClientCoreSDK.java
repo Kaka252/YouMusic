@@ -180,15 +180,6 @@ public class ClientCoreSDK {
     }
 
     /**
-     * 发送音乐通知
-     */
-    public void sendMusicNotification() {
-        if (getCurrentPlayingMusicState() == State.PREPARED || getCurrentPlayingMusicState() == State.PAUSED) {
-            NotificationReceiver.get().sendNotification();
-        }
-    }
-
-    /**
      * 播放下一首
      */
     public Audio getNextOne() {

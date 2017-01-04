@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.zhouyou.music.entity.Audio;
+import com.zhouyou.music.notification.NotificationReceiver;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
 import com.zhouyou.remote.client.observer.MusicManager;
@@ -37,11 +38,35 @@ public class MusicNotificationService extends Service implements IMusicStateSubs
 
     @Override
     public void onUpdateChange(int state) {
-        if (state == State.COMPLETED) {
-            Audio audio = ClientCoreSDK.get().getNextOne();
-            if (audio != null) {
-                ClientCoreSDK.get().playMusic(audio.path);
-            }
+        switch (state) {
+            case State.IDLE:
+                break;
+            case State.INITIALIZED:
+                break;
+            case State.PREPARING:
+                break;
+            case State.PREPARED:
+                NotificationReceiver.get().sendNotification();
+                break;
+            case State.IN_PROGRESS:
+                break;
+            case State.PAUSED:
+                NotificationReceiver.get().sendNotification();
+                break;
+            case State.COMPLETED:
+                Audio audio = ClientCoreSDK.get().getNextOne();
+                if (audio != null) {
+                    ClientCoreSDK.get().playMusic(audio.path);
+                }
+                break;
+            case State.STOPPED:
+                break;
+            case State.END:
+                break;
+            case State.ERROR:
+                break;
+            default:
+                break;
         }
     }
 
