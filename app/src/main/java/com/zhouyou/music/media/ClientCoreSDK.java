@@ -234,70 +234,66 @@ public class ClientCoreSDK {
     /**
      * 播放下一首
      */
-//    public Audio getNextOne() {
-//        int index = 0;
-//        List<Audio> playList = getPlayList();
-//        if (ListUtils.isEmpty(playList)) return null;
-//        int size = playList.size();
-//        int mode = getPlayMode();
-//
-//        String path = getCurrentPlayingMusicPath();
-//        // 0. 循环播放
-//        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
-//            for (int i = 0; i < size; i++) {
-//
-//            }
-//            index = playList.indexOf(path);
-//            if (index >= size - 1) {
-//                index = 0;
-//            } else {
-//                index += 1;
-//            }
-//        }
-//        // 1. 单曲循环
-//        else if (mode == Mode.MODE_SINGLE_PLAY) {
-//            index = playList.indexOf(path);
-//            if (getCurrentPlayingMusicPosition() != getCurrentPlayingMusicDuration()) {
-//                index = playList.indexOf(path);
-//                if (index >= size - 1) {
-//                    index = 0;
-//                } else {
-//                    index += 1;
-//                }
-//            }
-//        }
-//        // 2. 随机播放
-//        else if (mode == Mode.MODE_RANDOM_PLAY) {
-//            Random random = new Random();
-//            index = random.nextInt(size) - 1;
-//        }
-//        path = playList.get(index);
-
-//    }
+    public Audio getNextOne() {
+        List<Audio> playList = getPlayList();
+        Audio currAudio = getPlayingMusic();
+        if (ListUtils.isEmpty(playList) || currAudio == null) return null;
+        int index = 0;
+        int size = playList.size();
+        int mode = getPlayMode();
+        // 0. 循环播放
+        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+            index = playList.indexOf(currAudio);
+            if (index >= size - 1) {
+                index = 0;
+            } else {
+                index += 1;
+            }
+        }
+        // 1. 单曲循环
+        else if (mode == Mode.MODE_SINGLE_PLAY) {
+            index = playList.indexOf(currAudio);
+            if (getCurrentPlayingMusicPosition() != getCurrentPlayingMusicDuration()) {
+                index = playList.indexOf(currAudio);
+                if (index >= size - 1) {
+                    index = 0;
+                } else {
+                    index += 1;
+                }
+            }
+        }
+        // 2. 随机播放
+        else if (mode == Mode.MODE_RANDOM_PLAY) {
+            Random random = new Random();
+            index = random.nextInt(size) - 1;
+        }
+        return playList.get(index);
+    }
 
     /**
      * 播放上一首
      */
-//    public Audio getLastOne() {
-//        int index = 0;
-//        int size = playList.size();
-//        int mode = getPlayMode();
-//        String path = getCurrentPlayingMusicPath();
-//        // 0. 循环播放
-//        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
-//            index = playList.indexOf(path);
-//            if (index <= 0) {
-//                index = playList.size() - 1;
-//            } else {
-//                index -= 1;
-//            }
-//        }
-//        // 2. 随机播放
-//        else if (mode == Mode.MODE_RANDOM_PLAY) {
-//            Random random = new Random();
-//            index = random.nextInt(size) - 1;
-//        }
-//
-//        path = playList.get(index);
-//    }
+    public Audio getLastOne() {
+        List<Audio> playList = getPlayList();
+        Audio currAudio = getPlayingMusic();
+        if (ListUtils.isEmpty(playList) || currAudio == null) return null;
+        int index = 0;
+        int mode = getPlayMode();
+        int size = playList.size();
+        // 0. 循环播放
+        if (mode == Mode.MODE_CYCLE_ALL_PLAY) {
+            index = playList.indexOf(currAudio);
+            if (index <= 0) {
+                index = playList.size() - 1;
+            } else {
+                index -= 1;
+            }
+        }
+        // 2. 随机播放
+        else if (mode == Mode.MODE_RANDOM_PLAY) {
+            Random random = new Random();
+            index = random.nextInt(size) - 1;
+        }
+        return playList.get(index);
+    }
 }
