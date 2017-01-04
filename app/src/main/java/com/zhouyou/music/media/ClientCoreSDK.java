@@ -7,7 +7,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zhouyou.library.utils.ListUtils;
+import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.library.utils.T;
+import com.zhouyou.music.config.Constants;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.notification.NotificationReceiver;
@@ -111,12 +113,19 @@ public class ClientCoreSDK {
     }
 
     /**
+     * 保存播放模式
+     * @param playMode
+     */
+    public void savePlayMode(int playMode) {
+        PrefUtils.put(Constants.SP_PLAY_MODE, playMode);
+    }
+    /**
      * 获取音乐播放模式
      *
      * @return
      */
     public int getPlayMode() {
-        return MusicServiceSDK.get().getMode();
+        return PrefUtils.getInt(Constants.SP_PLAY_MODE, Mode.MODE_CYCLE_ALL_PLAY);
     }
 
     /**
@@ -161,11 +170,6 @@ public class ClientCoreSDK {
         playMusic(selectedMusic, -1);
     }
 
-
-    public void setPlayMode(int mode) {
-        MusicServiceSDK.get().setMode(mode);
-    }
-
     /**
      * 暂停播放
      */
@@ -178,15 +182,6 @@ public class ClientCoreSDK {
      */
     public void resume(int seekPosition) {
         MusicServiceSDK.get().resume(seekPosition);
-    }
-
-    /**
-     * 完成播放
-     *
-     * @param isPlayBack 是否播放上一首
-     */
-    public void complete(boolean isPlayBack) {
-        MusicServiceSDK.get().complete(isPlayBack);
     }
 
     /**

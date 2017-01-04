@@ -140,7 +140,7 @@ public class NotificationReceiver {
                 } else if (action == REQUEST_RESUME) {
                     ClientCoreSDK.get().resume(-1);
                 } else if (action == REQUEST_NEXT) {
-                    ClientCoreSDK.get().complete(false);
+//                    ClientCoreSDK.get().complete(false);
                 } else if (action == REQUEST_SHUT_DOWN) {
                     cancel();
                 }

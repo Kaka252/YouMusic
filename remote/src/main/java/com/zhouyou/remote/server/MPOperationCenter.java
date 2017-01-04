@@ -41,8 +41,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     private IMusicReceiver receiver;
     /*当前的播放状态*/
     private int currState = 0;
-    /*当前播放模式*/
-    private int mode;
     /*当前的播放音乐的url*/
     private String currPlayingMusicPath;
     /*当前播放音乐的进度*/
@@ -73,7 +71,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
      * @throws RemoteException
      */
     @Override
-    public void playMusicList(Intent data) throws RemoteException {
+    public void playMusic(Intent data) throws RemoteException {
         if (data == null || data.getExtras() == null) {
             doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
@@ -141,17 +139,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
             Log.e("MusicError", e.toString());
             doMediaPlayerAction(makeStateChange(State.ERROR));
         }
-    }
-
-    /**
-     * 设置模式
-     *
-     * @param mode
-     */
-    @Override
-    public void setMode(int mode) throws RemoteException {
-        this.mode = mode;
-        onMainProcessStateChangeNotify(0);
     }
 
     /**
@@ -277,7 +264,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         b.putString(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
         b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
         b.putInt(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());
-        b.putInt(MusicConstants.MUSIC_MODE, mode);
         config.setExtra(b);
         receiver.onReceive(config);
     }

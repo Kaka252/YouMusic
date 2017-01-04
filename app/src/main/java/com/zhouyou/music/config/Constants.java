@@ -15,10 +15,8 @@ public class Constants {
     public static final String DATA_LONG = PACKAGE + "DATA_LONG";
     public static final String DATA_STRING = PACKAGE + "DATA_STRING";
     public static final String DATA_ENTITY = PACKAGE + "DATA_ENTITY";
-    /**
-     * 发送音频播放的状态广播
-     */
-    public static final String RECEIVER_AUDIO_STATE_CHANGE = PACKAGE + "RECEIVER_AUDIO_STATE_CHANGE";
 
     public static final String RECEIVER_AUDIO_NOTIFICATION = PACKAGE + "RECEIVER_AUDIO_NOTIFICATION";
+
+    public static final String SP_PLAY_MODE = PACKAGE + "SP_PLAY_MODE";
 }

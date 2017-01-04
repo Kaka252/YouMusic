@@ -16,23 +16,10 @@ public class MusicStateMessageFactory {
         return intent;
     }
 
-    public static Intent createMusicControlMessage(int state, boolean isPlayBack) {
-        Intent intent = new Intent();
-        intent.putExtra(MusicConstants.MUSIC_STATE, state);
-        intent.putExtra(MusicConstants.MUSIC_PLAY_BACK, isPlayBack);
-        return intent;
-    }
-
     public static Intent createMusicStateMessage(int state, int seekPosition) {
         Intent intent = new Intent();
         intent.putExtra(MusicConstants.MUSIC_PLAYING_POSITION, seekPosition);
         intent.putExtra(MusicConstants.MUSIC_STATE, state);
-        return intent;
-    }
-
-    public static Intent createMusicModeMessage(int mode) {
-        Intent intent = new Intent();
-        intent.putExtra(MusicConstants.MUSIC_MODE, mode);
         return intent;
     }
 }

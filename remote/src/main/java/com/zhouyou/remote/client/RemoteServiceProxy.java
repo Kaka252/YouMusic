@@ -89,7 +89,7 @@ public class RemoteServiceProxy {
     synchronized void playMusicList(Intent data) {
         if (isConnected()) {
             try {
-                mIMusicControlInterface.playMusicList(data);
+                mIMusicControlInterface.playMusic(data);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -105,21 +105,6 @@ public class RemoteServiceProxy {
         if (isConnected()) {
             try {
                 mIMusicControlInterface.doMediaPlayerAction(action);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * 设置播放模式
-     *
-     * @param mode
-     */
-    void setMode(int mode) {
-        if (isConnected()) {
-            try {
-                mIMusicControlInterface.setMode(mode);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
