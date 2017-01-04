@@ -91,7 +91,7 @@ public class Receiver extends IMusicReceiver.Stub {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_STATE:
-                    MusicManager.get().createAudioStatePublisher().notifySubscribers();
+                    MusicManager.get().createAudioStatePublisher().notifySubscribers(currState);
                     break;
                 case UPDATE_PROGRESS:
                     MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);

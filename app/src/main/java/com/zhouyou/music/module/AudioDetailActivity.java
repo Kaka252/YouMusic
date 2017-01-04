@@ -97,10 +97,9 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
      * 通知状态改变
      */
     @Override
-    public void onUpdateChange() {
-        int currState = sdk.getCurrentPlayingMusicState();
-        operationPanel.updatePanel(currState);
-        if (currState == State.PREPARED || currState == State.IDLE) {
+    public void onUpdateChange(int state) {
+        operationPanel.updatePanel(state);
+        if (state == State.PREPARED || state == State.IDLE) {
             loadAlbumImage();
         }
     }

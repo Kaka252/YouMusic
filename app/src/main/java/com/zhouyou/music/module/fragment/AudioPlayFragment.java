@@ -72,9 +72,8 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
     }
 
     @Override
-    public void onUpdateChange() {
-        int currState = sdk.getCurrentPlayingMusicState();
-        if (currState == State.PREPARED || currState == State.IDLE) {
+    public void onUpdateChange(int state) {
+        if (state == State.PREPARED || state == State.IDLE) {
             ivAlbum.initSpanningDegree();
         }
         loadAudioInfo();

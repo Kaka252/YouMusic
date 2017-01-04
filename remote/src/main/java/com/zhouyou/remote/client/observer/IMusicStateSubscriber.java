@@ -9,5 +9,5 @@ public interface IMusicStateSubscriber {
     /**
      * 通知改变
      */
-    void onUpdateChange();
+    void onUpdateChange(int state);
 }

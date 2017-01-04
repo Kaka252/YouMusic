@@ -10,5 +10,5 @@ public interface IMusicStatePublisher {
 
     void unregister(IMusicStateSubscriber subscriber);
 
-    void notifySubscribers();
+    void notifySubscribers(int state);
 }
