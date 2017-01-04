@@ -86,7 +86,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             sdk.playMusic(audio.path);
             sdk.savePlayList(data);
         } else {
-            playPanel.viewDetail();
+            if (sdk.isMusicPlaying()) {
+                playPanel.viewDetail();
+            } else {
+                sdk.resume(sdk.getCurrentPlayingMusicPosition());
+            }
         }
     }
 
