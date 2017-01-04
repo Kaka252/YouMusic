@@ -28,6 +28,7 @@ import java.util.List;
  * 日期：2016/12/15.
  */
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener,
+        View.OnClickListener,
         IMusicStateSubscriber,
         IMusicProgressSubscriber,
         OnMusicPlayingActionListener {
@@ -56,6 +57,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         data = AudioLocalDataManager.get().getLocalAudioList();
         AudioAdapter adapter = new AudioAdapter(this, data);
         listView.setAdapter(adapter);
+        findViewById(R.id.iv_search).setOnClickListener(this);
     }
 
     @Override
@@ -64,6 +66,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         playPanel.updateAudioPlayingStatus();
         playPanel.loadAudioInfo();
         onProgressChange(sdk.getCurrentPlayingMusicPosition(), sdk.getCurrentPlayingMusicDuration());
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_search:
+                T.ss("功能未实现");
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
