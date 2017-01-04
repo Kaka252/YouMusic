@@ -41,6 +41,8 @@
         <service
             android:name="com.zhouyou.remote.server.MusicService"
             android:process=":music_service" />
+
+        <service android:name=".media.MusicNotificationService" />
     </application>
 
 </manifest>

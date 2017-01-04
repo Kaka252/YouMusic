@@ -146,6 +146,9 @@ public class ClientCoreSDK {
         return MusicServiceSDK.get().hasInitializedPlayList();
     }
 
+    public void playMusic(String selectedMusic) {
+        playMusic(getPlayList(), selectedMusic, 1, -1);
+    }
     /**
      * 生成播放列表，并开始播放指定音乐
      *

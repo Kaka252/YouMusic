@@ -95,22 +95,28 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         }
         this.currPlayingMusicPath = selectMusic;
         this.playList = playList;
-        switch (playAction) {
-            case 1:
-                playNext();
-                break;
-            case 2:
-                playBack();
-                break;
-            default:
-                if (seekPosition > 0) {
-                    currentPosition = seekPosition;
-                    play(false);
-                } else {
-                    play();
-                }
-                break;
+        if (seekPosition > 0) {
+            currentPosition = seekPosition;
+            play(false);
+        } else {
+            play();
         }
+//        switch (playAction) {
+//            case 1:
+//                playNext();
+//                break;
+//            case 2:
+//                playBack();
+//                break;
+//            default:
+//                if (seekPosition > 0) {
+//                    currentPosition = seekPosition;
+//                    play(false);
+//                } else {
+//                    play();
+//                }
+//                break;
+//        }
     }
 
     private Intent makeStateChange(int state, int seekPosition) {
@@ -212,7 +218,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 break;
             case State.COMPLETED: // 播放完成
-                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 16);
+//                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 16);
                 break;
             case State.STOPPED: // 播放终断
                 PLAYER.stop();
@@ -222,7 +228,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 break;
             case State.ERROR: // 错误
                 PLAYER.reset();
-                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
+//                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
                 break;
@@ -242,12 +248,12 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 case ACTION_INIT_PLAY:
                     currentPosition = 0;
                     break;
-                case ACTION_PLAY_NEXT:
-                    playNext();
-                    break;
-                case ACTION_PLAY_BACK:
-                    playBack();
-                    break;
+//                case ACTION_PLAY_NEXT:
+//                    playNext();
+//                    break;
+//                case ACTION_PLAY_BACK:
+//                    playBack();
+//                    break;
                 case ACTION_PROGRESS_UPDATE:
                     try {
                         onMainProcessStateChangeNotify(1);

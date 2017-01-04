@@ -10,6 +10,7 @@ import com.yolanda.nohttp.NoHttp;
 import com.zhouyou.library.utils.Lib;
 import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.music.db.DBHelper;
+import com.zhouyou.music.media.MusicNotificationService;
 import com.zhouyou.remote.client.MusicServiceSDK;
 
 /**
@@ -34,6 +35,7 @@ public class App extends Application {
         BlurKit.init(this);
         PrefUtils.init(this);
         MusicServiceSDK.init(this).startMusicService();
+        MusicNotificationService.startService(this);
         NoHttp.initialize(this, new NoHttp.Config().setConnectTimeout(30 * 1000).setReadTimeout(30 * 1000));
         Logger.setDebug(true);
         Logger.setTag("http");
