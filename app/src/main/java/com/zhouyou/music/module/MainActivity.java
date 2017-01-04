@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         Audio audio = (Audio) parent.getItemAtPosition(position);
         if (audio == null || TextUtils.isEmpty(audio.path)) return;
         if (sdk.getPlayingMusic() == null || !sdk.isPlayingCurrentMusic(audio.path)) {
-            sdk.playMusic(data, audio.path);
+            sdk.playMusic(audio.path);
             sdk.savePlayList(data);
         } else {
             playPanel.viewDetail();
@@ -93,7 +93,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onUpdateChange(int state) {
-        Log.e("MainActivity", "onUpdateChange - " + state);
         playPanel.updateAudioPlayingStatus(state);
         if (state == State.PREPARED || state == State.IDLE) {
             playPanel.loadAudioInfo();
@@ -118,7 +117,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             T.ss("请选择歌曲进行播放");
             return;
         }
-        sdk.playMusic(sdk.getPlayList(), audio.path);
+        sdk.playMusic(audio.path, seekPosition);
     }
 
     @Override

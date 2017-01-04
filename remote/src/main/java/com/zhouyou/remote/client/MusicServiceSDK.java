@@ -133,13 +133,4 @@ public class MusicServiceSDK {
     public int getMode() {
         return receiver.getMode();
     }
-
-    /**
-     * 是否初始化播放列表
-     *
-     * @return
-     */
-    public boolean hasInitializedPlayList() {
-        return receiver.hasInitializedPlayList();
-    }
 }

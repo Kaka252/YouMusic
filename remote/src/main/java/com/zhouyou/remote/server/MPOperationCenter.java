@@ -49,8 +49,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     private int currentPosition = 0;
     /*当前播放音乐的时长*/
     private int duration;
-    /*当前的播放列表*/
-    private ArrayList<String> playList = new ArrayList<>();
     /*偏好*/
     private SharedPreferences sp;
 
@@ -81,19 +79,13 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
             return;
         }
         Bundle b = data.getExtras();
-        ArrayList<String> playList = b.getStringArrayList(MusicConstants.MUSIC_PLAY_LIST);
         String selectMusic = b.getString(MusicConstants.MUSIC_SELECTED);
         int seekPosition = b.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
-        if (playList == null || playList.size() <= 0) {
-            doMediaPlayerAction(makeStateChange(State.ERROR));
-            return;
-        }
         if (TextUtils.isEmpty(selectMusic)) {
             doMediaPlayerAction(makeStateChange(State.ERROR));
             return;
         }
         this.currPlayingMusicPath = selectMusic;
-        this.playList = playList;
         if (seekPosition > 0) {
             currentPosition = seekPosition;
             play(false);
@@ -271,15 +263,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
     }
 
     /**
-     * 判断播放列表是否被初始化
-     *
-     * @return
-     */
-    private boolean hasPlayListInitialized() {
-        return playList != null && playList.size() > 0;
-    }
-
-    /**
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
      */
     private void onMainProcessStateChangeNotify(int dataType) throws RemoteException {
@@ -291,7 +274,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         config.setDataType(dataType);
         Bundle b = new Bundle();
         b.putInt(MusicConstants.MUSIC_STATE, currState);
-        b.putBoolean(MusicConstants.MUSIC_PLAY_LIST, hasPlayListInitialized());
         b.putString(MusicConstants.MUSIC_SELECTED, currPlayingMusicPath);
         b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, getPlayingPosition());
         b.putInt(MusicConstants.MUSIC_PLAYING_DURATION, getPlayingDuration());

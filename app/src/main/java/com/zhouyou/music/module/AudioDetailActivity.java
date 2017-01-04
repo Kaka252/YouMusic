@@ -123,7 +123,7 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
             T.ss("请选择歌曲进行播放");
             return;
         }
-        sdk.playMusic(sdk.getPlayList(), audio.path);
+        sdk.playMusic(audio.path, seekPosition);
     }
 
     @Override

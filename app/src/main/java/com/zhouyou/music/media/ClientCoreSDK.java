@@ -140,23 +140,12 @@ public class ClientCoreSDK {
     /**
      * 生成播放列表，并开始播放指定音乐
      *
-     * @param data          播放列表
      * @param selectedMusic 播放歌曲
      * @param seekPosition  被指定的进度
      */
-    public void playMusic(List<Audio> data, String selectedMusic, int seekPosition) {
-        if (ListUtils.isEmpty(data)) {
-            T.ss("没有可用的音乐播放列表");
-            return;
-        }
-        ArrayList<String> playList = new ArrayList<>();
-        for (Audio audio : data) {
-            if (audio == null || TextUtils.isEmpty(audio.path)) continue;
-            playList.add(audio.path);
-        }
+    public void playMusic(String selectedMusic, int seekPosition) {
         Intent intent = new Intent();
         Bundle b = new Bundle();
-        b.putStringArrayList(MusicConstants.MUSIC_PLAY_LIST, playList);
         b.putString(MusicConstants.MUSIC_SELECTED, selectedMusic);
         b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, seekPosition);
         intent.putExtras(b);
@@ -166,20 +155,10 @@ public class ClientCoreSDK {
     /**
      * 生成播放列表，并开始播放指定音乐
      *
-     * @param data          播放列表
      * @param selectedMusic 播放歌曲
      */
-    public void playMusic(List<Audio> data, String selectedMusic) {
-        playMusic(data, selectedMusic, -1);
-    }
-
-    /**
-     * 播放音乐
-     *
-     * @param selectedMusic 开始播放指定音乐
-     */
     public void playMusic(String selectedMusic) {
-        playMusic(getPlayList(), selectedMusic, -1);
+        playMusic(selectedMusic, -1);
     }
 
 

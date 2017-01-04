@@ -19,8 +19,6 @@ import com.zhouyou.remote.constants.MusicConstants;
  */
 public class Receiver extends IMusicReceiver.Stub {
 
-    /*播放列表是否被初始化*/
-    private boolean hasPlayListInitialized;
     /*当前播放状态*/
     private int currState;
     /*当前播放音乐的路径*/
@@ -58,7 +56,6 @@ public class Receiver extends IMusicReceiver.Stub {
         Bundle data = config.getExtra();
         currMusicPath = data.getString(MusicConstants.MUSIC_SELECTED);
         currState = data.getInt(MusicConstants.MUSIC_STATE);
-        hasPlayListInitialized = data.getBoolean(MusicConstants.MUSIC_PLAY_LIST);
         currPlayingPosition = data.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
         currPlayingDuration = data.getInt(MusicConstants.MUSIC_PLAYING_DURATION);
         mode = data.getInt(MusicConstants.MUSIC_MODE);
@@ -68,15 +65,6 @@ public class Receiver extends IMusicReceiver.Stub {
         } else {
             mMainHandler.sendEmptyMessage(UPDATE_STATE);
         }
-    }
-
-    /**
-     * 播放列表是否被初始化
-     *
-     * @return true - 初始化了
-     */
-    boolean hasInitializedPlayList() {
-        return hasPlayListInitialized;
     }
 
     private boolean isPlaying() {
