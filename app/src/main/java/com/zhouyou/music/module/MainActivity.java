@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onUpdateChange(int state) {
-        Log.e("MainActivity", "onUpdateChange");
+        Log.e("MainActivity", "onUpdateChange - " + state);
         playPanel.updateAudioPlayingStatus(state);
         if (state == State.PREPARED || state == State.IDLE) {
             playPanel.loadAudioInfo();
