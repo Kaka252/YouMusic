@@ -16,6 +16,7 @@ import com.zhouyou.music.media.ClientCoreSDK;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
 import com.zhouyou.music.module.views.AudioPlayPanel;
+import com.zhouyou.music.notification.NotificationReceiver;
 import com.zhouyou.remote.State;
 import com.zhouyou.remote.client.observer.IMusicProgressSubscriber;
 import com.zhouyou.remote.client.observer.IMusicStateSubscriber;
@@ -138,5 +139,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onDestroy();
         MusicManager.get().createAudioStatePublisher().unregister(this);
         MusicManager.get().createProgressPublisher().unregister(this);
+        NotificationReceiver.get().destroy();
     }
 }
