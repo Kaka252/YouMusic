@@ -63,6 +63,7 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
     public void onResume() {
         super.onResume();
         loadAudioInfo();
+        ivAlbum.setSpanning(sdk.isMusicPlaying());
     }
 
     @Override
