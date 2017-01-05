@@ -56,12 +56,12 @@ public class MusicNotificationService extends Service implements IMusicStateSubs
                 ClientCoreSDK.get().saveCurrentPlayMusicPath(path);
                 break;
             case State.PREPARED:
-                NotificationReceiver.get().sendNotification();
+                NotificationReceiver.get().sendNotification(State.PREPARED);
                 break;
             case State.IN_PROGRESS:
                 break;
             case State.PAUSED:
-                NotificationReceiver.get().sendNotification();
+                NotificationReceiver.get().sendNotification(State.PAUSED);
                 break;
             case State.COMPLETED:
                 handler.sendEmptyMessage(0);

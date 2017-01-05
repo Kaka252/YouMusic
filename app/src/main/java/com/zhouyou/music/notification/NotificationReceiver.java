@@ -57,9 +57,9 @@ public class NotificationReceiver {
     private NotificationManager manager;
 
     @SuppressLint("NewApi")
-    public void sendNotification() {
-        if (!setupRemoteViews()) return;
-        setupAction();
+    public void sendNotification(int state) {
+        if (!setupRemoteViews(state)) return;
+        setupAction(state);
         manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notify = builder.build();
@@ -70,7 +70,7 @@ public class NotificationReceiver {
         manager.notify(100, notify);
     }
 
-    private boolean setupRemoteViews() {
+    private boolean setupRemoteViews(int state) {
         Audio audio = ClientCoreSDK.get().getPlayingMusic();
         if (audio == null) return false;
         remoteViews = new RemoteViews(App.get().getPackageName(), R.layout.view_notification_bar);
@@ -81,10 +81,10 @@ public class NotificationReceiver {
         remoteViews.setTextViewText(R.id.tv_audio_info, sb.toString());
         Bitmap bm = MediaUtils.getThumbnail(context, audio.id, audio.albumId, MediaUtils.COMPRESS_LEVEL_SMALL);
         remoteViews.setImageViewBitmap(R.id.iv_album, bm);
-        if (ClientCoreSDK.get().isMusicPlaying()) {
-            remoteViews.setImageViewResource(R.id.iv_play_now, R.mipmap.ic_pause);
-        } else {
+        if (state == State.PAUSED) {
             remoteViews.setImageViewResource(R.id.iv_play_now, R.mipmap.ic_play);
+        } else {
+            remoteViews.setImageViewResource(R.id.iv_play_now, R.mipmap.ic_pause);
         }
         return true;
     }
@@ -92,27 +92,25 @@ public class NotificationReceiver {
     /**
      * 设置点击事件
      */
-    private void setupAction() {
+    private void setupAction(int state) {
         // 返回主页面
         Intent intentMain = new Intent(context, MainActivity.class);
         intentMain.putExtra(Constants.DATA_BOOLEAN, true);
         PendingIntent actionMain = PendingIntent.getActivity(context, REQUEST_MAIN_ACTIVITY, intentMain, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.ll_notification, actionMain);
-
         // 暂停/播放
-        int state = ClientCoreSDK.get().getCurrentPlayingMusicState();
-        if (state == State.IN_PROGRESS) {
-            Intent intentPause = new Intent();
-            intentPause.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
-            intentPause.putExtra(Constants.DATA_INT, REQUEST_PAUSE);
-            PendingIntent actionPause = PendingIntent.getBroadcast(context, REQUEST_PAUSE, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPause);
-        } else if (state == State.PAUSED) {
+        if (state == State.PAUSED) {
             Intent intentPlay = new Intent();
             intentPlay.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
             intentPlay.putExtra(Constants.DATA_INT, REQUEST_RESUME);
             PendingIntent actionPlay = PendingIntent.getBroadcast(context, REQUEST_RESUME, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPlay);
+        } else {
+            Intent intentPause = new Intent();
+            intentPause.setAction(Constants.RECEIVER_AUDIO_NOTIFICATION);
+            intentPause.putExtra(Constants.DATA_INT, REQUEST_PAUSE);
+            PendingIntent actionPause = PendingIntent.getBroadcast(context, REQUEST_PAUSE, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.iv_play_now, actionPause);
         }
 
         // 播放下一首
@@ -140,7 +138,10 @@ public class NotificationReceiver {
                 } else if (action == REQUEST_RESUME) {
                     ClientCoreSDK.get().resume(-1);
                 } else if (action == REQUEST_NEXT) {
-//                    ClientCoreSDK.get().complete(false);
+                    Audio audio = ClientCoreSDK.get().getNextOne();
+                    if (audio != null) {
+                        ClientCoreSDK.get().playMusic(audio.path);
+                    }
                 } else if (action == REQUEST_SHUT_DOWN) {
                     cancel();
                 }
