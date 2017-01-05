@@ -10,5 +10,5 @@ public interface IMusicStatePublisher {
 
     void unregister(IMusicStateSubscriber subscriber);
 
-    void notifySubscribers(int state);
+    void notifySubscribers(int state, String path);
 }

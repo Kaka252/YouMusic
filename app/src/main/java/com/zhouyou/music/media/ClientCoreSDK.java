@@ -71,13 +71,21 @@ public class ClientCoreSDK {
         return !TextUtils.isEmpty(path) && TextUtils.equals(path, getCurrentPlayingMusicPath());
     }
 
+    public void saveCurrentPlayMusicPath(String path) {
+        PrefUtils.put(Constants.SP_MUSIC_PATH, path);
+    }
+
     /**
      * 获取当前正在播放的音乐路径
      *
      * @return
      */
     private String getCurrentPlayingMusicPath() {
-        return MusicServiceSDK.get().getMusicPath();
+        String path = MusicServiceSDK.get().getMusicPath();
+        if (TextUtils.isEmpty(path)) {
+            path = PrefUtils.getString(Constants.SP_MUSIC_PATH, "");
+        }
+        return path;
     }
 
     /**

@@ -33,10 +33,10 @@ public class MusicStatePublisher implements IMusicStatePublisher {
     }
 
     @Override
-    public void notifySubscribers(int state) {
+    public void notifySubscribers(int state, String path) {
         synchronized (lock) {
             for (IMusicStateSubscriber subscriber : subscribers) {
-                subscriber.onUpdateChange(state);
+                subscriber.onUpdateChange(state, path);
             }
         }
     }

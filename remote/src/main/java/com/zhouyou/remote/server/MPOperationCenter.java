@@ -157,7 +157,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 break;
             case State.PREPARING: // 正在准备
                 PLAYER.prepareAsync();
-                saveLastPlayedMusic();
                 break;
             case State.PREPARED: // 准备就绪
                 if (seekPosition > 0) {
@@ -167,7 +166,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 doMediaPlayerAction(makeStateChange(State.IN_PROGRESS));
                 break;
             case State.IN_PROGRESS: // 播放中
-                // TODO 发送通知
                 handler.sendEmptyMessage(ACTION_PROGRESS_UPDATE);
                 break;
             case State.PAUSED: // 暂停
@@ -175,7 +173,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 handler.sendEmptyMessage(ACTION_PROGRESS_SUSPEND);
                 break;
             case State.COMPLETED: // 播放完成
-//                handler.sendEmptyMessageDelayed(isPlayBack ? ACTION_PLAY_BACK : ACTION_PLAY_NEXT, 16);
                 break;
             case State.STOPPED: // 播放终断
                 PLAYER.stop();
@@ -185,7 +182,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 break;
             case State.ERROR: // 错误
                 PLAYER.reset();
-//                handler.sendEmptyMessageDelayed(ACTION_PLAY_NEXT, 2000);
                 break;
             default:
                 break;
@@ -249,9 +245,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
      * 获取到音乐播放器的状态和当前播放音乐的id后返回主进程操作
      */
     private void onMainProcessStateChangeNotify(int dataType) throws RemoteException {
-        if (TextUtils.isEmpty(currPlayingMusicPath)) {
-            currPlayingMusicPath = getLastPlayedMusic();
-        }
         Log.d(TAG, "音乐的路径 : " + currPlayingMusicPath);
         MusicConfig config = new MusicConfig();
         config.setDataType(dataType);
@@ -317,25 +310,6 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
             e.printStackTrace();
         }
     }
-
-    /**
-     * 保存上一次播放的音乐id
-     */
-    private void saveLastPlayedMusic() {
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("musicPath", currPlayingMusicPath);
-        editor.apply();
-    }
-
-    /**
-     * 获取上一次播放的音乐id
-     *
-     * @return
-     */
-    private String getLastPlayedMusic() {
-        return sp.getString("musicPath", "");
-    }
-
 
     /**
      * 打印日志

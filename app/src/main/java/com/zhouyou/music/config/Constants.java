@@ -18,5 +18,6 @@ public class Constants {
 
     public static final String RECEIVER_AUDIO_NOTIFICATION = PACKAGE + "RECEIVER_AUDIO_NOTIFICATION";
 
+    public static final String SP_MUSIC_PATH = PACKAGE + "SP_MUSIC_PATH";
     public static final String SP_PLAY_MODE = PACKAGE + "SP_PLAY_MODE";
 }

@@ -57,15 +57,31 @@ public class Receiver extends IMusicReceiver.Stub {
         currPlayingDuration = data.getInt(MusicConstants.MUSIC_PLAYING_DURATION);
         int dataType = config.getDataType();
         if (dataType == 1 && currState == State.IN_PROGRESS) {
-            mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);
+            mMainHandler.sendMessage(getMessage(UPDATE_PROGRESS));
         } else {
-            Message msg = Message.obtain();
-            msg.what = UPDATE_STATE;
-            Bundle b = new Bundle();
+            mMainHandler.sendMessage(getMessage(UPDATE_STATE));
+        }
+    }
+
+    /**
+     * 发送消息
+     * @param signal
+     * @return
+     */
+    private Message getMessage(int signal) {
+        Message msg = Message.obtain();
+        msg.what = signal;
+        Bundle b = new Bundle();
+        if (signal == UPDATE_PROGRESS) {
+            b.putInt(MusicConstants.MUSIC_PLAYING_POSITION, currPlayingPosition);
+            b.putInt(MusicConstants.MUSIC_PLAYING_DURATION, currPlayingDuration);
+            msg.setData(b);
+        } else if (signal == UPDATE_STATE) {
+            b.putString(MusicConstants.MUSIC_SELECTED, currMusicPath);
             b.putInt(MusicConstants.MUSIC_STATE, currState);
             msg.setData(b);
-            mMainHandler.sendMessage(msg);
         }
+        return msg;
     }
 
     private static final int UPDATE_STATE = 0;
@@ -74,14 +90,18 @@ public class Receiver extends IMusicReceiver.Stub {
     private Handler mMainHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            Bundle b = msg.getData();
+            if (b == null) return false;
             switch (msg.what) {
                 case UPDATE_STATE:
-                    Bundle b = msg.getData();
                     int state = b.getInt(MusicConstants.MUSIC_STATE);
-                    MusicManager.get().createAudioStatePublisher().notifySubscribers(state);
+                    String path = b.getString(MusicConstants.MUSIC_SELECTED);
+                    MusicManager.get().createAudioStatePublisher().notifySubscribers(state, path);
                     break;
                 case UPDATE_PROGRESS:
-                    MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
+                    int position = b.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
+                    int duration = b.getInt(MusicConstants.MUSIC_PLAYING_DURATION);
+                    MusicManager.get().createProgressPublisher().notifySubscribers(position, duration);
                     break;
                 default:
                     break;

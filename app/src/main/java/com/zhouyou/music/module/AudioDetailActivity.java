@@ -96,7 +96,7 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
      * 通知状态改变
      */
     @Override
-    public void onUpdateChange(int state) {
+    public void onUpdateChange(int state, String path) {
         operationPanel.updatePanel(state);
         if (state == State.PREPARING) {
             loadAlbumImage();
