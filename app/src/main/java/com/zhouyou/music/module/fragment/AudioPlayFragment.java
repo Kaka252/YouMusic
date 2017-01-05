@@ -74,9 +74,10 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
     @Override
     public void onUpdateChange(int state) {
         if (state == State.PREPARING) {
-            ivAlbum.initSpanningDegree();
             loadAudioInfo();
+            ivAlbum.initSpanningDegree();
         }
+        ivAlbum.setSpanning(state == State.IN_PROGRESS);
     }
 
     /**
@@ -88,7 +89,6 @@ public class AudioPlayFragment extends BaseFragment implements IMusicStateSubscr
             @Override
             public void setupMusic(Audio audio, Bitmap bm) {
                 ivAlbum.setBitmap(bm);
-                ivAlbum.setSpanning(sdk.isMusicPlaying());
             }
         });
         task.loadMusic();
