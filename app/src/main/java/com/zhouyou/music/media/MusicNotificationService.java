@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.notification.NotificationReceiver;
@@ -19,6 +20,8 @@ import com.zhouyou.remote.client.observer.MusicManager;
  * 日期：2016/12/29.
  */
 public class MusicNotificationService extends Service implements IMusicStateSubscriber {
+
+    private static final String TAG = "MusicService";
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -38,6 +41,7 @@ public class MusicNotificationService extends Service implements IMusicStateSubs
 
     @Override
     public void onUpdateChange(int state) {
+        Log.d(TAG, "onUpdateChange: " + state);
         switch (state) {
             case State.IDLE:
                 break;

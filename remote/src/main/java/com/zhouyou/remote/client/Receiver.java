@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.zhouyou.remote.IMusicReceiver;
 import com.zhouyou.remote.MusicConfig;
@@ -18,6 +19,8 @@ import com.zhouyou.remote.constants.MusicConstants;
  * 信号接受者
  */
 public class Receiver extends IMusicReceiver.Stub {
+
+    private static final String TAG = "Receiver";
 
     /*当前播放状态*/
     private int currState;
@@ -53,15 +56,16 @@ public class Receiver extends IMusicReceiver.Stub {
         currPlayingPosition = data.getInt(MusicConstants.MUSIC_PLAYING_POSITION);
         currPlayingDuration = data.getInt(MusicConstants.MUSIC_PLAYING_DURATION);
         int dataType = config.getDataType();
-        if (dataType == 1 && isPlaying()) {
+        if (dataType == 1 && currState == State.IN_PROGRESS) {
             mMainHandler.sendEmptyMessage(UPDATE_PROGRESS);
         } else {
-            mMainHandler.sendEmptyMessage(UPDATE_STATE);
+            Message msg = Message.obtain();
+            msg.what = UPDATE_STATE;
+            Bundle b = new Bundle();
+            b.putInt(MusicConstants.MUSIC_STATE, currState);
+            msg.setData(b);
+            mMainHandler.sendMessage(msg);
         }
-    }
-
-    private boolean isPlaying() {
-        return currState == State.IN_PROGRESS;
     }
 
     private static final int UPDATE_STATE = 0;
@@ -72,7 +76,9 @@ public class Receiver extends IMusicReceiver.Stub {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_STATE:
-                    MusicManager.get().createAudioStatePublisher().notifySubscribers(currState);
+                    Bundle b = msg.getData();
+                    int state = b.getInt(MusicConstants.MUSIC_STATE);
+                    MusicManager.get().createAudioStatePublisher().notifySubscribers(state);
                     break;
                 case UPDATE_PROGRESS:
                     MusicManager.get().createProgressPublisher().notifySubscribers(currPlayingPosition, currPlayingDuration);
