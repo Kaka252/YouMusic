@@ -21,7 +21,11 @@
 
         <SeekBar
             android:id="@+id/seek_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dip"
+            android:maxHeight="8dp"
+            android:minHeight="8dp"
+            android:thumb="@mipmap/ic_seek_thumb"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
@@ -43,8 +47,8 @@
             android:id="@+id/iv_play_mode_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_play_mode_cycle"
-            android:padding="15dp"/>
+            android:padding="15dp"
+            android:src="@mipmap/ic_play_mode_cycle" />
 
         <ImageView
             android:id="@+id/iv_play_back"
@@ -71,8 +75,8 @@
             android:id="@+id/iv_like_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_dislike"
-            android:padding="15dp"/>
+            android:padding="15dp"
+            android:src="@mipmap/ic_dislike" />
 
     </LinearLayout>
 
