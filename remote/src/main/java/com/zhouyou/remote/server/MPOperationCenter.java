@@ -29,8 +29,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
         MediaPlayer.OnCompletionListener,
         MediaPlayer.OnSeekCompleteListener {
 
-    private static final String TAG = MPOperationCenter.class.getSimpleName();
-
+    private static final String TAG = "MPOperationCenter";
     private static final MediaPlayer PLAYER = new MediaPlayer();
     private Context context;
     /*返回主进程的接收回调*/
@@ -289,7 +288,10 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        Log.d(TAG, "onSeekComplete");
+        if (mp.getDuration() - mp.getCurrentPosition() < 1000) {
+            Log.d(TAG, "onSeekComplete: 下一首");
+            onCompletion(mp);
+        }
     }
 
     @Override

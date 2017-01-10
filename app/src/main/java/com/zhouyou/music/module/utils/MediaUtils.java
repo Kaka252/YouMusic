@@ -34,10 +34,11 @@ public class MediaUtils {
 
     /**
      * 获取缩率图
+     *
      * @param context
      * @param audioId
      * @param albumId
-     * @param level 0 - 不压缩 | 1 - 按比例压缩70% | 2 - 按比例压缩50% | 3 - 按比例压缩30%
+     * @param level   0 - 不压缩 | 1 - 按比例压缩80% | 2 - 按比例压缩50% | 3 - 按比例压缩30%
      * @return
      */
     public static Bitmap getThumbnail(Context context, long audioId, long albumId, int level) {
@@ -49,8 +50,8 @@ public class MediaUtils {
             case COMPRESS_LEVEL_ORIGINAL:
                 return bm;
             case COMPRESS_LEVEL_SMALL:
-                w = (int) (w * 0.7f);
-                h = (int) (h * 0.7f);
+                w = (int) (w * 0.8f);
+                h = (int) (h * 0.8f);
                 break;
             case COMPRESS_LEVEL_MEDIUM:
                 w = (int) (w * 0.5f);
