@@ -181,7 +181,7 @@ class MPOperationCenter extends IMusicControlInterface.Stub implements MediaPlay
                 PLAYER.stop();
                 break;
             case State.ERROR: // 错误
-                PLAYER.reset();
+                PLAYER.stop();
                 break;
             default:
                 break;
