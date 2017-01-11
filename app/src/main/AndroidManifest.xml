@@ -43,6 +43,11 @@
             android:process=":music_service" />
 
         <service android:name=".media.MusicNotificationService" />
+
+        <provider
+            android:name=".provider.MediaContentProvider"
+            android:authorities="com.zhouyou.music.provider.MediaContentProvider"
+            android:exported="true" />
     </application>
 
 </manifest>
