@@ -38,6 +38,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".module.SearchActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name="com.zhouyou.remote.server.MusicService"
             android:process=":music_service" />

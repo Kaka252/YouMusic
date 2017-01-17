@@ -27,7 +27,7 @@ import com.zhouyou.music.db.DBHelper;
 public class MediaContentProvider extends ContentProvider {
 
     private static final String AUTHORITY = "content://com.zhouyou.music.provider/";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/item");
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/audio");
     private static final String TAG = "MediaContentProvider";
 
     private static final String TABLE = "audio";
@@ -39,11 +39,11 @@ public class MediaContentProvider extends ContentProvider {
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(AUTHORITY, "audio", 0);
-        URI_MATCHER.addURI(AUTHORITY, "audio/id", 1);
-        URI_MATCHER.addURI(AUTHORITY, "audio/path", 2);
+        URI_MATCHER.addURI(AUTHORITY, "audio/#", 1);
     }
 
     private static final ArrayMap<String, String> articleProjectionMap;
+
     static {
         articleProjectionMap = new ArrayMap<>();
         articleProjectionMap.put("id", "id");
@@ -80,7 +80,6 @@ public class MediaContentProvider extends ContentProvider {
         Log.d(TAG, "onCreate: 查询");
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         SQLiteQueryBuilder sqlBuilder = new SQLiteQueryBuilder();
-        String limit = null;
         switch (URI_MATCHER.match(uri)) {
             case 0:
                 sqlBuilder.setTables(TABLE);
@@ -101,7 +100,7 @@ public class MediaContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Error Uri: " + uri);
         }
-        Cursor cursor = sqlBuilder.query(db, projection, selection, selectionArgs, null, null, TextUtils.isEmpty(sortOrder) ? "id asc" : sortOrder, limit);
+        Cursor cursor = sqlBuilder.query(db, projection, selection, selectionArgs, null, null, TextUtils.isEmpty(sortOrder) ? "id asc" : sortOrder, null);
         cursor.setNotificationUri(resolver, uri);
         return cursor;
     }
@@ -153,7 +152,7 @@ public class MediaContentProvider extends ContentProvider {
         Log.d(TAG, "onCreate: 更新数据");
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int count;
-        switch(URI_MATCHER.match(uri)) {
+        switch (URI_MATCHER.match(uri)) {
             case 0:
                 count = db.update(TABLE, values, selection, selectionArgs);
                 break;
