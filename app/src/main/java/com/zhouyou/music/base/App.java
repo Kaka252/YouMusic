@@ -1,6 +1,7 @@
 package com.zhouyou.music.base;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.facebook.stetho.Stetho;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -44,6 +45,7 @@ public class App extends Application {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(getApplicationContext()))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(getApplicationContext()))
                         .build());
+        MultiDex.install(this);
     }
 
     public DBHelper getHelper() {

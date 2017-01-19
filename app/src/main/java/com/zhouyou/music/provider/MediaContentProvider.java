@@ -53,8 +53,7 @@ public class MediaContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         Log.d(TAG, "onCreate: 创建Provider");
-        Context context = App.get().getApplicationContext();
-        resolver = context.getContentResolver();
+        resolver = getContext().getContentResolver();
         dbHelper = App.get().getHelper();
         return true;
     }
