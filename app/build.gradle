@@ -22,23 +22,60 @@ android {
         multiDexEnabled true
     }
 
-//    pruductFlavors {
-//        devOnLineIncremental {
-//            minSdkVersion 21
-//            dexOptions {
-//                incremental true //增量编译
-//                javaMaxHeapSize "3g"
-//                preDexLibraries true //将lab预编译为dex
-//                dexInProcess = true
-//                jumboMode = true
-//            }
-//        }
-//    }
+    productFlavors {
+        devOnLineIncremental {
+            minSdkVersion 21
+            dexOptions {
+                incremental true //增量编译
+                javaMaxHeapSize "3g"
+                preDexLibraries true //将lab预编译为dex
+                dexInProcess = true
+                jumboMode = true
+            }
+            buildConfigField("boolean", "PRINT_LOG", "true")
+            buildConfigField("boolean", "API_ONLINE", "true")
+            buildConfigField("boolean", "QA", "false")
+            buildConfigField("String", "APP_VERSION_NAME", "\"${rootProject.ext.appVersionName}\"")
+        }
+
+        devOnLine {
+            minSdkVersion rootProject.ext.minSdkVersion
+            dexOptions {
+                incremental true //增量编译
+                javaMaxHeapSize "3g"
+                preDexLibraries true //将lab预编译为dex
+                dexInProcess = true
+                jumboMode = true
+            }
+            buildConfigField("boolean", "PRINT_LOG", "true")
+            buildConfigField("boolean", "API_ONLINE", "true")
+            buildConfigField("boolean", "QA", "false")
+            buildConfigField("String", "APP_VERSION_NAME", "\"${rootProject.ext.appVersionName}\"")
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("youmusic.jks")
+            keyAlias "youmusic"
+            keyPassword "1qaz2wsxE"
+            storePassword "1qaz2wsxE"
+        }
+    }
 
     buildTypes {
-        release {
-            minifyEnabled false
+        debug {
+            minifyEnabled false     // 混淆关闭
+            shrinkResources false    // 将无用的类资源过滤，Gradle2.2版本后设置为false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        release {
+            minifyEnabled true      // 混淆打开
+            shrinkResources true    // 将无用的类资源过滤，Gradle2.2版本后设置为false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -48,7 +85,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     testCompile 'junit:junit:4.12'
     compile project(path: ':library')
     compile 'com.wonderkiln:blurkit:1.0.0'
