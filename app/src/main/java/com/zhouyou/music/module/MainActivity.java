@@ -3,6 +3,7 @@ package com.zhouyou.music.module;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -52,6 +53,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void initViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         playPanel.setOnMusicPlayingActionListener(this);
