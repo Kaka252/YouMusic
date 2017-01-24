@@ -166,14 +166,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MusicManager.get().createAudioStatePublisher().unregister(this);
-        MusicManager.get().createProgressPublisher().unregister(this);
-        NotificationReceiver.get().destroy();
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -181,5 +173,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MusicManager.get().createAudioStatePublisher().unregister(this);
+        MusicManager.get().createProgressPublisher().unregister(this);
+        NotificationReceiver.get().destroy();
     }
 }
