@@ -1,10 +1,17 @@
 package com.zhouyou.music.module;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.zhouyou.library.utils.T;
@@ -29,6 +36,7 @@ import java.util.List;
  * 日期：2016/12/15.
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener,
+        NavigationView.OnNavigationItemSelectedListener,
         AudioAdapter.OnItemClickListener,
         IMusicStateSubscriber,
         IMusicProgressSubscriber,
@@ -55,10 +63,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         toolbar.setTitle("");
+        toolbar.setNavigationIcon(R.mipmap.ic_menu);
         setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         playPanel.setOnMusicPlayingActionListener(this);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void refreshAdapter() {
@@ -68,6 +85,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         recyclerView.setLayoutManager(layoutManager);
         AudioAdapter adapter = new AudioAdapter(this, data, this);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -148,5 +172,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         MusicManager.get().createAudioStatePublisher().unregister(this);
         MusicManager.get().createProgressPublisher().unregister(this);
         NotificationReceiver.get().destroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

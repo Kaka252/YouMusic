@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.zhouyou.library.utils.Scale;
@@ -29,6 +30,8 @@ import com.zhouyou.remote.State;
  * 日期：2016/12/12.
  */
 public class NotificationReceiver {
+
+    private static final String TAG = "NotificationReceiver";
 
     private static final int REQUEST_MAIN_ACTIVITY = 0;
     private static final int REQUEST_PAUSE = 1;
@@ -160,7 +163,13 @@ public class NotificationReceiver {
     public void destroy() {
         cancel();
         if (context != null && notifyActionReceiver != null) {
-            context.unregisterReceiver(notifyActionReceiver);
+            try {
+                context.unregisterReceiver(notifyActionReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "destroy: 广播未注册");
+                e.printStackTrace();
+            }
+
         }
     }
 }
