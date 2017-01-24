@@ -62,8 +62,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(R.mipmap.ic_menu);
+//        toolbar.setTitle("");
+//        toolbar.setNavigationIcon(R.mipmap.ic_menu);
         setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
