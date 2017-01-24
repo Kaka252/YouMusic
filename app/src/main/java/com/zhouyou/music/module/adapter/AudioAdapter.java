@@ -2,6 +2,7 @@ package com.zhouyou.music.module.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,56 +19,61 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/11/18.
  */
-public class AudioAdapter extends BaseAdapter {
+public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> {
 
     private Activity activity;
     private List<Audio> data;
-    private LayoutInflater inflater;
+    private OnItemClickListener listener;
 
-    public AudioAdapter(Activity activity, List<Audio> data) {
+    public AudioAdapter(Activity activity, List<Audio> data, OnItemClickListener listener) {
         this.activity = activity;
         this.data = data;
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.listener = listener;
     }
 
     @Override
-    public int getCount() {
-        return ListUtils.getCount(data);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View view = inflater.inflate(R.layout.item_audio, parent, false);
+        return new ViewHolder(view);
     }
 
-    @Override
-    public Audio getItem(int position) {
+    private Audio getItem(int position) {
         return ListUtils.getElement(data, position);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_audio, null);
-            holder.tvAudioTitle = (TextView) convertView.findViewById(R.id.tv_audio_title);
-            holder.tvAudioArtist = (TextView) convertView.findViewById(R.id.tv_audio_artist);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        Audio audio = getItem(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final Audio audio = getItem(position);
         if (audio != null) {
             holder.tvAudioTitle.setText(audio.title);
             holder.tvAudioArtist.setText(audio.artist);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) listener.onItemClick(audio);
+                }
+            });
         }
-        return convertView;
     }
 
-    private static class ViewHolder {
+    @Override
+    public int getItemCount() {
+        return ListUtils.getCount(data);
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvAudioTitle;
         TextView tvAudioArtist;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            tvAudioTitle = (TextView) itemView.findViewById(R.id.tv_audio_title);
+            tvAudioArtist = (TextView) itemView.findViewById(R.id.tv_audio_artist);
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Audio audio);
     }
 }

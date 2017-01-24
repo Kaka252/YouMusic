@@ -1,10 +1,10 @@
 package com.zhouyou.music.module;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
@@ -27,12 +27,13 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener,
-        View.OnClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,
+        AudioAdapter.OnItemClickListener,
         IMusicStateSubscriber,
         IMusicProgressSubscriber,
         OnMusicPlayingActionListener {
 
+    private RecyclerView recyclerView;
     private AudioPlayPanel playPanel;
     private ClientCoreSDK sdk;
     private List<Audio> data;
@@ -46,18 +47,23 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             MusicManager.get().createAudioStatePublisher().register(this);
             MusicManager.get().createProgressPublisher().register(this);
             initViews();
+            refreshAdapter();
         }
     }
 
     private void initViews() {
-        ListView listView = (ListView) findViewById(R.id.list_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
         playPanel.setOnMusicPlayingActionListener(this);
-        listView.setOnItemClickListener(this);
+    }
+
+    private void refreshAdapter() {
         data = AudioLocalDataManager.get().getLocalAudioList();
-        AudioAdapter adapter = new AudioAdapter(this, data);
-        listView.setAdapter(adapter);
-        findViewById(R.id.iv_search).setOnClickListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        AudioAdapter adapter = new AudioAdapter(this, data, this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -70,17 +76,16 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_search:
-                T.ss("功能未实现");
-                break;
+//            case R.id.iv_search:
+//                T.ss("功能未实现");
+//                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Audio audio = (Audio) parent.getItemAtPosition(position);
+    public void onItemClick(Audio audio) {
         if (audio == null || TextUtils.isEmpty(audio.path)) return;
         if (sdk.getPlayingMusic() == null || !sdk.isPlayingCurrentMusic(audio.path)) {
             sdk.playMusic(audio.path);
