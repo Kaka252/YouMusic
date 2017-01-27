@@ -1,6 +1,7 @@
 package com.zhouyou.music.module;
 
-import android.os.Build;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,8 +12,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
@@ -20,8 +24,10 @@ import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.Audio;
 import com.zhouyou.music.entity.AudioLocalDataManager;
 import com.zhouyou.music.media.ClientCoreSDK;
+import com.zhouyou.music.media.MusicLoadTask;
 import com.zhouyou.music.media.OnMusicPlayingActionListener;
 import com.zhouyou.music.module.adapter.AudioAdapter;
+import com.zhouyou.music.module.utils.MediaUtils;
 import com.zhouyou.music.module.views.AudioPlayPanel;
 import com.zhouyou.music.notification.NotificationReceiver;
 import com.zhouyou.remote.State;
@@ -35,8 +41,7 @@ import java.util.List;
  * 作者：ZhouYou
  * 日期：2016/12/15.
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener,
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         AudioAdapter.OnItemClickListener,
         IMusicStateSubscriber,
         IMusicProgressSubscriber,
@@ -46,6 +51,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     private AudioPlayPanel playPanel;
     private ClientCoreSDK sdk;
     private List<Audio> data;
+
+    private ImageView ivAlbum;
+    private TextView tvAudioTitle;
+    private TextView tvAudioArtist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +71,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        toolbar.setTitle("");
+        toolbar.setTitle(R.string.main_title);
         setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         playPanel = (AudioPlayPanel) findViewById(R.id.play_panel);
@@ -73,7 +82,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        initNavigationView();
+    }
+
+    private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View navHeaderView = navigationView.getHeaderView(0);
+        ivAlbum = (ImageView) navHeaderView.findViewById(R.id.iv_album);
+        tvAudioTitle = (TextView) navHeaderView.findViewById(R.id.tv_audio_title);
+        tvAudioArtist = (TextView) navHeaderView.findViewById(R.id.tv_audio_artist);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -94,21 +111,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_actions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         playPanel.updateAudioPlayingStatus(sdk.getCurrentPlayingMusicState());
         playPanel.loadAudioInfo();
+        updateNavigation();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.iv_search:
-//                T.ss("功能未实现");
-//                break;
-            default:
-                break;
-        }
+    private void updateNavigation() {
+        MusicLoadTask task = new MusicLoadTask();
+        task.setOnMusicLoadingListener(new MusicLoadTask.OnMusicLoadingListener() {
+            @Override
+            public void setupMusic(Audio audio, Bitmap bm) {
+                ivAlbum.setImageBitmap(bm);
+                tvAudioTitle.setText(audio.title);
+                tvAudioArtist.setText(audio.artist);
+            }
+        });
+        task.loadMusic(MediaUtils.COMPRESS_LEVEL_ORIGINAL);
     }
 
     @Override
@@ -131,6 +168,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         playPanel.updateAudioPlayingStatus(state);
         if (state == State.PREPARING) {
             playPanel.loadAudioInfo();
+            updateNavigation();
         }
     }
 
