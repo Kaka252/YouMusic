@@ -1,6 +1,6 @@
 package com.zhouyou.library.utils;
 
-import android.app.Application;
+import com.zhouyou.library.utils.app.IApplication;
 
 /**
  * 作者：ZhouYou
@@ -8,13 +8,13 @@ import android.app.Application;
  */
 public class Lib {
 
-    private static Application app;
+    private static IApplication app;
 
-    public static void init(Application app) {
+    public static void init(IApplication app) {
         Lib.app = app;
     }
 
-    public static Application getApplication() {
+    public static IApplication getApplication() {
         if (Lib.app == null) {
             throw new IllegalArgumentException("LBase application is null");
         }
