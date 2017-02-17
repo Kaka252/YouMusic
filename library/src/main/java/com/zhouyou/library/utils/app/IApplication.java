@@ -10,8 +10,6 @@ public interface IApplication {
 
     Context getContext();
 
-    Context getApplicationContext();
-
     IApplication getInstance();
 
     String getPackageName();

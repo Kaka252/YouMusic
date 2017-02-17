@@ -1,6 +1,5 @@
 package com.zhouyou.music.module;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zhouyou.library.utils.Jump;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
@@ -120,8 +120,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_action_search) {
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
+            new Jump.Launcher(this)
+                    .to(SearchActivity.class)
+                    .setup()
+                    .launch();
             return true;
         }
         return super.onOptionsItemSelected(item);

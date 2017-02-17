@@ -4,90 +4,97 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 /**
  * 作者：ZhouYou
  * 日期：2017/2/16.
+ *
+ * (1)跳转
+ * new Jump.Launcher(this).to(SearchActivity.class).setup().launch();
+ * (2)销毁
+ * new Jump.Destroyer(this).setup().finish();
  */
 public class Jump {
 
-    private static volatile Jump instance = null;
-
     private Context context;
+    private Class<?> clazz;
+    private Intent data;
     private int animType;
     private int reqCode = -1;
     private boolean isFinish;
 
-    private Intent intent;
-
-    private Jump(Context context, Intent intent) {
+    public Jump(Context context, Class<?> clazz, Intent data, int animType, int reqCode, boolean isFinish) {
         this.context = context;
-        this.intent = intent;
+        this.clazz = clazz;
+        this.data = data;
+        this.animType = animType;
+        this.reqCode = reqCode;
+        this.isFinish = isFinish;
     }
 
-    private static class Builder {
+    public Jump(Context context, int animType) {
+        this(context, null, null, animType, -1, false);
+    }
+
+    public static class Launcher {
 
         private Context context;
-        private Intent intent;
+        private Class<?> clazz;
+        private Intent data;
+        private int animType;
+        private int reqCode = -1;
+        private boolean isFinish;
 
-        Builder(Context context) {
+        public Launcher(Context context) {
             this.context = context;
-            intent = new Intent();
         }
 
-        public Jump build() {
-            return new Jump(context, intent);
+        public Launcher to(Class<?> clazz) {
+            this.clazz = clazz;
+            return this;
         }
-    }
 
-    public static Jump with(@NonNull Context context) {
-        if (context == null) {
-            throw new IllegalArgumentException("context == null");
+        public Launcher bind(Bundle data) {
+            Intent intent = new Intent();
+            intent.putExtras(data);
+            return bind(intent);
         }
-        if (instance == null) {
-            synchronized (Jump.class) {
-                if (instance == null) {
-                    instance = new Builder(context).build();
-                }
-            }
+
+        public Launcher bind(Intent data) {
+            this.data = data;
+            return this;
         }
-        return instance;
-    }
 
-    public Jump to(Class<?> clazz) {
-        intent.setClass(context, clazz);
-        return this;
-    }
+        public Launcher setAnim(int animType) {
+            this.animType = animType;
+            return this;
+        }
 
-    public Jump data(Bundle data) {
-        intent.putExtras(data);
-        return this;
-    }
+        public Launcher setReqCode(int reqCode) {
+            this.reqCode = reqCode;
+            return this;
+        }
 
-    public Jump data(Intent data) {
-        intent.putExtras(data);
-        return this;
-    }
+        public Launcher setFinish(boolean isFinish) {
+            this.isFinish = isFinish;
+            return this;
+        }
 
-    public Jump anim(int animType) {
-        this.animType = animType;
-        return this;
-    }
-
-    public Jump reqCode(int reqCode) {
-        this.reqCode = reqCode;
-        return this;
-    }
-
-    public Jump finish(boolean isFinish) {
-        this.isFinish = isFinish;
-        return this;
+        public Jump setup() {
+            return new Jump(context, clazz, data, animType, reqCode, isFinish);
+        }
     }
 
     public void launch() {
-        if (intent == null) {
-            throw new NullPointerException("intent == null");
+        if (context == null) {
+            throw new NullPointerException("Context has not been initialized yet.");
+        }
+        if (clazz == null) {
+            throw new NullPointerException("Class has not been setup yet.");
+        }
+        Intent intent = new Intent(context, clazz);
+        if (data != null) {
+            intent.putExtras(data);
         }
         if (reqCode >= 0 && context instanceof Activity) {
             ((Activity) context).startActivityForResult(intent, reqCode);
@@ -95,6 +102,30 @@ public class Jump {
             context.startActivity(intent);
         }
         if (isFinish && context instanceof Activity) {
+            ((Activity) context).finish();
+        }
+    }
+
+    public static class Destroyer {
+        private Context context;
+        private int animType;
+
+        public Destroyer(Context context) {
+            this.context = context;
+        }
+
+        public Destroyer setAnim(int animType) {
+            this.animType = animType;
+            return this;
+        }
+
+        public Jump setup() {
+            return new Jump(context, animType);
+        }
+    }
+
+    public void finish() {
+        if (context instanceof Activity) {
             ((Activity) context).finish();
         }
     }

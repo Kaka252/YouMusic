@@ -2,15 +2,9 @@ package com.zhouyou.music.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.support.multidex.MultiDex;
 
 import com.facebook.stetho.Stetho;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.tencent.tinker.anno.DefaultLifeCycle;
-import com.tencent.tinker.lib.tinker.TinkerInstaller;
-import com.tencent.tinker.loader.app.DefaultApplicationLike;
-import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.wonderkiln.blurkit.BlurKit;
 import com.yolanda.nohttp.Logger;
 import com.yolanda.nohttp.NoHttp;
@@ -25,19 +19,19 @@ import com.zhouyou.remote.client.MusicServiceSDK;
  * 作者：ZhouYou
  * 日期：2016/11/18.
  */
-@DefaultLifeCycle(
-        application = "com.zhouyou.music.SampleApplication",
-        flags = ShareConstants.TINKER_ENABLE_ALL,
-        loadVerifyFlag = false
-)
-public class App extends DefaultApplicationLike implements IApplication {
+//@DefaultLifeCycle(
+//        application = "com.zhouyou.music.SampleApplication",
+//        flags = ShareConstants.TINKER_ENABLE_ALL,
+//        loadVerifyFlag = false
+//)
+public class App extends Application implements IApplication {
 
     private static Context context;
     private static App instance;
 
-    public App(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag, long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent) {
-        super(application, tinkerFlags, tinkerLoadVerifyFlag, applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent);
-    }
+//    public App(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag, long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent) {
+//        super(application, tinkerFlags, tinkerLoadVerifyFlag, applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent);
+//    }
 
     public static App get() {
         return instance;
@@ -45,15 +39,16 @@ public class App extends DefaultApplicationLike implements IApplication {
 
     public static DBHelper helper;
 
-    @Override
-    public void onBaseContextAttached(Context base) {
-        super.onBaseContextAttached(base);
-        MultiDex.install(base);
-    }
+//    @Override
+//    public void onBaseContextAttached(Context base) {
+//        super.onBaseContextAttached(base);
+//        MultiDex.install(base);
+//    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         instance = this;
         context = getApplicationContext();
         Lib.init(this);
@@ -69,7 +64,6 @@ public class App extends DefaultApplicationLike implements IApplication {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(getApplicationContext()))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(getApplicationContext()))
                         .build());
-        TinkerInstaller.install(this);
     }
 
     public DBHelper getHelper() {
@@ -81,11 +75,6 @@ public class App extends DefaultApplicationLike implements IApplication {
 
     @Override
     public Context getContext() {
-        return getApplication();
-    }
-
-    @Override
-    public Context getApplicationContext() {
         return getApplicationContext();
     }
 

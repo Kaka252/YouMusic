@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zhouyou.library.utils.Jump;
 import com.zhouyou.library.utils.T;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
@@ -146,7 +147,8 @@ public class AudioDetailActivity extends BaseActivity implements IMusicStateSubs
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                onBackPressed();
+                new Jump.Destroyer(this).setup().finish();
+//                onBackPressed();
                 break;
             default:
                 break;

@@ -151,7 +151,7 @@ public class T {
     }
 
     private static Context getContext() {
-        return Lib.getApplication().getApplicationContext();
+        return Lib.getApplication().getContext();
     }
 
     private static Handler handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
