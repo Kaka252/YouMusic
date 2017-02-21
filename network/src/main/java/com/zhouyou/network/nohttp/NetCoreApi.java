@@ -1,9 +1,8 @@
-package com.zhouyou.network;
+package com.zhouyou.network.nohttp;
 
 import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.rest.RequestQueue;
-import com.zhouyou.network.config.Params;
+import com.zhouyou.network.nohttp.config.Params;
 
 import java.lang.reflect.ParameterizedType;
 

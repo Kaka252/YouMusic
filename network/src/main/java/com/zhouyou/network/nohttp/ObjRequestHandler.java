@@ -1,4 +1,4 @@
-package com.zhouyou.network;
+package com.zhouyou.network.nohttp;
 
 import com.alibaba.fastjson.JSON;
 import com.yolanda.nohttp.Headers;

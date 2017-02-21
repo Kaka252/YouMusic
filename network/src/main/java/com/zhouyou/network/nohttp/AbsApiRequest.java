@@ -1,12 +1,11 @@
-package com.zhouyou.network;
+package com.zhouyou.network.nohttp;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
-import com.zhouyou.network.config.Params;
+import com.zhouyou.network.nohttp.config.Params;
 
 import java.lang.reflect.Field;
 

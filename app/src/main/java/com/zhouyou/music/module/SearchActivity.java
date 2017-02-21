@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.yolanda.nohttp.NoHttp;
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
-import com.zhouyou.network.AbsApiRequest;
-import com.zhouyou.network.NetCoreApi;
 
 import java.io.IOException;
 
@@ -17,8 +14,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * 作者：ZhouYou

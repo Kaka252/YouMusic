@@ -2,8 +2,8 @@ package com.zhouyou.music.net;
 
 import com.yolanda.nohttp.RequestMethod;
 import com.zhouyou.music.net.response.GetAlbumListResponse;
-import com.zhouyou.network.AbsApiRequest;
-import com.zhouyou.network.IRespCallback;
+import com.zhouyou.network.nohttp.AbsApiRequest;
+import com.zhouyou.network.nohttp.IRespCallback;
 
 /**
  * 作者：ZhouYou
