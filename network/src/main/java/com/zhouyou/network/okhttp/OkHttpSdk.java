@@ -29,31 +29,34 @@ public class OkHttpSdk {
 
     }
 
-    public static void get() {
+    public static void initialize() {
         if (client == null) {
             synchronized (OkHttpSdk.class) {
                 if (client == null) {
-                    client = new OkHttpClient();
+                    X509TrustManager x509TrustManager = initInsecureTrustManager();
+                    SSLSocketFactory sslSocketFactory = initInsecureSslSocketFactory(x509TrustManager);
+                    client = new OkHttpClient.Builder()
+                            .writeTimeout(DEFAULT_MILLIS_SECOND, TimeUnit.MILLISECONDS)
+                            .readTimeout(DEFAULT_MILLIS_SECOND, TimeUnit.MILLISECONDS)
+                            .connectTimeout(DEFAULT_MILLIS_SECOND, TimeUnit.MILLISECONDS)
+                            .sslSocketFactory(sslSocketFactory, x509TrustManager)
+                            .build();
                 }
             }
         }
     }
 
-    public void initialize() {
-        X509TrustManager x509TrustManager = initInsecureTrustManager();
-        SSLSocketFactory sslSocketFactory = initInsecureSslSocketFactory(x509TrustManager);
-        client.newBuilder()
-                .writeTimeout(DEFAULT_MILLIS_SECOND, TimeUnit.MILLISECONDS)
-                .readTimeout(DEFAULT_MILLIS_SECOND, TimeUnit.MILLISECONDS)
-                .connectTimeout(DEFAULT_MILLIS_SECOND, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(sslSocketFactory, x509TrustManager)
-                .build();
+    public static OkHttpClient getClient() {
+        if (client == null) {
+            throw new NullPointerException("OkHttp has not been initialized yet.");
+        }
+        return client;
     }
 
-    private SSLSocketFactory initInsecureSslSocketFactory(TrustManager trustManager) {
+    private static SSLSocketFactory initInsecureSslSocketFactory(TrustManager trustManager) {
         try {
             SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new TrustManager[] {trustManager}, new SecureRandom());
+            context.init(null, new TrustManager[]{trustManager}, new SecureRandom());
             return context.getSocketFactory();
         } catch (Exception e) {
             throw new AssertionError(e);
@@ -63,15 +66,18 @@ public class OkHttpSdk {
     /**
      * 信任所有证书
      */
-    private X509TrustManager initInsecureTrustManager() {
+    private static X509TrustManager initInsecureTrustManager() {
         return new X509TrustManager() {
-            @Override public void checkClientTrusted(X509Certificate[] chain, String authType) {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) {
             }
 
-            @Override public void checkServerTrusted(X509Certificate[] chain, String authType) {
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) {
             }
 
-            @Override public X509Certificate[] getAcceptedIssuers() {
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
                 return new X509Certificate[0];
             }
         };
