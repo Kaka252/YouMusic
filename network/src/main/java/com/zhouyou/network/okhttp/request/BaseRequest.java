@@ -23,7 +23,7 @@ public abstract class BaseRequest {
     protected Map<String, String> headers;
     protected Request.Builder builder;
 
-    public BaseRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
+    BaseRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
         this.url = url;
         this.tag = tag;
         this.params = params;
