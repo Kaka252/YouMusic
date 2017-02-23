@@ -13,7 +13,6 @@ import com.zhouyou.library.utils.PrefUtils;
 import com.zhouyou.library.utils.app.IApplication;
 import com.zhouyou.music.db.DBHelper;
 import com.zhouyou.music.media.MusicNotificationService;
-import com.zhouyou.network.okhttp.OkHttpSdk;
 import com.zhouyou.remote.client.MusicServiceSDK;
 
 /**
@@ -65,7 +64,6 @@ public class App extends Application implements IApplication {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(getApplicationContext()))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(getApplicationContext()))
                         .build());
-        OkHttpSdk.initialize();
     }
 
     public DBHelper getHelper() {

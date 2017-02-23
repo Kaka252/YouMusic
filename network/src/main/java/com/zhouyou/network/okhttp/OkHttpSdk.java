@@ -1,5 +1,8 @@
 package com.zhouyou.network.okhttp;
 
+import com.zhouyou.network.okhttp.method.GetRequestBuilder;
+import com.zhouyou.network.okhttp.method.PostRequestBuilder;
+
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;
@@ -21,15 +24,20 @@ import okhttp3.OkHttpClient;
  */
 public class OkHttpSdk {
 
+
+    public static OkHttpSdk getInstance() {
+        return OkHttpProxy.SDK;
+    }
+
+    private static final class OkHttpProxy {
+        private static final OkHttpSdk SDK = new OkHttpSdk();
+    }
+
     private static volatile OkHttpClient client;
 
     private static final long DEFAULT_MILLIS_SECOND = 10000;
 
     private OkHttpSdk() {
-
-    }
-
-    public static void initialize() {
         if (client == null) {
             synchronized (OkHttpSdk.class) {
                 if (client == null) {
@@ -44,13 +52,6 @@ public class OkHttpSdk {
                 }
             }
         }
-    }
-
-    public static OkHttpClient getClient() {
-        if (client == null) {
-            throw new NullPointerException("OkHttp has not been initialized yet.");
-        }
-        return client;
     }
 
     private static SSLSocketFactory initInsecureSslSocketFactory(TrustManager trustManager) {
@@ -95,5 +96,25 @@ public class OkHttpSdk {
                 return null;
             }
         };
+    }
+
+    public OkHttpClient getClient() {
+        if (client == null) {
+            throw new NullPointerException("OkHttp has not been initialized yet.");
+        }
+        return client;
+    }
+
+    /**
+     * 构建Get请求方法
+     *
+     * @return
+     */
+    public GetRequestBuilder get() {
+        return new GetRequestBuilder();
+    }
+
+    public PostRequestBuilder post() {
+        return new PostRequestBuilder();
     }
 }
