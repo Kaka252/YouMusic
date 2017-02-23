@@ -18,13 +18,9 @@ import okhttp3.RequestBody;
 public abstract class BaseRequest {
 
     protected String url;
-
     protected Object tag;
-
     protected Map<String, String> params;
-
     protected Map<String, String> headers;
-
     protected Request.Builder builder;
 
     public BaseRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
@@ -60,7 +56,15 @@ public abstract class BaseRequest {
     }
 
     public ApiRequestCall createRequestCall() {
-        return new ApiRequestCall();
+        return new ApiRequestCall(this);
+    }
+
+    /**
+     * 建立最终配置好参数之后的网络请求
+     * @return
+     */
+    public Request setupRequest() {
+        return createRequest(createRequestBody());
     }
 
     /**

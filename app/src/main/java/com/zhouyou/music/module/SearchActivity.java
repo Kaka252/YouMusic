@@ -2,14 +2,20 @@ package com.zhouyou.music.module;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.OkHttpSdk;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * 作者：ZhouYou
@@ -23,44 +29,40 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        request();
+        try {
+            request();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void request() {
-
+    private void request() throws IOException {
         String url = "https://api.douban.com/v2/music/search";
         Map<String, String> params = new HashMap<>();
         params.put("q", "银魂");
         params.put("start", "0");
         params.put("count", "10");
-        ApiRequestCall call = OkHttpSdk.getInstance()
+        final ApiRequestCall call = OkHttpSdk.getInstance()
                 .get()
                 .url(url)
                 .tag(this)
                 .addParams(params)
                 .build();
 
+        call.async(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d(TAG, "onResponse");
+                String htmlString = response.body().string();
+                Log.d(TAG, htmlString);
+            }
+        });
 
 
-
-
-
-//        OkHttpClient client = new OkHttpClient();
-//        Request request = new Request.Builder()
-//                .url("https://api.douban.com/v2/music/search?q=银魂&start=0&count=10")
-//                .build();
-//        Call call = client.newCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.d(TAG, "onFailure");
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                Log.d(TAG, "onResponse");
-//                String htmlString = response.body().string();
-//            }
-//        });
     }
 }

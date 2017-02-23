@@ -4,6 +4,7 @@ import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.interfaces.IParams;
 import com.zhouyou.network.okhttp.request.PostRequest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,13 +17,19 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
         return new PostRequest(url, tag, params, headers).createRequestCall();
     }
 
+
     @Override
-    public BaseRequestBuilder addParam(String key, String value) {
-        return null;
+    public PostRequestBuilder addParam(String key, String value) {
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        params.put(key, value);
+        return this;
     }
 
     @Override
-    public BaseRequestBuilder addParams(Map<String, String> params) {
-        return null;
+    public PostRequestBuilder addParams(Map<String, String> params) {
+        this.params = params;
+        return this;
     }
 }
