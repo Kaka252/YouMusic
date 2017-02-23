@@ -8,6 +8,7 @@ import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.OkHttpSdk;
+import com.zhouyou.network.okhttp.callback.BaseCallback;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,19 +49,27 @@ public class SearchActivity extends BaseActivity {
                 .tag(this)
                 .addParams(params)
                 .build();
-
-        call.async(new Callback() {
+        call.async(new BaseCallback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onError(Call call, Exception e) {
 
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.d(TAG, "onResponse");
-                String htmlString = response.body().string();
-                Log.d(TAG, htmlString);
+            public Object parseResponse(Response resp) {
+                return null;
             }
+
+            @Override
+            public Object onResponse(Response resp) {
+                return null;
+            }
+
+//            public void onResponse(Call call, Response response) throws IOException {
+//                Log.d(TAG, "onResponse");
+//                String htmlString = response.body().string();
+//                Log.d(TAG, htmlString);
+//            }
         });
 
 

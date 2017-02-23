@@ -1,7 +1,11 @@
 package com.zhouyou.network.okhttp;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
+import com.zhouyou.network.okhttp.callback.BaseCallback;
+import com.zhouyou.network.okhttp.callback.MainHandler;
 import com.zhouyou.network.okhttp.request.BaseRequest;
 
 import java.io.IOException;
@@ -42,9 +46,51 @@ public class ApiRequestCall {
      * 异步调用
      * @param callback
      */
-    public void async(Callback callback) {
+    public void async(final BaseCallback callback) {
         Call call = newCall();
-        call.enqueue(callback);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                if (call.isCanceled()) {
+                    failResponseCallback(callback, call, null);
+                    return;
+                }
+                failResponseCallback(callback, call, e);
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (call.isCanceled()) {
+                    failResponseCallback(callback, call, null);
+                    return;
+                }
+                if (response.isSuccessful()) {
+                    Object result = callback.parseResponse(response);
+                    successResponseCallback(callback, result);
+                } else {
+                    failResponseCallback(callback, call, null);
+                }
+            }
+        });
+    }
+
+    private void failResponseCallback(final BaseCallback callback, final Call call, final Exception e) {
+        MainHandler.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onError(call, e);
+            }
+        });
+    }
+
+    private void successResponseCallback(final BaseCallback callback, final Object result) {
+        MainHandler.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onResponse(result);
+            }
+        });
     }
 
     public Response sync() throws IOException {
@@ -59,4 +105,5 @@ public class ApiRequestCall {
     public Call getCall() {
         return call;
     }
+
 }
