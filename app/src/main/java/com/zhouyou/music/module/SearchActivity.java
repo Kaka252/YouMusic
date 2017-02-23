@@ -61,8 +61,8 @@ public class SearchActivity extends BaseActivity {
             }
 
             @Override
-            public Object onResponse(Response resp) {
-                return null;
+            public void onResponse(Object resp) {
+
             }
 
 //            public void onResponse(Call call, Response response) throws IOException {
