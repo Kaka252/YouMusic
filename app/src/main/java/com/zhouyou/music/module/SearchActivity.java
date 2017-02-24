@@ -6,17 +6,15 @@ import android.util.Log;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
+import com.zhouyou.music.entity.NetMusic;
 import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.OkHttpSdk;
-import com.zhouyou.network.okhttp.callback.BaseCallback;
+import com.zhouyou.network.okhttp.callback.GsonCallback;
+import com.zhouyou.network.okhttp.param.Params;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * 作者：ZhouYou
@@ -39,39 +37,26 @@ public class SearchActivity extends BaseActivity {
 
     private void request() throws IOException {
         String url = "https://api.douban.com/v2/music/search";
-        Map<String, String> params = new HashMap<>();
+        Params params = new Params();
         params.put("q", "银魂");
         params.put("start", "0");
-        params.put("count", "10");
+        params.put("count", "1");
         final ApiRequestCall call = OkHttpSdk.getInstance()
                 .get()
                 .url(url)
-                .tag(this)
                 .addParams(params)
+                .tag(this)
                 .build();
-        call.async(new BaseCallback() {
+        call.async(new GsonCallback<NetMusic>() {
             @Override
             public void onError(Call call, Exception e) {
 
             }
 
             @Override
-            public Object parseResponse(Response resp) {
-                return null;
+            public void onResponse(NetMusic music) {
+                Log.d(TAG, music.toString());
             }
-
-            @Override
-            public void onResponse(Object resp) {
-
-            }
-
-//            public void onResponse(Call call, Response response) throws IOException {
-//                Log.d(TAG, "onResponse");
-//                String htmlString = response.body().string();
-//                Log.d(TAG, htmlString);
-//            }
         });
-
-
     }
 }

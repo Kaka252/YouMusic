@@ -5,16 +5,14 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by zhouyou on 17/2/24.
  */
 
-public class MainHandler {
+public class MainThread {
 
-    private static volatile MainHandler instance;
+    private static volatile MainThread instance;
     private MainHandlerExecutor executor;
 
     private static class MainHandlerExecutor implements Executor {
@@ -27,17 +25,17 @@ public class MainHandler {
         }
     }
 
-    private MainHandler() {
+    private MainThread() {
         if (executor == null) {
             executor = new MainHandlerExecutor();
         }
     }
 
-    public static MainHandler getInstance() {
+    public static MainThread getInstance() {
         if (instance == null) {
-            synchronized (MainHandler.class) {
+            synchronized (MainThread.class) {
                 if (instance == null) {
-                    instance = new MainHandler();
+                    instance = new MainThread();
                 }
             }
         }

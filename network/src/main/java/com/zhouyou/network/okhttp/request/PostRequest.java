@@ -2,6 +2,8 @@ package com.zhouyou.network.okhttp.request;
 
 import android.text.TextUtils;
 
+import com.zhouyou.network.okhttp.param.Params;
+
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -14,7 +16,7 @@ import okhttp3.RequestBody;
  */
 public class PostRequest extends BaseRequest {
 
-    public PostRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
+    public PostRequest(String url, Object tag, Params params, Map<String, String> headers) {
         super(url, tag, params, headers);
     }
 
@@ -30,11 +32,10 @@ public class PostRequest extends BaseRequest {
 
     private FormBody.Builder buildRequestParams() {
         FormBody.Builder builder = new FormBody.Builder();
-        if (params != null) {
-            for (String key : params.keySet()) {
-                if (TextUtils.isEmpty(key)) continue;
-                builder.add(key, params.get(key));
-            }
+        if (params.isEmpty()) return builder;
+        for (String key : params.keySet()) {
+            if (TextUtils.isEmpty(key)) continue;
+            builder.add(key, params.get(key));
         }
         return builder;
     }

@@ -1,5 +1,7 @@
 package com.zhouyou.network.okhttp.request;
 
+import com.zhouyou.network.okhttp.param.Params;
+
 import java.util.Map;
 
 import okhttp3.Request;
@@ -11,7 +13,7 @@ import okhttp3.RequestBody;
  */
 public class GetRequest extends BaseRequest {
 
-    public GetRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
+    public GetRequest(String url, Object tag, Params params, Map<String, String> headers) {
         super(url, tag, params, headers);
     }
 

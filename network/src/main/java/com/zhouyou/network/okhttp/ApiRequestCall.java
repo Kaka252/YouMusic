@@ -1,11 +1,9 @@
 package com.zhouyou.network.okhttp;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import com.zhouyou.network.okhttp.callback.BaseCallback;
-import com.zhouyou.network.okhttp.callback.MainHandler;
+import com.zhouyou.network.okhttp.callback.AbsCallback;
+import com.zhouyou.network.okhttp.callback.MainThread;
 import com.zhouyou.network.okhttp.request.BaseRequest;
 
 import java.io.IOException;
@@ -44,48 +42,65 @@ public class ApiRequestCall {
 
     /**
      * 异步调用
+     *
      * @param callback
      */
-    public void async(final BaseCallback callback) {
+    public void async(final AbsCallback callback) {
         Call call = newCall();
         call.enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                if (call.isCanceled()) {
-                    failResponseCallback(callback, call, null);
-                    return;
-                }
                 failResponseCallback(callback, call, e);
-
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (call.isCanceled()) {
-                    failResponseCallback(callback, call, null);
-                    return;
-                }
-                if (response.isSuccessful()) {
-                    Object result = callback.parseResponse(response);
-                    successResponseCallback(callback, result);
-                } else {
-                    failResponseCallback(callback, call, null);
+                try {
+                    if (response.isSuccessful()) {
+                        Object result = callback.parseResponse(response);
+                        successResponseCallback(callback, result);
+                    } else {
+                        failResponseCallback(callback, call, null);
+                    }
+                } catch (Exception e) {
+                    failResponseCallback(callback, call, e);
+                } finally {
+                    if (response.body() != null) {
+                        response.body().close();
+                    }
                 }
             }
         });
     }
 
-    private void failResponseCallback(final BaseCallback callback, final Call call, final Exception e) {
-        MainHandler.getInstance().execute(new Runnable() {
+    /**
+     * 请求失败后回调
+     *
+     * @param callback
+     * @param call
+     * @param e
+     */
+    private void failResponseCallback(final AbsCallback callback, final Call call, final Exception e) {
+        MainThread.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                callback.onError(call, e);
+                if (call.isCanceled()) {
+                    callback.onError(call, null);
+                } else {
+                    callback.onError(call, e);
+                }
             }
         });
     }
 
-    private void successResponseCallback(final BaseCallback callback, final Object result) {
-        MainHandler.getInstance().execute(new Runnable() {
+    /**
+     * 请求成功后回调
+     *
+     * @param callback
+     * @param result
+     */
+    private void successResponseCallback(final AbsCallback callback, final Object result) {
+        MainThread.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 callback.onResponse(result);

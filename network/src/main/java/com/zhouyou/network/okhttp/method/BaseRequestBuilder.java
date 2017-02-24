@@ -1,6 +1,7 @@
 package com.zhouyou.network.okhttp.method;
 
 import com.zhouyou.network.okhttp.ApiRequestCall;
+import com.zhouyou.network.okhttp.param.Params;
 
 import java.io.File;
 import java.util.Map;
@@ -15,7 +16,7 @@ public abstract class BaseRequestBuilder<T extends BaseRequestBuilder> {
 
     protected Object tag;
 
-    protected Map<String, String> params;
+    protected Params params;
 
     protected Map<String, File> files;
 

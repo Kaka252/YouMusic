@@ -3,6 +3,7 @@ package com.zhouyou.network.okhttp.request;
 import android.text.TextUtils;
 
 import com.zhouyou.network.okhttp.ApiRequestCall;
+import com.zhouyou.network.okhttp.param.Params;
 
 import java.util.Map;
 
@@ -19,11 +20,11 @@ public abstract class BaseRequest {
 
     protected String url;
     protected Object tag;
-    protected Map<String, String> params;
+    protected Params params;
     protected Map<String, String> headers;
     protected Request.Builder builder;
 
-    BaseRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
+    BaseRequest(String url, Object tag, Params params, Map<String, String> headers) {
         this.url = url;
         this.tag = tag;
         this.params = params;

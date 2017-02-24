@@ -1,6 +1,7 @@
 package com.zhouyou.network.okhttp.interfaces;
 
 import com.zhouyou.network.okhttp.method.BaseRequestBuilder;
+import com.zhouyou.network.okhttp.param.Params;
 
 import java.util.Map;
 
@@ -11,5 +12,6 @@ import java.util.Map;
 public interface IParams {
 
     BaseRequestBuilder addParam(String key, String value);
-    BaseRequestBuilder addParams(Map<String, String> params);
+    BaseRequestBuilder addParams(Map<String, String> p);
+    BaseRequestBuilder addParams(Params params);
 }

@@ -2,9 +2,9 @@ package com.zhouyou.network.okhttp.method;
 
 import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.interfaces.IParams;
+import com.zhouyou.network.okhttp.param.Params;
 import com.zhouyou.network.okhttp.request.PostRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,14 +21,23 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
     @Override
     public PostRequestBuilder addParam(String key, String value) {
         if (params == null) {
-            params = new HashMap<>();
+            params = new Params();
         }
         params.put(key, value);
         return this;
     }
 
     @Override
-    public PostRequestBuilder addParams(Map<String, String> params) {
+    public PostRequestBuilder addParams(Map<String, String> p) {
+        if (params == null) {
+            params = new Params();
+        }
+        params.put(p);
+        return this;
+    }
+
+    @Override
+    public PostRequestBuilder addParams(Params params) {
         this.params = params;
         return this;
     }
