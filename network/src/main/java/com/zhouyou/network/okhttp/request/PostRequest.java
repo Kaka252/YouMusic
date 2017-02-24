@@ -7,6 +7,7 @@ import com.zhouyou.network.okhttp.param.Params;
 import java.util.Map;
 
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -37,6 +38,13 @@ public class PostRequest extends BaseRequest {
             if (TextUtils.isEmpty(key)) continue;
             builder.add(key, params.get(key));
         }
+        return builder;
+    }
+
+    private MultipartBody.Builder buildFileRequestParams() {
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MultipartBody.FORM);
+        builder.addFormDataPart("", "");
         return builder;
     }
 
