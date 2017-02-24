@@ -1,15 +1,18 @@
 package com.zhouyou.music.module;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.zhouyou.music.R;
 import com.zhouyou.music.base.BaseActivity;
 import com.zhouyou.music.entity.NetMusic;
 import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.OkHttpSdk;
+import com.zhouyou.network.okhttp.callback.BitmapCallback;
 import com.zhouyou.network.okhttp.callback.FileCallback;
 import com.zhouyou.network.okhttp.callback.GsonCallback;
 import com.zhouyou.network.okhttp.param.Params;
@@ -32,6 +35,7 @@ public class SearchActivity extends BaseActivity {
         setContentView(R.layout.activity_search);
         request();
         download();
+        getBitmap();
     }
 
     private void request() {
@@ -72,6 +76,21 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onResponse(File resp) {
                 Log.d(TAG, resp.toString());
+            }
+        });
+    }
+
+    private void getBitmap() {
+        String url = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1487925706&di=d5eafb6a2bf83796ffb88a91322af3f4&src=http://i0.hdslb.com/bfs/face/b7246b976ee6225da7258dc604683af258d69709.jpg";
+        OkHttpSdk.getInstance().get().url(url).tag(this).build().async(new BitmapCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(Bitmap resp) {
+                ((ImageView) findViewById(R.id.iv_image)).setImageBitmap(resp);
             }
         });
     }
