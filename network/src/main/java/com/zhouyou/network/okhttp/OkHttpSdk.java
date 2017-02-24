@@ -13,6 +13,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Call;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
@@ -114,7 +115,34 @@ public class OkHttpSdk {
         return new GetRequestBuilder();
     }
 
+    /**
+     * 构建Post请求方法
+     *
+     * @return
+     */
     public PostRequestBuilder post() {
         return new PostRequestBuilder();
     }
+
+    /**
+     * 取消网络请求
+     *
+     * @param tag
+     */
+    public void cancelTag(Object tag) {
+        if (tag == null) return;
+        for (Call call : client.dispatcher().queuedCalls()) {
+            if (call == null || call.request() == null) continue;
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
+        }
+        for (Call call : client.dispatcher().runningCalls()) {
+            if (call == null || call.request() == null) continue;
+            if (call.request().tag().equals(tag)) {
+                call.cancel();
+            }
+        }
+    }
+
 }
