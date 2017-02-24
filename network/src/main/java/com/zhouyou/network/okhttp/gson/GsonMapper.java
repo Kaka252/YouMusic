@@ -13,7 +13,6 @@ public class GsonMapper {
     private Gson gson;
 
     private GsonMapper() {
-        gson = new Gson();
     }
 
     public static GsonMapper getInstance() {
