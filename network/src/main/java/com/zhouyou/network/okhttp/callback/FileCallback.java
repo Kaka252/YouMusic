@@ -3,12 +3,12 @@ package com.zhouyou.network.okhttp.callback;
 import android.support.annotation.NonNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.Response;
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.Okio;
 
 /**
  * 作者：ZhouYou
@@ -16,12 +16,12 @@ import okhttp3.Response;
  */
 public abstract class FileCallback extends AbsCallback<File> {
 
-    private String destPath;
-    private String fileName;
+    private String dir;
+    private String name;
 
-    public FileCallback(@NonNull String destPath, @NonNull String fileName) {
-        this.destPath = destPath;
-        this.fileName = fileName;
+    public FileCallback(@NonNull String dir, @NonNull String name) {
+        this.dir = dir;
+        this.name = name;
     }
 
     @Override
@@ -30,35 +30,26 @@ public abstract class FileCallback extends AbsCallback<File> {
     }
 
     private File downloadFile(Response resp) {
-        InputStream is = null;
-        File dir = new File(destPath);
-        if (!dir.exists()) dir.mkdirs();
-        File file = new File(dir, fileName);
-
-        FileOutputStream fos = null;
-        byte[] buf = new byte[1024];
-        int len;
+        BufferedSink sink;
+        BufferedSource source;
+        File file = null;
         try {
-            is = resp.body().byteStream();
-            fos = new FileOutputStream(file);
-            while ((len = is.read(buf)) != -1) {
-
-                fos.write(buf, 0, len);
+            source = resp.body().source();
+            file = new File(dir, name);
+            if (!file.exists()) file.createNewFile();
+            sink = Okio.buffer(Okio.sink(file));
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = source.read(buf)) != -1) {
+                sink.write(buf, 0, len);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            sink.close();
+            source.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (resp.body() != null) resp.body().close();
-            try {
-                if (fos != null) {
-                    fos.flush();
-                    fos.close();
-                }
-                if (is != null) is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (resp.body() != null) {
+                resp.body().close();
             }
         }
         return file;
