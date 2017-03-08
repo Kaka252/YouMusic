@@ -22,26 +22,20 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
     private List<GetRequestBuilder> requestBuilders;
 
     public BatchRequestBuilder() {
-        this("");
-    }
-
-    public BatchRequestBuilder(String url) {
         this.requestBuilders = new ArrayList<>();
-        this.url = url;
     }
 
-    public BatchRequestBuilder batch(String url) {
-        this.url = url;
-        return this;
-    }
+    private String key;
 
-    public BatchRequestBuilder addRequest(@NonNull GetRequestBuilder builder) {
-        requestBuilders.add(builder);
-        return this;
-    }
-
-    public BatchRequestBuilder addRequests(@NonNull List<GetRequestBuilder> requestBuilders) {
+    public BatchRequestBuilder batch(String key, @NonNull List<GetRequestBuilder> requestBuilders) {
+        this.key = key;
         this.requestBuilders.addAll(requestBuilders);
+        return this;
+    }
+
+    public BatchRequestBuilder batch(String key, @NonNull GetRequestBuilder builder) {
+        this.key = key;
+        requestBuilders.add(builder);
         return this;
     }
 
