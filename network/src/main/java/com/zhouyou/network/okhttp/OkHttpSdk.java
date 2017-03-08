@@ -4,6 +4,7 @@ import com.zhouyou.network.okhttp.method.BatchRequestBuilder;
 import com.zhouyou.network.okhttp.method.GetRequestBuilder;
 import com.zhouyou.network.okhttp.method.PostRequestBuilder;
 import com.zhouyou.network.okhttp.param.Params;
+import com.zhouyou.network.okhttp.request.PostRequest;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -135,11 +136,15 @@ public class OkHttpSdk {
      * @return
      */
     public PostRequestBuilder post() {
-        return new PostRequestBuilder();
+        return post("", null);
     }
 
     public PostRequestBuilder post(String url, Params params) {
-        return new PostRequestBuilder(url, params);
+        return post(url, params, null);
+    }
+
+    public PostRequestBuilder post(String url, Params params, List<FileParam> fileParams) {
+        return new PostRequestBuilder(url, params, fileParams);
     }
 
     /**

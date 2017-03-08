@@ -25,30 +25,33 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
         this.requestBuilders = new ArrayList<>();
     }
 
-    private String key;
+    private String batchKey;
 
-    public BatchRequestBuilder batch(String key, @NonNull List<GetRequestBuilder> requestBuilders) {
-        this.key = key;
-        this.requestBuilders.addAll(requestBuilders);
+    public BatchRequestBuilder batch(String batchKey, List<GetRequestBuilder> requestBuilders) {
+        this.batchKey = batchKey;
+        if (requestBuilders != null && !requestBuilders.isEmpty()) {
+            this.requestBuilders.addAll(requestBuilders);
+        }
         return this;
     }
 
-    public BatchRequestBuilder batch(String key, @NonNull GetRequestBuilder builder) {
-        this.key = key;
-        requestBuilders.add(builder);
+    public BatchRequestBuilder batch(String batchKey, GetRequestBuilder builder) {
+        this.batchKey = batchKey;
+        if (builder != null) {
+            requestBuilders.add(builder);
+        }
         return this;
-    }
-
-    public void put(String key) {
-        params.put(key, batchParams());
     }
 
     @Override
     public ApiRequestCall build() {
+        if (params != null && !params.isEmpty()) {
+            params.put(batchKey, getBatchParams());
+        }
         return new BatchRequest(url, tag, params, headers).createRequestCall();
     }
 
-    private String batchParams() {
+    private String getBatchParams() {
         if (requestBuilders.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
         sb.append("[");
