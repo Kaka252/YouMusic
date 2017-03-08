@@ -7,6 +7,7 @@ import com.zhouyou.network.okhttp.callback.MainThread;
 import com.zhouyou.network.okhttp.request.BaseRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,6 +25,8 @@ public class ApiRequestCall {
     private Call call;
     private BaseRequest baseRequest;
     private OkHttpClient client;
+
+    private List<Call> calls;
 
     public ApiRequestCall(@NonNull BaseRequest baseRequest) {
         client = OkHttpSdk.getInstance().getClient();

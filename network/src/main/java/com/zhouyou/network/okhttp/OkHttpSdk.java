@@ -1,5 +1,6 @@
 package com.zhouyou.network.okhttp;
 
+import com.zhouyou.network.okhttp.method.BatchRequestBuilder;
 import com.zhouyou.network.okhttp.method.GetRequestBuilder;
 import com.zhouyou.network.okhttp.method.PostRequestBuilder;
 import com.zhouyou.network.okhttp.param.Params;
@@ -122,6 +123,10 @@ public class OkHttpSdk {
 
     public GetRequestBuilder get(String url, Params params) {
         return new GetRequestBuilder(url, params);
+    }
+
+    public BatchRequestBuilder batch() {
+        return new BatchRequestBuilder();
     }
 
     /**
