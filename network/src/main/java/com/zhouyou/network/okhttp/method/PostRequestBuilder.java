@@ -12,11 +12,20 @@ import java.util.Map;
  * 日期：2017/2/23.
  */
 public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> implements IParams {
+
+
+    public PostRequestBuilder() {
+    }
+
+    public PostRequestBuilder(String url, Params params) {
+        this.url = url;
+        this.params = params;
+    }
+
     @Override
     public ApiRequestCall build() {
         return new PostRequest(url, tag, params, headers).createRequestCall();
     }
-
 
     @Override
     public PostRequestBuilder addParam(String key, String value) {

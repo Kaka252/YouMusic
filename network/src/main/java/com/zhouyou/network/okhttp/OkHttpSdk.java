@@ -2,6 +2,7 @@ package com.zhouyou.network.okhttp;
 
 import com.zhouyou.network.okhttp.method.GetRequestBuilder;
 import com.zhouyou.network.okhttp.method.PostRequestBuilder;
+import com.zhouyou.network.okhttp.param.Params;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -112,7 +113,15 @@ public class OkHttpSdk {
      * @return
      */
     public GetRequestBuilder get() {
-        return new GetRequestBuilder();
+        return get("");
+    }
+
+    public GetRequestBuilder get(String url) {
+        return get(url, null);
+    }
+
+    public GetRequestBuilder get(String url, Params params) {
+        return new GetRequestBuilder(url, params);
     }
 
     /**
@@ -122,6 +131,10 @@ public class OkHttpSdk {
      */
     public PostRequestBuilder post() {
         return new PostRequestBuilder();
+    }
+
+    public PostRequestBuilder post(String url, Params params) {
+        return new PostRequestBuilder(url, params);
     }
 
     /**

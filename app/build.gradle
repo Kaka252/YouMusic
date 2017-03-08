@@ -106,6 +106,7 @@ dependencies {
     compile("com.tencent.tinker:tinker-android-anno:$rootProject.ext.tinker") { changing = true }   // 可选，用于生成application类
     //tinker's main Android lib
     compile('com.tencent.tinker:tinker-android-lib:1.7.7')
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 //    compile 'com.squareup.picasso:picasso:2.5.2'
 
 }

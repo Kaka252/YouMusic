@@ -45,9 +45,7 @@ public class SearchActivity extends BaseActivity {
         params.put("start", "0");
         params.put("count", "1");
         final ApiRequestCall call = OkHttpSdk.getInstance()
-                .get()
-                .url(url)
-                .addParams(params)
+                .get(url, params)
                 .tag(this)
                 .build();
         call.async(new GsonCallback<NetMusic>() {

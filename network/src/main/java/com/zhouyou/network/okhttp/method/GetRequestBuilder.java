@@ -13,6 +13,18 @@ import java.util.Map;
  */
 public class GetRequestBuilder extends BaseRequestBuilder<GetRequestBuilder> implements IParams {
 
+    public GetRequestBuilder() {
+    }
+
+    public GetRequestBuilder(String url) {
+        this(url, null);
+    }
+
+    public GetRequestBuilder(String url, Params params) {
+        this.url = url;
+        this.params = params;
+    }
+
     @Override
     public GetRequestBuilder addParam(String key, String value) {
         if (params == null) {
