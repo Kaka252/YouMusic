@@ -4,23 +4,29 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zhouyou.network.okhttp.ApiRequestCall;
+import com.zhouyou.network.okhttp.interfaces.IParams;
 import com.zhouyou.network.okhttp.param.Params;
 import com.zhouyou.network.okhttp.request.BatchRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 作者：ZhouYou
  * 日期：2017/3/8.
  */
-public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder> {
+public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder> implements IParams {
 
     private static final String TAG = "BatchRequestBuilder";
 
     private List<GetRequestBuilder> requestBuilders;
 
     private String batchKey;
+
+    public void batchKey(String batchKey) {
+        this.batchKey = batchKey;
+    }
 
     public BatchRequestBuilder(String url, String batchKey) {
         this.url = url;
@@ -44,9 +50,7 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
 
     @Override
     public ApiRequestCall build() {
-        if (params != null && !params.isEmpty()) {
-            params.put(batchKey, getBatchParams());
-        }
+        addParam(batchKey, getBatchParams());
         return new BatchRequest(url, tag, params, headers).createRequestCall();
     }
 
@@ -70,5 +74,29 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
         sb.append("]");
         Log.d(TAG, "batch: " + sb.toString());
         return sb.toString();
+    }
+
+    @Override
+    public BatchRequestBuilder addParam(String key, String value) {
+        if (params == null) {
+            params = new Params();
+        }
+        params.put(key, value);
+        return this;
+    }
+
+    @Override
+    public BatchRequestBuilder addParams(Map<String, String> p) {
+        if (params == null) {
+            params = new Params();
+        }
+        params.put(p);
+        return this;
+    }
+
+    @Override
+    public BatchRequestBuilder addParams(Params params) {
+        this.params = params;
+        return this;
     }
 }

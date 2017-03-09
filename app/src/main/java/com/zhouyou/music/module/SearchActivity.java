@@ -103,18 +103,17 @@ public class SearchActivity extends BaseActivity {
         GetRequestBuilder profile = new GetRequestBuilder();
         profile.url("geek/getBossProfile");
         profile.addParam("bossId", "1823");
-//        profile.addParam("lid", );
 
         GetRequestBuilder list = new GetRequestBuilder();
         list.url("geek/getBossProfileJobList");
         list.addParam("bossId", "1823");
         list.addParam("page", "1");
-//        list.addParam("lid", )
 
         ApiRequestCall call = OkHttpSdk.getInstance()
                 .batch(url, batchKey)
                 .addRequest(profile)
                 .addRequest(list)
+//                .add
                 .build();
         call.async(new StringCallback() {
             @Override

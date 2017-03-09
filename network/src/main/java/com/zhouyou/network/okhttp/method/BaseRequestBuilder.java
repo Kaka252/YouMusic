@@ -3,7 +3,6 @@ package com.zhouyou.network.okhttp.method;
 import com.zhouyou.network.okhttp.ApiRequestCall;
 import com.zhouyou.network.okhttp.param.Params;
 
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -17,8 +16,6 @@ public abstract class BaseRequestBuilder<T extends BaseRequestBuilder> {
     protected Object tag;
 
     protected Params params;
-
-    protected Map<String, File> files;
 
     protected Map<String, String> headers;
 
@@ -35,6 +32,10 @@ public abstract class BaseRequestBuilder<T extends BaseRequestBuilder> {
     public T headers(Map<String, String> headers) {
         this.headers = headers;
         return (T) this;
+    }
+
+    public Params getParams() {
+        return params;
     }
 
     public abstract ApiRequestCall build();
