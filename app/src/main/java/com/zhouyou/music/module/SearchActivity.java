@@ -15,6 +15,8 @@ import com.zhouyou.network.okhttp.OkHttpSdk;
 import com.zhouyou.network.okhttp.callback.BitmapCallback;
 import com.zhouyou.network.okhttp.callback.FileCallback;
 import com.zhouyou.network.okhttp.callback.GsonCallback;
+import com.zhouyou.network.okhttp.callback.StringCallback;
+import com.zhouyou.network.okhttp.method.GetRequestBuilder;
 import com.zhouyou.network.okhttp.param.Params;
 
 import java.io.File;
@@ -36,6 +38,7 @@ public class SearchActivity extends BaseActivity {
         request();
         download();
         getBitmap();
+        getBatch();
     }
 
     private void request() {
@@ -89,6 +92,39 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onResponse(Bitmap resp) {
                 ((ImageView) findViewById(R.id.iv_image)).setImageBitmap(resp);
+            }
+        });
+    }
+
+    private void getBatch() {
+        String url = "http://api.weizhipin.com/api/batch/batchRun";
+        String batchKey = "batch_method_feed";
+
+        GetRequestBuilder profile = new GetRequestBuilder();
+        profile.url("geek/getBossProfile");
+        profile.addParam("bossId", "1823");
+//        profile.addParam("lid", );
+
+        GetRequestBuilder list = new GetRequestBuilder();
+        list.url("geek/getBossProfileJobList");
+        list.addParam("bossId", "1823");
+        list.addParam("page", "1");
+//        list.addParam("lid", )
+
+        ApiRequestCall call = OkHttpSdk.getInstance()
+                .batch(url, batchKey)
+                .addRequest(profile)
+                .addRequest(list)
+                .build();
+        call.async(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(String resp) {
+                Log.d(TAG, resp);
             }
         });
     }

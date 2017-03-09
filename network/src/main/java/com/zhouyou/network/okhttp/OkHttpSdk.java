@@ -4,7 +4,6 @@ import com.zhouyou.network.okhttp.method.BatchRequestBuilder;
 import com.zhouyou.network.okhttp.method.GetRequestBuilder;
 import com.zhouyou.network.okhttp.method.PostRequestBuilder;
 import com.zhouyou.network.okhttp.param.Params;
-import com.zhouyou.network.okhttp.request.PostRequest;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -126,8 +125,12 @@ public class OkHttpSdk {
         return new GetRequestBuilder(url, params);
     }
 
-    public BatchRequestBuilder batch() {
-        return new BatchRequestBuilder();
+    public BatchRequestBuilder batch(String url) {
+        return batch(url, "");
+    }
+
+    public BatchRequestBuilder batch(String url, String batchKey) {
+        return new BatchRequestBuilder(url, batchKey);
     }
 
     /**

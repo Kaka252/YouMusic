@@ -1,6 +1,5 @@
 package com.zhouyou.network.okhttp.method;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -21,22 +20,22 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
 
     private List<GetRequestBuilder> requestBuilders;
 
-    public BatchRequestBuilder() {
+    private String batchKey;
+
+    public BatchRequestBuilder(String url, String batchKey) {
+        this.url = url;
+        this.batchKey = batchKey;
         this.requestBuilders = new ArrayList<>();
     }
 
-    private String batchKey;
-
-    public BatchRequestBuilder batch(String batchKey, List<GetRequestBuilder> requestBuilders) {
-        this.batchKey = batchKey;
+    public BatchRequestBuilder addRequest(List<GetRequestBuilder> requestBuilders) {
         if (requestBuilders != null && !requestBuilders.isEmpty()) {
             this.requestBuilders.addAll(requestBuilders);
         }
         return this;
     }
 
-    public BatchRequestBuilder batch(String batchKey, GetRequestBuilder builder) {
-        this.batchKey = batchKey;
+    public BatchRequestBuilder addRequest(GetRequestBuilder builder) {
         if (builder != null) {
             requestBuilders.add(builder);
         }
@@ -62,7 +61,7 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
             Params mParams = builder.params;
             if (mParams == null || mParams.isEmpty()) continue;
             mUrl = mParams.join(mUrl);
-            sb.append("\"").append(mUrl).append("\"");
+            sb.append("\"").append("method=").append(mUrl).append("\"");
             sb.append(",");
         }
         if (sb.length() > 0) {
