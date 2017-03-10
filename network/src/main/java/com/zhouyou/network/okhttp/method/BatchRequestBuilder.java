@@ -29,11 +29,11 @@ public class BatchRequestBuilder extends BaseRequestBuilder<BatchRequestBuilder>
     }
 
     public BatchRequestBuilder() {
+        this("");
     }
 
     public BatchRequestBuilder(String url) {
-        this.url = url;
-        this.requestBuilders = new ArrayList<>();
+        this(url, "");
     }
 
     public BatchRequestBuilder(String url, String batchKey) {

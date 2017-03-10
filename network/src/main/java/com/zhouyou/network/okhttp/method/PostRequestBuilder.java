@@ -6,7 +6,6 @@ import com.zhouyou.network.okhttp.param.Params;
 import com.zhouyou.network.okhttp.request.PostRequest;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,24 +14,20 @@ import java.util.Map;
  */
 public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> implements IParams {
 
-    private Map<String, File> files = new HashMap<>();
-
     public PostRequestBuilder() {
+        this("");
     }
 
     public PostRequestBuilder(String url) {
-        this.url = url;
+        this(url, null);
     }
 
-    public PostRequestBuilder(String url, Params params) {
+    public PostRequestBuilder(String url, Params ps) {
         this.url = url;
-        this.params = params;
-    }
-
-    public PostRequestBuilder(String url, Params params, Map<String, File> files) {
-        this.url = url;
-        this.params = params;
-        this.files = files;
+        params = ps;
+        if (params == null) {
+            params = new Params();
+        }
     }
 
     @Override
@@ -42,24 +37,21 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
 
     @Override
     public PostRequestBuilder addParam(String key, String value) {
-        if (params == null) {
-            params = new Params();
-        }
         params.put(key, value);
         return this;
     }
 
     @Override
     public PostRequestBuilder addParams(Map<String, String> p) {
-        if (params == null) {
-            params = new Params();
-        }
         params.put(p);
         return this;
     }
 
     @Override
     public PostRequestBuilder addParams(Params params) {
+        if (params == null) {
+            throw new NullPointerException("Params must not be null.");
+        }
         this.params = params;
         return this;
     }
@@ -68,7 +60,7 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
         if (f == null) {
             throw new NullPointerException("File must not be null.");
         }
-        files.put(key, f);
+        params.putFile(key, f);
         return this;
     }
 
@@ -76,7 +68,7 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
         if (fs == null) {
             throw new NullPointerException("File must not be null.");
         }
-        files.putAll(fs);
+        params.putFiles(fs);
         return this;
     }
 }

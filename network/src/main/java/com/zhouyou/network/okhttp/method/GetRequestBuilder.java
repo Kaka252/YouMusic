@@ -14,44 +14,45 @@ import java.util.Map;
 public class GetRequestBuilder extends BaseRequestBuilder<GetRequestBuilder> implements IParams {
 
     public GetRequestBuilder() {
+        this("");
     }
 
     public GetRequestBuilder(String url) {
         this(url, null);
     }
 
-    public GetRequestBuilder(String url, Params params) {
+    public GetRequestBuilder(String url, Params ps) {
         this.url = url;
-        this.params = params;
+        params = ps;
+        if (params == null) {
+            params = new Params();
+        }
     }
 
     @Override
     public GetRequestBuilder addParam(String key, String value) {
-        if (params == null) {
-            params = new Params();
-        }
         params.put(key, value);
         return this;
     }
 
     @Override
     public GetRequestBuilder addParams(Map<String, String> p) {
-        if (params == null) {
-            params = new Params();
-        }
         params.put(p);
         return this;
     }
 
     @Override
     public GetRequestBuilder addParams(Params params) {
+        if (params == null) {
+            throw new NullPointerException("Params must not be null.");
+        }
         this.params = params;
         return this;
     }
 
     @Override
     public ApiRequestCall build() {
-        if (params != null && !params.isEmpty()) {
+        if (!params.isEmpty()) {
             url = params.join(url);
         }
         return new GetRequest(url, tag, params, headers).createRequestCall();
