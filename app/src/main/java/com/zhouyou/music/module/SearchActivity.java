@@ -41,6 +41,24 @@ public class SearchActivity extends BaseActivity {
         getBatch();
     }
 
+    private void upload() {
+        String url = "";
+        Params params = new Params();
+        params.put("", "");
+        ApiRequestCall call = OkHttpSdk.getInstance().post(url, params).build();
+        call.async(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(String resp) {
+
+            }
+        });
+    }
+
     private void request() {
         String url = "https://api.douban.com/v2/music/search";
         Params params = new Params();
@@ -113,7 +131,6 @@ public class SearchActivity extends BaseActivity {
                 .batch(url, batchKey)
                 .addRequest(profile)
                 .addRequest(list)
-//                .add
                 .build();
         call.async(new StringCallback() {
             @Override
