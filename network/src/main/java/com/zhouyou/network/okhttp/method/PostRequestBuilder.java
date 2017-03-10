@@ -1,15 +1,12 @@
 package com.zhouyou.network.okhttp.method;
 
-import android.support.annotation.NonNull;
-
 import com.zhouyou.network.okhttp.ApiRequestCall;
-import com.zhouyou.network.okhttp.FileParam;
 import com.zhouyou.network.okhttp.interfaces.IParams;
 import com.zhouyou.network.okhttp.param.Params;
 import com.zhouyou.network.okhttp.request.PostRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,17 +15,21 @@ import java.util.Map;
  */
 public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> implements IParams {
 
-    private List<FileParam> files = new ArrayList<>();
+    private Map<String, File> files = new HashMap<>();
 
     public PostRequestBuilder() {
-        this("", null);
+    }
+
+    public PostRequestBuilder(String url) {
+        this.url = url;
     }
 
     public PostRequestBuilder(String url, Params params) {
-        this(url, params, null);
+        this.url = url;
+        this.params = params;
     }
 
-    public PostRequestBuilder(String url, Params params, List<FileParam> files) {
+    public PostRequestBuilder(String url, Params params, Map<String, File> files) {
         this.url = url;
         this.params = params;
         this.files = files;
@@ -36,7 +37,7 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
 
     @Override
     public ApiRequestCall build() {
-        return new PostRequest(url, tag, params, files, headers).createRequestCall();
+        return new PostRequest(url, tag, params, headers).createRequestCall();
     }
 
     @Override
@@ -63,19 +64,19 @@ public class PostRequestBuilder extends BaseRequestBuilder<PostRequestBuilder> i
         return this;
     }
 
-    public PostRequestBuilder file(@NonNull FileParam fileParam) {
-        if (files == null) {
-            files = new ArrayList<>();
+    public PostRequestBuilder addFile(String key, File f) {
+        if (f == null) {
+            throw new NullPointerException("File must not be null.");
         }
-        files.add(fileParam);
+        files.put(key, f);
         return this;
     }
 
-    public PostRequestBuilder files(@NonNull List<FileParam> fileParams) {
-        if (files == null) {
-            files = new ArrayList<>();
+    public PostRequestBuilder addFiles(Map<String, File> fs) {
+        if (fs == null) {
+            throw new NullPointerException("File must not be null.");
         }
-        files.addAll(fileParams);
+        files.putAll(fs);
         return this;
     }
 }

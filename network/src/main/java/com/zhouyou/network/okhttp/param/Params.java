@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,16 +20,20 @@ public class Params {
 
     private Map<String, String> params;
 
+    private Map<String, File> fileParams;
+
     public Params() {
         params = new HashMap<>();
+        fileParams = new HashMap<>();
     }
 
     public void put(String key, String value) {
         params.put(key, value);
     }
 
-    public void put(Map<String, String> params) {
-        this.params = params;
+    public void put(Map<String, String> ps) {
+        if (ps == null) return;
+        params.putAll(ps);
     }
 
     public boolean isEmpty() {
@@ -43,8 +48,32 @@ public class Params {
         return params.get(key);
     }
 
+    public Set<String> fileSet() {
+        return fileParams.keySet();
+    }
+
+    public File getFile(String key) {
+        return fileParams.get(key);
+    }
+
+    public void putFile(String key, File f) {
+        fileParams.put(key, f);
+    }
+
+    public void putFiles(Map<String, File> fs) {
+        if (fs == null) return;
+        fileParams.putAll(fs);
+    }
+
+    public boolean hasFile() {
+        return fileParams == null || fileParams.isEmpty();
+    }
+
+
+
     /**
      * 拼装url和params
+     *
      * @param url
      * @return
      */

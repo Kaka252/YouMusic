@@ -114,19 +114,27 @@ public class OkHttpSdk {
      * @return
      */
     public GetRequestBuilder get() {
-        return get("");
+        return new GetRequestBuilder();
     }
 
     public GetRequestBuilder get(String url) {
-        return get(url, null);
+        return new GetRequestBuilder(url);
     }
 
     public GetRequestBuilder get(String url, Params params) {
         return new GetRequestBuilder(url, params);
     }
 
+    /**
+     * 构建批量请求方法
+     * @return
+     */
+    public BatchRequestBuilder batch() {
+        return new BatchRequestBuilder();
+    }
+
     public BatchRequestBuilder batch(String url) {
-        return batch(url, "");
+        return new BatchRequestBuilder(url);
     }
 
     public BatchRequestBuilder batch(String url, String batchKey) {
@@ -139,15 +147,15 @@ public class OkHttpSdk {
      * @return
      */
     public PostRequestBuilder post() {
-        return post("", null);
+        return new PostRequestBuilder();
+    }
+
+    public PostRequestBuilder post(String url) {
+        return new PostRequestBuilder(url);
     }
 
     public PostRequestBuilder post(String url, Params params) {
-        return post(url, params, null);
-    }
-
-    public PostRequestBuilder post(String url, Params params, List<FileParam> fileParams) {
-        return new PostRequestBuilder(url, params, fileParams);
+        return new PostRequestBuilder(url, params);
     }
 
     /**
